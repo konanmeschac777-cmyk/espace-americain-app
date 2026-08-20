@@ -6,5 +6,11 @@ class Category < ApplicationRecord
   validates :slug, presence: true, uniqueness: true
   validates :name, presence: true
 
+  # Préfixe de cote, dérivé du slug : "communication" donne COM.
+  # Les six catégories donnent six préfixes distincts. En ajouter une qui
+  # commence par les trois mêmes lettres qu'une existante créerait une
+  # ambiguïté de rangement : la tâche catalogue:coter le détecte.
+  def shelf_prefix = slug.first(3).upcase
+
   def to_s = name
 end
