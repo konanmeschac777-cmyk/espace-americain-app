@@ -26,11 +26,14 @@
   </div>
 
 <% when :membership_expired %>
-  <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+  <div class="bandeau bandeau-attention mb-4 flex-col items-start">
     <p class="font-bold">Abonnement expiré depuis le <%= date_courte(member.expires_on) %>.</p>
-    <p>Encaisse le renouvellement au comptoir, puis prolonge ici.</p>
-    <%= button_to "Prolonger d'un an", renew_member_path(member, redirect_to_loan: true),
-                  class: "bouton bouton-rouge bouton-petit mt-3" %>
+    <%# L'adhésion est gratuite : il n'y a rien à encaisser, juste une
+        autorisation à donner. Le bandeau est en attention et non en
+        blocage, parce que la situation se règle d'un seul geste. %>
+    <p>La réinscription est gratuite, il suffit de la valider.</p>
+    <%= button_to "Réinscrire pour un an", renew_member_path(member, redirect_to_loan: true),
+                  class: "bouton bouton-primaire bouton-petit mt-3" %>
   </div>
 
 <% when :suspended %>

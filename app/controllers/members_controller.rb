@@ -1,11 +1,11 @@
 class MembersController < ApplicationController
-  # Prolonge l'abonnement d'un an. Le paiement se fait au comptoir et
-  # n'est pas enregistré ici : l'application ne connaît que la date.
+  # Réinscrit pour un an. L'adhésion est gratuite : il n'y a aucun montant
+  # à saisir, seulement une autorisation à enregistrer.
   def renew
     member = Member.find(params[:id])
     member.renew_membership!
 
-    message = "Abonnement de #{member.full_name} prolongé jusqu'au #{l(member.expires_on, format: :long)}."
+    message = "#{member.full_name} est réinscrit jusqu'au #{l(member.expires_on, format: :long)}."
 
     if params[:redirect_to_loan]
       redirect_to new_loan_path(member_id: member.id), notice: message

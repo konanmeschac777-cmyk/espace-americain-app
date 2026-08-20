@@ -1,7 +1,8 @@
-# Un abonné. L'abonnement dure un an et se renouvelle au comptoir.
+# Un abonné. L'adhésion est gratuite et vaut un an.
 #
-# Le paiement n'est jamais enregistré ici : il se fait en espèces à l'accueil.
-# L'application ne connaît que la date d'expiration.
+# L'expiration ne sert donc pas à faire payer, mais à savoir qui fréquente
+# encore l'Espace : une carte d'un an oblige à repasser au comptoir, ce qui
+# tient la liste à jour. La réinscription est un simple geste d'autorisation.
 class Member < ApplicationRecord
   belongs_to :site
   has_many :loans, dependent: :restrict_with_error
@@ -48,8 +49,9 @@ class Member < ApplicationRecord
     nil
   end
 
-  # Prolonge d'un an. Si l'abonnement est déjà expiré, l'année repart
-  # d'aujourd'hui : on ne fait pas payer une période écoulée.
+  # Prolonge d'un an. Si l'adhésion est déjà expirée, l'année repart
+  # d'aujourd'hui plutôt que de la date dépassée : sinon une carte oubliée
+  # pendant deux ans repartirait déjà expirée.
   def renew_membership!
     starting_point = [ expires_on, Date.current ].max
     update!(expires_on: starting_point >> Setting.membership_months)
