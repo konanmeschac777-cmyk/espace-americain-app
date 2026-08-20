@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Public Sans', system-ui, sans-serif; font-size: 16px; color: #3D4752; background: #F7F8FA; }
+    a { color: #0A2240; text-decoration: none; } a:hover { color: #143A6B; }
+  </style>
+</helmet>
+
+<div style="width: 390px; min-height: 820px; background: #F7F8FA; display: flex; flex-direction: column;">
+
+  <header style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; background: #0A2240;">
+    <div style="flex: 1; min-width: 0;">
+      <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin: 0;">American Shelf de Tiassalé</p>
+      <h1 style="font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; color: #FFFFFF; margin: 0;">Enregistrer un prêt</h1>
+    </div>
+    <a href="#" style="flex-shrink: 0; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8); text-decoration: underline;">Quitter</a>
+  </header>
+
+  <div style="padding: 16px;">
+
+    <ol style="display: flex; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none;">
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #0A2240; color: #FFFFFF; font-size: 14px; font-weight: 700;">1</span>
+        <span style="font-size: 14px; color: #1B1B1B; font-weight: 700;">Abonné</span>
+      </li>
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #F1F4F8; border: 1px solid #C9CFD6; color: #8A939C; font-size: 14px; font-weight: 700;">2</span>
+        <span style="font-size: 14px; color: #8A939C;">Ouvrage</span>
+      </li>
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #F1F4F8; border: 1px solid #C9CFD6; color: #8A939C; font-size: 14px; font-weight: 700;">3</span>
+        <span style="font-size: 14px; color: #8A939C;">Confirmer</span>
+      </li>
+    </ol>
+
+    <h2 style="font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; color: #1B1B1B; margin: 0 0 12px;">Qui emprunte ?</h2>
+
+    <label style="display: block; margin-bottom: 6px; font-family: 'Libre Franklin', sans-serif; font-size: 15px; font-weight: 700; color: #1B1B1B;" for="q">Nom ou numéro de carte</label>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+      <input id="q" type="search" value="TSL-2026" style="flex: 1; min-width: 0; min-height: 48px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 4px; font-family: 'Public Sans', sans-serif; font-size: 16px; color: #1B1B1B;">
+      <button type="button" style="display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px; border: none; border-radius: 4px; background: #0A2240; color: #FFFFFF; font-family: 'Libre Franklin', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;">Chercher</button>
+    </div>
+
+    <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Adjoua Brou</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0201</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #FBEAEE; color: #B31942; font-size: 14px; font-weight: 600; white-space: nowrap;">Abonnement expiré</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Fatou Diarra</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0034</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #FCF3E3; color: #8A5200; font-size: 14px; font-weight: 600; white-space: nowrap;">A déjà un livre</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 6px; box-shadow: 0 6px 18px rgba(10,34,64,0.10);">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Aminata Koné</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0087</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">Peut emprunter</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Yao Kouassi</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0155</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #FCF3E3; color: #8A5200; font-size: 14px; font-weight: 600; white-space: nowrap;">A déjà un livre</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Kouadio N'Guessan</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0112</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #FCF3E3; color: #8A5200; font-size: 14px; font-weight: 600; white-space: nowrap;">A déjà un livre</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-weight: 600; color: #1B1B1B;">Ibrahim Traoré</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670;">TSL-2026-0233</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #FBEAEE; color: #B31942; font-size: 14px; font-weight: 600; white-space: nowrap;">Suspendu</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

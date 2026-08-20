@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Public Sans', system-ui, sans-serif; font-size: 16px; color: #3D4752; background: #F7F8FA; }
+    a { color: #5C6670; } a:hover { color: #0A2240; }
+    input::placeholder { color: #8A939C; }
+  </style>
+</helmet>
+
+<div style="width: 390px; min-height: 720px; background: #F7F8FA; display: flex; flex-direction: column; justify-content: center; padding: 40px 16px;">
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 32px;">
+    <span style="display: flex; width: 56px; height: 56px; border-radius: 4px; background: #0A2240; align-items: center; justify-content: center; margin-bottom: 12px;">
+      <span style="display: block; width: 24px; height: 24px; border-top: 4px solid #FFFFFF; border-bottom: 4px solid #FFFFFF;"></span>
+    </span>
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942; margin: 0;">American Shelf de Tiassalé</p>
+    <h1 style="font-family: 'Libre Franklin', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: #1B1B1B; margin: 4px 0 0;">Espace bibliothécaire</h1>
+  </div>
+
+  <div style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px; padding: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+
+      <div>
+        <label style="display: block; margin-bottom: 6px; font-family: 'Libre Franklin', sans-serif; font-size: 15px; font-weight: 700; color: #1B1B1B;" for="email">Adresse email</label>
+        <input id="email" type="email" placeholder="bibliothecaire@exemple.ci" style="display: block; width: 100%; min-height: 48px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 4px; font-family: 'Public Sans', sans-serif; font-size: 16px; color: #1B1B1B;">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 6px; font-family: 'Libre Franklin', sans-serif; font-size: 15px; font-weight: 700; color: #1B1B1B;" for="mdp">Mot de passe</label>
+        <input id="mdp" type="password" value="............" style="display: block; width: 100%; min-height: 48px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 4px; font-family: 'Public Sans', sans-serif; font-size: 16px; color: #1B1B1B;">
+      </div>
+
+      <button type="button" style="display: flex; width: 100%; align-items: center; justify-content: center; min-height: 60px; padding: 16px 24px; margin-top: 4px; border: none; border-radius: 4px; background: #0A2240; color: #FFFFFF; font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer;">Se connecter</button>
+
+    </div>
+  </div>
+
+  <p style="text-align: center; margin: 20px 0 0;">
+    <a href="#" style="font-size: 14px; color: #5C6670; text-decoration: underline;">Mot de passe oublié</a>
+  </p>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

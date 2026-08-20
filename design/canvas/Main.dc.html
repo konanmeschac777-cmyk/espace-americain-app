@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Public Sans', system-ui, sans-serif; }
+    a { color: #B31942; } a:hover { color: #8E1435; }
+  </style>
+</helmet>
+
+<div style="width: 520px; min-height: 880px; background: #0A2240; color: #FFFFFF; padding: 48px 44px; display: flex; flex-direction: column; gap: 40px;">
+
+  <div style="display: flex; align-items: center; gap: 14px;">
+    <span style="display: flex; width: 48px; height: 48px; border-radius: 4px; background: #FFFFFF; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="1" y="4" width="20" height="3" fill="#0A2240"></rect>
+        <rect x="1" y="15" width="20" height="3" fill="#B31942"></rect>
+      </svg>
+    </span>
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #F0A0B4; margin: 0;">American Spaces &middot; Côte d'Ivoire</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 18px;">
+    <h1 style="font-family: 'Libre Franklin', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin: 0; color: #FFFFFF; text-wrap: balance;">American Shelf de Tiassalé</h1>
+    <p style="font-size: 19px; line-height: 1.5; color: rgba(255,255,255,0.72); margin: 0;">Les écrans de l'espace bibliothécaire, tels qu'ils fonctionnent aujourd'hui dans l'application.</p>
+  </div>
+
+  <div style="height: 1px; background: rgba(255,255,255,0.18);"></div>
+
+  <div style="display: flex; flex-direction: column; gap: 22px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #F0A0B4; margin: 0;">Rangée du haut</p>
+      <p style="font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.78); margin: 0;">Le parcours complet, de la connexion au prêt enregistré. Six écrans, trois étapes.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #F0A0B4; margin: 0;">Rangée du bas</p>
+      <p style="font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.78); margin: 0;">Les situations qui interdisent un prêt. C'est ce qui sépare un outil d'une maquette : l'application connaît les règles de la bibliothèque et dit comment s'en sortir.</p>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; display: flex; flex-direction: column; gap: 18px;">
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: rgba(255,255,255,0.18);">
+      <div style="background: #0A2240; padding: 16px 4px 4px 0;">
+        <div style="width: 26px; height: 3px; background: #B31942; margin-bottom: 10px;"></div>
+        <div style="font-family: 'Libre Franklin', sans-serif; font-size: 26px; font-weight: 800; line-height: 1; color: #FFFFFF; font-variant-numeric: tabular-nums;">19</div>
+        <p style="font-size: 13px; line-height: 1.35; color: rgba(255,255,255,0.6); margin: 6px 0 0;">titres au catalogue</p>
+      </div>
+      <div style="background: #0A2240; padding: 16px 4px 4px 12px;">
+        <div style="width: 26px; height: 3px; background: #B31942; margin-bottom: 10px;"></div>
+        <div style="font-family: 'Libre Franklin', sans-serif; font-size: 26px; font-weight: 800; line-height: 1; color: #FFFFFF; font-variant-numeric: tabular-nums;">93</div>
+        <p style="font-size: 13px; line-height: 1.35; color: rgba(255,255,255,0.6); margin: 6px 0 0;">exemplaires sur les étagères</p>
+      </div>
+      <div style="background: #0A2240; padding: 16px 4px 4px 12px;">
+        <div style="width: 26px; height: 3px; background: #B31942; margin-bottom: 10px;"></div>
+        <div style="font-family: 'Libre Franklin', sans-serif; font-size: 26px; font-weight: 800; line-height: 1; color: #FFFFFF; font-variant-numeric: tabular-nums;">14</div>
+        <p style="font-size: 13px; line-height: 1.35; color: rgba(255,255,255,0.6); margin: 6px 0 0;">jours de prêt, renouvelable une fois</p>
+      </div>
+    </div>
+
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); margin: 0;">État au 20 août 2026</p>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

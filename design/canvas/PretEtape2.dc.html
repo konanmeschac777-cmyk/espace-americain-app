@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Public Sans', system-ui, sans-serif; font-size: 16px; color: #3D4752; background: #F7F8FA; }
+    a { color: #0A2240; text-decoration: none; } a:hover { color: #143A6B; }
+  </style>
+</helmet>
+
+<div style="width: 390px; min-height: 1080px; background: #F7F8FA; display: flex; flex-direction: column;">
+
+  <header style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; background: #0A2240;">
+    <div style="flex: 1; min-width: 0;">
+      <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin: 0;">American Shelf de Tiassalé</p>
+      <h1 style="font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; color: #FFFFFF; margin: 0;">Enregistrer un prêt</h1>
+    </div>
+    <a href="#" style="flex-shrink: 0; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8); text-decoration: underline;">Quitter</a>
+  </header>
+
+  <div style="padding: 16px;">
+
+    <ol style="display: flex; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none;">
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #0A6B3C;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2.5 7.4L5.4 10.3L11.5 4.2" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span style="font-size: 14px; color: #0A6B3C;">Abonné</span>
+      </li>
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #0A2240; color: #FFFFFF; font-size: 14px; font-weight: 700;">2</span>
+        <span style="font-size: 14px; color: #1B1B1B; font-weight: 700;">Ouvrage</span>
+      </li>
+      <li style="flex: 1; display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; width: 28px; height: 28px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: #F1F4F8; border: 1px solid #C9CFD6; color: #8A939C; font-size: 14px; font-weight: 700;">3</span>
+        <span style="font-size: 14px; color: #8A939C;">Confirmer</span>
+      </li>
+    </ol>
+
+    <div style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px; padding: 16px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: flex-start; gap: 12px;">
+        <div style="flex: 1; min-width: 0;">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942; margin: 0;">Abonné</p>
+          <p style="font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; color: #1B1B1B; margin: 2px 0 0;">Aminata Koné</p>
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #5C6670; margin: 0;">TSL-2026-0087</p>
+        </div>
+        <button type="button" style="display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; min-height: 44px; padding: 8px 14px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 4px; color: #0A2240; font-family: 'Libre Franklin', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer;">Changer</button>
+      </div>
+    </div>
+
+    <h2 style="font-family: 'Libre Franklin', sans-serif; font-size: 18px; font-weight: 700; color: #1B1B1B; margin: 0 0 12px;">Quel ouvrage ?</h2>
+
+    <label style="display: block; margin-bottom: 6px; font-family: 'Libre Franklin', sans-serif; font-size: 15px; font-weight: 700; color: #1B1B1B;" for="qb">Titre ou auteur</label>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+      <input id="qb" type="search" value="or" style="flex: 1; min-width: 0; min-height: 48px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #C9CFD6; border-radius: 4px; font-family: 'Public Sans', sans-serif; font-size: 16px; color: #1B1B1B;">
+      <button type="button" style="display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px; border: none; border-radius: 4px; background: #0A2240; color: #FFFFFF; font-family: 'Libre Franklin', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;">Chercher</button>
+    </div>
+
+    <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Communication &amp; prise de parole</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">Devenez un grand orateur</span>
+            <span style="display: block; font-size: 14px; font-style: italic; color: #8A939C;">Auteur à renseigner</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote COM-01</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">9 sur 10 disponibles</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Développement personnel</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">La Théorie Let Them</span>
+            <span style="display: block; font-size: 14px; color: #5C6670;">Mel Robbins</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote DEV-02</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">2 sur 2 disponibles</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Développement personnel</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">Le Grain de Café</span>
+            <span style="display: block; font-size: 14px; color: #5C6670;">Jon Gordon</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote DEV-03</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">5 sur 5 disponibles</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Productivité &amp; organisation</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">S'organiser pour réussir</span>
+            <span style="display: block; font-size: 14px; color: #5C6670;">David Allen</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote PRO-03</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">6 sur 7 disponibles</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Productivité &amp; organisation</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">S'organiser pour réussir, la méthode GTD spéciale ados</span>
+            <span style="display: block; font-size: 14px; color: #5C6670;">David Allen</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote PRO-04</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">7 sur 7 disponibles</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 6px;">
+          <span style="flex: 1; min-width: 0;">
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #B31942;">Productivité &amp; organisation</span>
+            <span style="display: block; font-family: 'Libre Franklin', sans-serif; font-weight: 700; color: #1B1B1B; line-height: 1.3; margin-top: 2px;">Team, s'organiser pour réussir en équipe</span>
+            <span style="display: block; font-size: 14px; color: #5C6670;">David Allen</span>
+            <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8A939C;">Cote PRO-05</span>
+          </span>
+          <span style="display: inline-flex; flex-shrink: 0; align-items: center; padding: 4px 10px; border-radius: 999px; background: #E7F4EC; color: #0A6B3C; font-size: 14px; font-weight: 600; white-space: nowrap;">7 sur 7 disponibles</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

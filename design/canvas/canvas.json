@@ -1,0 +1,32 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Couverture", "x": 0, "y": 0, "w": 520, "h": 880 },
+
+    { "file": "Connexion.dc.html", "title": "1 · Connexion", "x": 600, "y": 0, "w": 390, "h": 720 },
+    { "file": "PretEtape1Vide.dc.html", "title": "2 · Départ du prêt", "x": 1040, "y": 0, "w": 390, "h": 640 },
+    { "file": "PretEtape1Resultats.dc.html", "title": "3 · Recherche d'abonné", "x": 1480, "y": 0, "w": 390, "h": 820 },
+    { "file": "PretEtape2.dc.html", "title": "4 · Choix de l'ouvrage", "x": 1920, "y": 0, "w": 390, "h": 1080 },
+    { "file": "PretEtape3.dc.html", "title": "5 · Confirmation", "x": 2360, "y": 0, "w": 390, "h": 760 },
+    { "file": "PretSucces.dc.html", "title": "6 · Prêt enregistré", "x": 2800, "y": 0, "w": 390, "h": 640 },
+
+    { "file": "BlocageLivreEnCours.dc.html", "title": "Blocage · a déjà un livre", "x": 600, "y": 1280, "w": 390, "h": 560 },
+    { "file": "BlocageAdhesionExpiree.dc.html", "title": "Blocage · adhésion expirée", "x": 1040, "y": 1280, "w": 390, "h": 560 }
+  ],
+  "annotations": [
+    {
+      "id": "parcours",
+      "x": 600,
+      "y": -120,
+      "w": 560,
+      "text": "Le parcours nominal, de la connexion au prêt enregistré.\nTrois étapes visibles en permanence, aucune ne peut être sautée."
+    },
+    {
+      "id": "blocages",
+      "x": 600,
+      "y": 1180,
+      "w": 560,
+      "text": "Les situations qui interdisent un prêt.\nC'est ce qui sépare un outil d'une maquette : l'application connaît les règles de la bibliothèque, dit ce qui bloque, et propose la sortie quand il y en a une."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}
