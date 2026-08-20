@@ -8,12 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0A2240">
 
-    <%# Les trois polices du design system. display=swap affiche le texte
-        dans la police système en attendant : sur une connexion mobile
-        lente, l'écran reste lisible pendant le chargement. %>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
+    <%# Les polices sont déclarées dans le CSS et servies par l'application.
+        Aucun appel vers un serveur extérieur : l'écran s'affiche
+        entièrement même sans accès à Internet. %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 

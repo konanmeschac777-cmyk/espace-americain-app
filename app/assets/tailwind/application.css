@@ -1,6 +1,52 @@
 @import "tailwindcss";
 
 /*
+  Les trois polices sont servies par l'application, pas par Google.
+
+  Raison : à Tiassalé, la connexion est mobile et parfois lente. Un appel
+  vers un serveur extérieur ajoute une latence à chaque première visite, et
+  échoue quand le réseau est coupé. Ici, tout vient du même serveur.
+
+  Seul le jeu de caractères "latin" est embarqué : il couvre le français et
+  les noms ivoiriens. Le jeu "latin-ext", destiné à l'Europe centrale,
+  pesait 118 Ko de plus pour aucun caractère utile.
+
+  font-display: swap affiche le texte dans la police système en attendant :
+  l'écran reste lisible pendant le chargement.
+*/
+
+/*
+  Un seul fichier par famille : ce sont des polices variables, un même
+  fichier contient toutes les graisses. Déclarer une plage dans font-weight
+  laisse le navigateur produire le 700 comme le 800 à partir du même
+  téléchargement. Trois fichiers au lieu de six, 69 Ko au lieu de 150.
+*/
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('LibreFranklin-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('PublicSans-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url('IBMPlexMono-latin.woff2') format('woff2');
+}
+
+/*
   Design system de l'American Shelf de Tiassalé.
 
   Ton institutionnel, sobre, lisible, jamais ludique. L'application sert un
