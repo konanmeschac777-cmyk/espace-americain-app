@@ -47,4 +47,13 @@ module ApplicationHelper
   end
 
   def date_courte(date) = date && l(date, format: :long)
+
+  # Lien d'appel direct. Sur le téléphone du bibliothécaire, un appui
+  # compose le numéro : c'est tout l'intérêt d'afficher les retards.
+  # Les numéros sont saisis au format local, l'indicatif est ajouté ici.
+  def lien_telephone(phone)
+    return nil if phone.blank?
+
+    "tel:+225#{phone.gsub(/\D/, '')}"
+  end
 end

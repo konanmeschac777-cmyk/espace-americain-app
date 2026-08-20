@@ -14,7 +14,10 @@ Rails.application.routes.draw do
   # Back-office. Les chemins sont en français, le code reste en anglais.
   # path_names est nécessaire en plus de path : sans lui, Rails garderait
   # /prets/new au lieu de /prets/nouveau.
-  resources :loans, path: "prets", path_names: { new: "nouveau" }, only: [ :new, :create ]
+  resources :loans, path: "prets", path_names: { new: "nouveau" }, only: [ :index, :new, :create ] do
+    # Prolonge un prêt de 14 jours, une seule fois.
+    post :renew, on: :member, path: "renouveler"
+  end
 
   # Le retour est une ressource à part entière et non une mise à jour du
   # prêt : c'est un geste du comptoir, avec son écran et son succès.

@@ -1,0 +1,56 @@
+<% content_for :title, "Emprunts" %>
+
+<%= render "shared/entete", titre: "Emprunts en cours" %>
+
+<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
+
+  <% if flash[:notice] %>
+    <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+  <% end %>
+  <% if flash[:alert] %>
+    <p class="bandeau bandeau-attention mb-4"><%= flash[:alert] %></p>
+  <% end %>
+
+  <%# Les compteurs sont dans les puces : le bibliothécaire voit combien de
+      retards il a sans changer d'écran. %>
+  <div class="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-4 px-4">
+    <% LoansController::FILTRES.each do |cle, filtre| %>
+      <%= link_to loans_path(filtre: cle),
+                  class: "puce #{'puce-active' if @filtre == cle} #{'puce-travail' if cle == 'retard' && @filtre != cle && @compteurs['retard'].positive?}" do %>
+        <%= filtre[:libelle] %>
+        <span class="donnee"><%= @compteurs[cle] %></span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @loans.any? %>
+    <ul class="flex flex-col gap-2">
+      <% @loans.each do |loan| %>
+        <li><%= render "emprunt", loan: loan %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="etat-vide">
+      <% case @filtre %>
+      <% when "retard" %>
+        <p class="etat-vide-titre">Aucun retard</p>
+        <p class="etat-vide-texte">Tous les livres sortis sont dans les délais.</p>
+      <% when "bientot" %>
+        <p class="etat-vide-titre">Rien à réclamer cette semaine</p>
+        <p class="etat-vide-texte">Aucune échéance dans les deux prochains jours.</p>
+      <% when "cours" %>
+        <p class="etat-vide-titre">Aucun emprunt tranquille</p>
+        <p class="etat-vide-texte">
+          Tous les livres sortis arrivent à échéance ou sont en retard.
+          Regarde les autres filtres.
+        </p>
+      <% else %>
+        <p class="etat-vide-titre">Aucun livre n'est sorti</p>
+        <p class="etat-vide-texte">Les 93 exemplaires sont sur les étagères.</p>
+      <% end %>
+    </div>
+  <% end %>
+
+</main>
+
+<%= render "shared/nav", actif: :emprunts %>

@@ -7,6 +7,36 @@
 class LoansController < ApplicationController
   RESULTS_LIMIT = 8
 
+  # Les quatre vues de la liste des emprunts. La clé arrive par l'URL, ce
+  # qui rend chaque filtre partageable et rechargeable.
+  FILTRES = {
+    "tous"    => { libelle: "Tous",        portee: -> { Loan.open } },
+    "cours"   => { libelle: "En cours",    portee: -> { Loan.on_time } },
+    "bientot" => { libelle: "Bientôt dus", portee: -> { Loan.due_soon } },
+    "retard"  => { libelle: "En retard",   portee: -> { Loan.overdue } }
+  }.freeze
+
+  def index
+    @filtre = FILTRES.key?(params[:filtre]) ? params[:filtre] : "tous"
+
+    @compteurs = FILTRES.transform_values { |f| f[:portee].call.count }
+    @loans = FILTRES.fetch(@filtre)[:portee].call
+                    .includes(:book, :member)
+                    .oldest_due_first
+  end
+
+  def renew
+    loan = Loan.find(params[:id])
+
+    if loan.renew!
+      redirect_back fallback_location: loans_path,
+                    notice: "« #{loan.book.title} » est prolongé jusqu'au #{l(loan.due_on, format: :long)}."
+    else
+      redirect_back fallback_location: loans_path,
+                    alert: "Ce prêt a déjà été renouvelé une fois, il ne peut plus l'être."
+    end
+  end
+
   def new
     # Prêt qui vient d'être enregistré : l'écran de succès prend alors
     # toute la place, il n'y a rien d'autre à montrer.

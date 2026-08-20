@@ -4,7 +4,7 @@
     jour où la liste sera là. %>
 <% actif = local_assigns.fetch(:actif) %>
 
-<nav class="nav-basse grid-cols-3">
+<nav class="nav-basse grid-cols-4">
   <%= link_to new_loan_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :pret}" do %>
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
       <rect x="3" y="4" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"></rect>
@@ -19,6 +19,13 @@
       <path d="M11 13V8M11 8L8.8 10.2M11 8l2.2 2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
     <span>Retour</span>
+  <% end %>
+
+  <%= link_to loans_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :emprunts}" do %>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M4 6h14M4 11h14M4 16h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+    </svg>
+    <span>Emprunts</span>
   <% end %>
 
   <%= link_to new_member_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :abonnes}" do %>

@@ -9,10 +9,20 @@ class Loan < ApplicationRecord
   validates :renewals_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate  :due_after_borrowed
 
+  # Fenêtre d'alerte : en deçà, l'échéance est annoncée comme proche.
+  DUE_SOON_DAYS = 2
+
+  # Au-delà, un retard n'est plus un oubli mais un livre probablement perdu.
+  # L'écran des emprunts le signale différemment.
+  LONG_OVERDUE_DAYS = 30
+
   scope :open,     -> { where(returned_on: nil) }
   scope :returned, -> { where.not(returned_on: nil) }
   scope :overdue,  -> { open.where(due_on: ...Date.current) }
   scope :due_within, ->(days) { open.where(due_on: Date.current..days.days.from_now.to_date) }
+  scope :due_soon,   -> { due_within(DUE_SOON_DAYS) }
+  scope :on_time,    -> { open.where(due_on: (Date.current + DUE_SOON_DAYS + 1)..) }
+  scope :long_overdue, -> { open.where(due_on: ...(Date.current - LONG_OVERDUE_DAYS)) }
   # Les retards les plus anciens en tête : c'est l'ordre de relance.
   # Trier par échéance suffit, les retards ont les dates les plus anciennes.
   scope :oldest_due_first, -> { order(:due_on) }
@@ -46,6 +56,8 @@ class Loan < ApplicationRecord
 
   def open?     = returned_on.nil?
   def overdue?  = open? && due_on < Date.current
+
+  def long_overdue? = overdue? && days_overdue > LONG_OVERDUE_DAYS
 
   def days_overdue
     overdue? ? (Date.current - due_on).to_i : 0

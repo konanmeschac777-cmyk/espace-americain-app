@@ -551,4 +551,59 @@
     opacity: 0.55;
     transition: opacity 120ms ease;
   }
+
+  /* --- Ligne dépliable ------------------------------------------------ */
+  /* Un emprunt s'ouvre sur ses actions. C'est un <details> natif : pas de
+     script à charger, et ça fonctionne au doigt comme au clavier. */
+
+  .ligne-details {
+    background: white;
+    border: 1px solid var(--color-bordure);
+    border-radius: var(--radius-carte);
+    overflow: hidden;
+  }
+
+  .ligne-details > summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 48px;
+    padding: 14px 16px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  /* Le triangle par défaut du navigateur ne suit pas le design system. */
+  .ligne-details > summary::-webkit-details-marker { display: none; }
+  .ligne-details > summary::marker { content: ""; }
+
+  .ligne-details > summary:hover {
+    background-color: var(--color-surface-alt);
+  }
+
+  .chevron {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-texte-estompe);
+    transition: transform 150ms ease;
+  }
+
+  .ligne-details[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .panneau-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--color-bordure);
+    background-color: var(--color-surface-alt);
+  }
+
+  /* Un retard de plus d'un mois n'est plus un oubli. Le filet rouge le
+     distingue d'un retard de trois jours sans crier pour autant. */
+  .ligne-details.tres-en-retard {
+    border-left: 4px solid var(--color-rouge);
+  }
 }
