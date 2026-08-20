@@ -1,0 +1,22 @@
+<div class="carte p-6 text-center mb-4">
+  <%# Coche dessinée en CSS : aucune bibliothèque d'icônes à charger. %>
+  <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-dispo-fond">
+    <span class="text-3xl font-bold text-dispo" aria-hidden="true">✓</span>
+  </span>
+
+  <p class="surtitre">Prêt enregistré</p>
+  <p class="font-titre text-xl font-extrabold text-encre mt-1"><%= loan.member.full_name %></p>
+  <p class="donnee text-sm text-texte-discret"><%= loan.member.card_number %></p>
+
+  <p class="titre-ouvrage mt-4">« <%= loan.book.title %> »</p>
+
+  <div class="mt-4 pt-4 border-t border-bordure">
+    <p class="surtitre">À rapporter le</p>
+    <p class="font-titre text-2xl font-extrabold text-navy leading-tight mt-1">
+      <%= date_courte(loan.due_on) %>
+    </p>
+  </div>
+</div>
+
+<%= link_to "Nouveau prêt", new_loan_path, class: "bouton bouton-primaire bouton-large bouton-grand mb-3" %>
+<%= link_to "Tableau de bord", root_path, class: "bouton bouton-contour bouton-large" %>

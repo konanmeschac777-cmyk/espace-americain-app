@@ -1,0 +1,62 @@
+fr:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      court: "%-d %b"
+      long: "%-d %B %Y"
+    day_names: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi]
+    abbr_day_names: [dim, lun, mar, mer, jeu, ven, sam]
+    month_names: [~, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
+    abbr_month_names: [~, jan., fév., mars, avr., mai, juin, juil., août, sept., oct., nov., déc.]
+
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      court: "%-d %b, %H:%M"
+      long: "%-d %B %Y à %H:%M"
+
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " et "
+      last_word_connector: " et "
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "doit être rempli"
+      taken: "est déjà utilisé"
+      invalid: "n'est pas valide"
+
+  activerecord:
+    models:
+      book: Ouvrage
+      member: Abonné
+      loan: Prêt
+      category: Catégorie
+      site: Site
+      setting: Réglage
+    attributes:
+      book:
+        title: Titre
+        author: Auteur
+        category: Catégorie
+        language: Langue
+        total_copies: Nombre d'exemplaires
+        shelf_mark: Cote de rangement
+        collection: Collection
+        received_on: Date de réception
+        summary: Résumé
+      member:
+        card_number: Numéro de carte
+        first_name: Prénom
+        last_name: Nom
+        phone: Téléphone
+        joined_on: Date d'adhésion
+        expires_on: Date d'expiration
+      loan:
+        book: Ouvrage
+        member: Abonné
+        borrowed_on: Date d'emprunt
+        due_on: Date de retour prévue
+        returned_on: Date de retour

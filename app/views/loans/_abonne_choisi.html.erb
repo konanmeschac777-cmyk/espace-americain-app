@@ -1,0 +1,52 @@
+<div class="carte p-4 mb-4">
+  <div class="flex items-start gap-3">
+    <div class="min-w-0 flex-1">
+      <p class="surtitre">Abonné</p>
+      <p class="font-titre text-lg font-bold text-encre truncate"><%= member.full_name %></p>
+      <p class="donnee text-sm text-texte-discret"><%= member.card_number %></p>
+    </div>
+    <%= link_to "Changer", new_loan_path(member_q: member.last_name),
+                class: "bouton bouton-contour bouton-petit shrink-0" %>
+  </div>
+</div>
+
+<%# Les quatre situations qui interdisent le prêt. Chacune dit ce qui se
+    passe et, quand c'est possible, comment le régler sur-le-champ. %>
+<% case member.borrow_block_reason %>
+<% when :already_borrowing %>
+  <% en_cours = member.current_loan %>
+  <div class="bandeau bandeau-attention mb-4 flex-col items-start">
+    <p class="font-bold">Cet abonné a déjà un livre en cours.</p>
+    <p>
+      « <%= en_cours.book.title %> », à rendre le
+      <span class="donnee"><%= date_courte(en_cours.due_on) %></span><% if en_cours.overdue? %>,
+      soit <%= en_cours.days_overdue %> jour<%= "s" if en_cours.days_overdue > 1 %> de retard<% end %>.
+    </p>
+    <p class="mt-1">Il doit le rapporter avant d'en emprunter un autre.</p>
+  </div>
+
+<% when :membership_expired %>
+  <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+    <p class="font-bold">Abonnement expiré depuis le <%= date_courte(member.expires_on) %>.</p>
+    <p>Encaisse le renouvellement au comptoir, puis prolonge ici.</p>
+    <%= button_to "Prolonger d'un an", renew_member_path(member, redirect_to_loan: true),
+                  class: "bouton bouton-rouge bouton-petit mt-3" %>
+  </div>
+
+<% when :suspended %>
+  <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+    <p class="font-bold">Cet abonné est suspendu.</p>
+    <p>Aucun prêt n'est possible tant que la suspension n'est pas levée.</p>
+  </div>
+
+<% else %>
+  <% if member.membership_expiring_soon? %>
+    <div class="bandeau bandeau-info mb-4 flex-col items-start">
+      <p>
+        Abonnement à renouveler bientôt, il expire le
+        <span class="donnee"><%= date_courte(member.expires_on) %></span>.
+        Le prêt reste possible.
+      </p>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,36 @@
+<% content_for :title, "Enregistrer un prêt" %>
+
+<header class="entete">
+  <div>
+    <p class="surtitre text-white/60">American Shelf de Tiassalé</p>
+    <h1 class="entete-titre">Enregistrer un prêt</h1>
+  </div>
+</header>
+
+<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
+  <% if @confirmed_loan %>
+    <%= render "succes", loan: @confirmed_loan %>
+  <% else %>
+    <% etape = @member.nil? ? 1 : (@book.nil? ? 2 : 3) %>
+    <%= render "etapes", courante: etape %>
+
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+    <% end %>
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+
+    <% if etape == 1 %>
+      <%= render "recherche_abonne" %>
+    <% else %>
+      <%= render "abonne_choisi", member: @member %>
+
+      <% if etape == 2 %>
+        <%= render "recherche_ouvrage", member: @member %>
+      <% else %>
+        <%= render "confirmation", member: @member, book: @book, loan: @loan %>
+      <% end %>
+    <% end %>
+  <% end %>
+</main>

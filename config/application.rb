@@ -16,12 +16,12 @@ module EspaceAmericainApp
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    # L'application est entièrement en français : messages, dates, erreurs.
+    config.i18n.default_locale = :fr
+    config.i18n.available_locales = [ :fr ]
+
+    # Abidjan est à UTC+0 toute l'année, sans heure d'été. Les dates
+    # d'échéance des prêts tombent donc toujours le bon jour.
+    config.time_zone = "UTC"
   end
 end

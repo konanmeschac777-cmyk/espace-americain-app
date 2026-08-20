@@ -1,1 +1,500 @@
 @import "tailwindcss";
+
+/*
+  Design system de l'American Shelf de Tiassalé.
+
+  Ton institutionnel, sobre, lisible, jamais ludique. L'application sert un
+  vrai lieu, pas une démo.
+
+  Deux contextes de mise en page :
+  - back-office, mobile d'abord, cible 390 px. Le bibliothécaire est debout
+    au comptoir avec un téléphone Android : zones tactiles de 48 px minimum,
+    texte de 16 px minimum, jamais moins.
+  - portail public, cible 1240 px avec déclinaison mobile.
+*/
+
+@theme {
+  /* Couleur principale : en-têtes, boutons primaires */
+  --color-navy: #0A2240;
+  --color-navy-survol: #143A6B;
+
+  /* Accents, surtitres, actions destructives */
+  --color-rouge: #B31942;
+  --color-rouge-survol: #8E1435;
+
+  --color-bordure: #E4E7EC;
+  --color-bordure-forte: #C9CFD6;
+
+  --color-encre: #1B1B1B;
+  --color-texte: #3D4752;
+  --color-texte-discret: #5C6670;
+  --color-texte-estompe: #8A939C;
+
+  --color-surface: #F7F8FA;
+  --color-surface-alt: #F1F4F8;
+
+  /* États. Chaque état a une couleur de texte et un fond assorti. */
+  --color-dispo: #0A6B3C;
+  --color-dispo-fond: #E7F4EC;
+  --color-attention: #8A5200;
+  --color-attention-fond: #FCF3E3;
+  --color-retard: #B31942;
+  --color-retard-fond: #FBEAEE;
+
+  /* Les trois polices ont un repli système : si Google Fonts est
+     inaccessible, l'application reste lisible au lieu de s'effondrer. */
+  --font-titre: "Libre Franklin", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+
+  --radius-bouton: 4px;
+  --radius-carte: 6px;
+  --radius-puce: 999px;
+
+  --shadow-survol: 0 6px 18px rgba(10, 34, 64, 0.10);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-texte);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-titre);
+    color: var(--color-encre);
+    font-weight: 700;
+  }
+
+  h1 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* Le contour de focus reste visible : au comptoir, on navigue parfois
+     au clavier, et c'est la seule aide pour savoir où l'on est. */
+  :focus-visible {
+    outline: 2px solid var(--color-navy);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* --- Surtitre ------------------------------------------------------- */
+
+  .surtitre {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-rouge);
+  }
+
+  /* Cotes de rangement, numéros de carte, dates : tout ce qui se lit
+     caractère par caractère et ne doit pas être confondu. */
+  .donnee {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Boutons -------------------------------------------------------- */
+
+  .bouton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: var(--radius-bouton);
+    font-family: var(--font-titre);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .bouton:disabled,
+  .bouton[aria-disabled="true"] {
+    background-color: var(--color-bordure);
+    border-color: var(--color-bordure);
+    color: var(--color-texte-estompe);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .bouton-primaire {
+    background-color: var(--color-navy);
+    color: white;
+  }
+
+  .bouton-primaire:hover:not(:disabled) {
+    background-color: var(--color-navy-survol);
+    box-shadow: var(--shadow-survol);
+  }
+
+  .bouton-contour {
+    background-color: white;
+    color: var(--color-navy);
+    border: 1px solid var(--color-bordure-forte);
+  }
+
+  .bouton-contour:hover:not(:disabled) {
+    background-color: var(--color-surface-alt);
+    box-shadow: var(--shadow-survol);
+  }
+
+  .bouton-rouge {
+    background-color: var(--color-rouge);
+    color: white;
+  }
+
+  .bouton-rouge:hover:not(:disabled) {
+    background-color: var(--color-rouge-survol);
+    box-shadow: var(--shadow-survol);
+  }
+
+  /* Trois tailles. La petite garde 44 px de haut : en dessous, le pouce
+     rate la cible une fois sur cinq. */
+  .bouton-petit {
+    min-height: 44px;
+    padding: 8px 14px;
+    font-size: 15px;
+  }
+
+  .bouton-grand {
+    min-height: 60px;
+    padding: 16px 24px;
+    font-size: 18px;
+  }
+
+  .bouton-large {
+    display: flex;
+    width: 100%;
+  }
+
+  /* --- Champs de saisie ----------------------------------------------- */
+
+  .libelle {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--font-titre);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-encre);
+  }
+
+  .champ {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    background-color: white;
+    border: 1px solid var(--color-bordure-forte);
+    border-radius: var(--radius-bouton);
+    font-family: var(--font-sans);
+    /* 16 px exactement : en dessous, iOS zoome tout seul à la saisie. */
+    font-size: 16px;
+    color: var(--color-encre);
+  }
+
+  .champ::placeholder {
+    color: var(--color-texte-estompe);
+  }
+
+  .champ:focus {
+    border-color: var(--color-navy);
+    outline: 2px solid var(--color-navy);
+    outline-offset: 0;
+  }
+
+  .champ-erreur {
+    border-color: var(--color-rouge);
+  }
+
+  .aide {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--color-texte-discret);
+  }
+
+  .message-erreur {
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-rouge);
+  }
+
+  /* --- Puces de filtre ------------------------------------------------ */
+
+  .puce {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid var(--color-bordure-forte);
+    border-radius: var(--radius-puce);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-texte);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .puce:hover {
+    background-color: var(--color-surface-alt);
+  }
+
+  .puce-active {
+    background-color: var(--color-navy);
+    border-color: var(--color-navy);
+    color: white;
+  }
+
+  /* La file "à compléter" n'est pas un filtre comme les autres :
+     c'est un travail en attente, elle se distingue. */
+  .puce-travail {
+    background-color: var(--color-attention-fond);
+    border-color: var(--color-attention);
+    color: var(--color-attention);
+  }
+
+  /* --- Badges d'état -------------------------------------------------- */
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-puce);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .badge-dispo {
+    background-color: var(--color-dispo-fond);
+    color: var(--color-dispo);
+  }
+
+  .badge-attention {
+    background-color: var(--color-attention-fond);
+    color: var(--color-attention);
+  }
+
+  .badge-retard {
+    background-color: var(--color-retard-fond);
+    color: var(--color-retard);
+  }
+
+  .badge-neutre {
+    background-color: var(--color-surface-alt);
+    color: var(--color-texte-discret);
+  }
+
+  /* --- Cartes et lignes de liste -------------------------------------- */
+
+  .carte {
+    background-color: white;
+    border: 1px solid var(--color-bordure);
+    border-radius: var(--radius-carte);
+  }
+
+  .carte-survol:hover {
+    box-shadow: var(--shadow-survol);
+  }
+
+  /* Ligne dense et tactile pour les listes d'abonnés et d'emprunts.
+     48 px de haut minimum, même quand le contenu est court. */
+  .ligne-liste {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 48px;
+    padding: 14px 16px;
+    background-color: white;
+    border: 1px solid var(--color-bordure);
+    border-radius: var(--radius-carte);
+    text-align: left;
+  }
+
+  .ligne-liste:hover {
+    background-color: var(--color-surface-alt);
+    box-shadow: var(--shadow-survol);
+  }
+
+  /* Les titres du fonds vont jusqu'à 52 caractères. Deux lignes, puis
+     les points de suspension : jamais de coupure au milieu d'un mot. */
+  .titre-ouvrage {
+    font-family: var(--font-titre);
+    font-weight: 700;
+    color: var(--color-encre);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Affiché à la place de l'auteur quand la fiche n'est pas complète. */
+  .auteur-manquant {
+    font-style: italic;
+    color: var(--color-texte-estompe);
+  }
+
+  /* --- Tuile de statistique ------------------------------------------- */
+
+  .tuile {
+    padding: 16px;
+    background-color: white;
+    border: 1px solid var(--color-bordure);
+    border-radius: var(--radius-carte);
+  }
+
+  .tuile-chiffre {
+    font-family: var(--font-titre);
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-navy);
+  }
+
+  .tuile-libelle {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--color-texte-discret);
+  }
+
+  /* Une tuile qui compte zéro retard est neutre. Au-dessus de zéro,
+     elle doit sauter aux yeux. */
+  .tuile-alerte .tuile-chiffre {
+    color: var(--color-rouge);
+  }
+
+  .tuile-alerte {
+    background-color: var(--color-retard-fond);
+    border-color: var(--color-retard);
+  }
+
+  /* --- Bandeaux d'alerte ---------------------------------------------- */
+
+  .bandeau {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-carte);
+    border-left: 4px solid;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .bandeau-info {
+    background-color: var(--color-surface-alt);
+    border-color: var(--color-navy);
+    color: var(--color-texte);
+  }
+
+  .bandeau-attention {
+    background-color: var(--color-attention-fond);
+    border-color: var(--color-attention);
+    color: var(--color-attention);
+  }
+
+  .bandeau-blocage {
+    background-color: var(--color-retard-fond);
+    border-color: var(--color-rouge);
+    color: var(--color-rouge);
+  }
+
+  /* --- État vide ------------------------------------------------------ */
+
+  .etat-vide {
+    padding: 40px 24px;
+    text-align: center;
+    background-color: white;
+    border: 1px dashed var(--color-bordure-forte);
+    border-radius: var(--radius-carte);
+  }
+
+  .etat-vide-titre {
+    font-family: var(--font-titre);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-encre);
+  }
+
+  .etat-vide-texte {
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--color-texte-discret);
+  }
+
+  /* --- En-tête et navigation du back-office --------------------------- */
+
+  .entete {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 10px 16px;
+    background-color: var(--color-navy);
+    color: white;
+  }
+
+  .entete-titre {
+    font-family: var(--font-titre);
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .nav-basse {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: white;
+    border-top: 1px solid var(--color-bordure);
+    /* Laisse passer la barre gestuelle des téléphones récents. */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-onglet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 60px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-texte-discret);
+  }
+
+  .nav-onglet-actif {
+    color: var(--color-navy);
+    box-shadow: inset 0 2px 0 var(--color-navy);
+  }
+
+  /* Réserve la place de la navigation basse, sinon elle recouvre le
+     dernier bouton de chaque écran. */
+  .zone-ecran {
+    padding-bottom: 84px;
+  }
+}

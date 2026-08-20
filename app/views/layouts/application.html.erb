@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
-    <title><%= content_for(:title) || "Espace Americain App" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= content_for(:title) || "American Shelf de Tiassalé" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Espace Americain App">
+    <meta name="application-name" content="American Shelf de Tiassalé">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0A2240">
+
+    <%# Les trois polices du design system. display=swap affiche le texte
+        dans la police système en attendant : sur une connexion mobile
+        lente, l'écran reste lisible pendant le chargement. %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Libre+Franklin:wght@700;800&family=Public+Sans:wght@400;600;700&display=swap">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -24,8 +32,6 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+    <%= yield %>
   </body>
 </html>

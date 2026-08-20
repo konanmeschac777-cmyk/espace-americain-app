@@ -1,0 +1,43 @@
+<h2 class="text-lg mb-3">Qui emprunte ?</h2>
+
+<%= form_with url: new_loan_path, method: :get, class: "mb-4" do %>
+  <label class="libelle" for="member_q">Nom ou numéro de carte</label>
+  <div class="flex gap-2">
+    <input type="search" id="member_q" name="member_q" value="<%= @member_query %>"
+           class="champ" placeholder="Koné, ou TSL-2026-0087"
+           autocomplete="off" autofocus>
+    <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
+  </div>
+<% end %>
+
+<% if @member_query.blank? %>
+  <%# État vide, avant toute frappe. %>
+  <div class="etat-vide">
+    <p class="etat-vide-titre">Commence par chercher l'abonné</p>
+    <p class="etat-vide-texte">
+      Tape les premières lettres de son nom, ou scanne le numéro de sa carte.
+    </p>
+  </div>
+<% elsif @members.empty? %>
+  <div class="etat-vide">
+    <p class="etat-vide-titre">Aucun abonné trouvé</p>
+    <p class="etat-vide-texte">
+      Rien ne correspond à « <%= @member_query %> ». Vérifie l'orthographe,
+      ou inscris cette personne comme nouvel abonné.
+    </p>
+  </div>
+<% else %>
+  <ul class="flex flex-col gap-2">
+    <% @members.each do |member| %>
+      <li>
+        <%= link_to new_loan_path(member_id: member.id), class: "ligne-liste" do %>
+          <span class="min-w-0 flex-1">
+            <span class="block font-semibold text-encre truncate"><%= member.full_name %></span>
+            <span class="donnee block text-sm text-texte-discret"><%= member.card_number %></span>
+          </span>
+          <%= badge_abonne(member) %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
