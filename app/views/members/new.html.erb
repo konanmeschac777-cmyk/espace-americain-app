@@ -1,0 +1,75 @@
+<% content_for :title, "Nouvel abonné" %>
+
+<%= render "shared/entete", titre: "Nouvel abonné" %>
+
+<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
+  <% if @confirmed_member %>
+    <%= render "succes", member: @confirmed_member %>
+  <% else %>
+
+    <%= form_with model: @member, url: members_path do |form| %>
+
+      <% if @member.errors.any? %>
+        <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+          <p class="font-bold">Il manque quelque chose.</p>
+          <ul class="mt-1">
+            <% @member.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="flex flex-col gap-4">
+
+        <div>
+          <%= form.label :first_name, "Prénom", class: "libelle" %>
+          <%= form.text_field :first_name, class: "champ", autofocus: true,
+                autocomplete: "given-name", required: true %>
+        </div>
+
+        <div>
+          <%= form.label :last_name, "Nom", class: "libelle" %>
+          <%= form.text_field :last_name, class: "champ",
+                autocomplete: "family-name", required: true %>
+        </div>
+
+        <div>
+          <%= form.label :phone, "Téléphone", class: "libelle" %>
+          <%= form.telephone_field :phone, class: "champ",
+                autocomplete: "tel", placeholder: "07 08 45 12 30" %>
+          <p class="aide">
+            Facultatif, mais c'est le seul moyen d'appeler en cas de retard.
+          </p>
+        </div>
+
+        <div>
+          <%= form.label :card_number, "Numéro de carte", class: "libelle" %>
+          <%= form.text_field :card_number, class: "champ donnee" %>
+          <p class="aide">
+            Calculé automatiquement. Ne le change que si tu utilises des
+            cartes déjà imprimées.
+          </p>
+        </div>
+
+        <%# Les deux dates ne sont pas saisies : l'adhésion court un an à
+            partir d'aujourd'hui. Les montrer évite d'avoir à les deviner. %>
+        <div class="carte p-4 bg-surface-alt">
+          <p class="surtitre">Adhésion</p>
+          <p class="mt-1">
+            Du <span class="donnee"><%= date_courte(Date.current) %></span>
+            au <span class="donnee"><%= date_courte(Date.current >> Setting.membership_months) %></span>
+          </p>
+          <p class="text-sm text-texte-discret mt-1">
+            Gratuite, valable un an, renouvelable au comptoir.
+          </p>
+        </div>
+
+        <%= form.submit "Inscrire", class: "bouton bouton-primaire bouton-large bouton-grand" %>
+      </div>
+    <% end %>
+
+  <% end %>
+</main>
+
+<%= render "shared/nav", actif: :abonnes %>

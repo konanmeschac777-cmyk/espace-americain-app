@@ -16,8 +16,13 @@ Rails.application.routes.draw do
   # /prets/new au lieu de /prets/nouveau.
   resources :loans, path: "prets", path_names: { new: "nouveau" }, only: [ :new, :create ]
 
-  resources :members, path: "abonnes", only: [] do
-    # Renouvellement annuel, une fois le paiement encaissé au comptoir.
+  # Le retour est une ressource à part entière et non une mise à jour du
+  # prêt : c'est un geste du comptoir, avec son écran et son succès.
+  resources :returns, path: "retours", path_names: { new: "nouveau" }, only: [ :new, :create ]
+
+  resources :members, path: "abonnes", path_names: { new: "nouveau" }, only: [ :new, :create ] do
+    # Réinscription annuelle. L'adhésion est gratuite, c'est une simple
+    # autorisation à enregistrer.
     post :renew, on: :member, path: "prolonger"
   end
 

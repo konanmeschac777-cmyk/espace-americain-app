@@ -543,4 +543,12 @@
   .zone-ecran {
     padding-bottom: 84px;
   }
+
+  /* Pendant qu'une recherche est en cours, les résultats affichés sont
+     ceux d'avant. Les estomper le dit, sans faire clignoter l'écran ni
+     vider la liste sous le doigt. */
+  turbo-frame[aria-busy="true"] {
+    opacity: 0.55;
+    transition: opacity 120ms ease;
+  }
 }

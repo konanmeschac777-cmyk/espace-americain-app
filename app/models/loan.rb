@@ -14,7 +14,23 @@ class Loan < ApplicationRecord
   scope :overdue,  -> { open.where(due_on: ...Date.current) }
   scope :due_within, ->(days) { open.where(due_on: Date.current..days.days.from_now.to_date) }
   # Les retards les plus anciens en tête : c'est l'ordre de relance.
+  # Trier par échéance suffit, les retards ont les dates les plus anciennes.
   scope :oldest_due_first, -> { order(:due_on) }
+
+  # Recherche de l'écran de retour. Elle porte sur le titre ET sur l'abonné,
+  # car au comptoir on présente tantôt le livre, tantôt la carte. Combinée
+  # au scope open, elle ne cherche jamais dans tout le catalogue : c'est ce
+  # qui rend le geste rapide.
+  scope :search, ->(term) {
+    next all if term.blank?
+
+    pattern = "%#{term.to_s.strip}%"
+    joins(:book, :member).where(
+      "books.title LIKE :q OR members.last_name LIKE :q " \
+      "OR members.first_name LIKE :q OR members.card_number LIKE :q",
+      q: pattern
+    )
+  }
 
   # Ouvre un prêt aux conditions du jour, sans l'enregistrer.
   # Les vérifications d'éligibilité restent du ressort de l'appelant.
@@ -58,6 +74,13 @@ class Loan < ApplicationRecord
 
     update!(returned_on: on)
   end
+
+  # Une fois le livre rendu, overdue? redevient faux : le retard n'existe
+  # plus. Ces deux méthodes gardent la trace de ce qui s'est passé, pour
+  # que l'écran de retour puisse le mentionner.
+  def returned_late? = returned_on.present? && returned_on > due_on
+
+  def days_late = returned_late? ? (returned_on - due_on).to_i : 0
 
   private
 

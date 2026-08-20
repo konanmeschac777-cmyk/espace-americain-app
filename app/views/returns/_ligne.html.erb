@@ -1,0 +1,26 @@
+<div class="ligne-liste items-start">
+  <div class="min-w-0 flex-1">
+    <p class="titre-ouvrage"><%= loan.book.title %></p>
+
+    <p class="text-sm text-texte-discret truncate">
+      <%= loan.member.full_name %>
+      <span class="donnee text-texte-estompe"><%= loan.member.card_number %></span>
+    </p>
+
+    <p class="text-sm text-texte-estompe">
+      Échéance <span class="donnee"><%= date_courte(loan.due_on) %></span>
+    </p>
+
+    <p class="mt-2"><%= badge_echeance(loan) %></p>
+  </div>
+
+  <%# Confirmation courte : le navigateur pose la question, pas une modale
+      à charger. Au comptoir, une frappe de trop coûte plus qu'un clic. %>
+  <%# _top : enregistrer un retour quitte la liste pour l'écran de succès,
+      ce n'est pas un simple rafraîchissement du fragment. %>
+  <%= button_to "Retourner", returns_path(loan_id: loan.id),
+                class: "bouton bouton-primaire bouton-petit shrink-0",
+                form: { class: "shrink-0",
+                        data: { turbo_frame: "_top",
+                                turbo_confirm: "Confirmer le retour de « #{loan.book.title} » ?" } } %>
+</div>

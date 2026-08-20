@@ -9,43 +9,51 @@
     n'est pas réglée.
   </p>
 <% else %>
-  <%= form_with url: new_loan_path, method: :get, class: "mb-4" do %>
+  <%= form_with url: new_loan_path, method: :get, class: "mb-4",
+                data: { controller: "recherche",
+                        turbo_frame: "resultats_ouvrages",
+                        turbo_action: "advance" } do %>
     <%= hidden_field_tag :member_id, member.id %>
     <label class="libelle" for="book_q">Titre ou auteur</label>
     <div class="flex gap-2">
       <input type="search" id="book_q" name="book_q" value="<%= @book_query %>"
              class="champ" placeholder="orateur, ou David Allen"
-             autocomplete="off" autofocus>
+             autocomplete="off" autofocus
+             data-action="input->recherche#chercher">
       <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
     </div>
+    <p class="aide">Les titres apparaissent au fur et à mesure de la frappe.</p>
   <% end %>
 
-  <% if @book_query.blank? %>
-    <div class="etat-vide">
-      <p class="etat-vide-titre">Cherche l'ouvrage</p>
-      <p class="etat-vide-texte">Quelques lettres du titre suffisent.</p>
-    </div>
-  <% elsif @books.empty? %>
-    <div class="etat-vide">
-      <p class="etat-vide-titre">Aucun ouvrage trouvé</p>
-      <p class="etat-vide-texte">Rien ne correspond à « <%= @book_query %> » dans le catalogue.</p>
-    </div>
-  <% else %>
-    <ul class="flex flex-col gap-2">
-      <% @books.each do |book| %>
-        <li>
-          <% if book.available? %>
-            <%= link_to new_loan_path(member_id: member.id, book_id: book.id), class: "ligne-liste" do %>
-              <%= render "resume_ouvrage", book: book %>
+  <%= turbo_frame_tag "resultats_ouvrages" do %>
+    <% if @book_query.blank? %>
+      <div class="etat-vide">
+        <p class="etat-vide-titre">Cherche l'ouvrage</p>
+        <p class="etat-vide-texte">Quelques lettres du titre suffisent.</p>
+      </div>
+    <% elsif @books.empty? %>
+      <div class="etat-vide">
+        <p class="etat-vide-titre">Aucun ouvrage trouvé</p>
+        <p class="etat-vide-texte">Rien ne correspond à « <%= @book_query %> » dans le catalogue.</p>
+      </div>
+    <% else %>
+      <ul class="flex flex-col gap-2">
+        <% @books.each do |book| %>
+          <li>
+            <% if book.available? %>
+              <%= link_to new_loan_path(member_id: member.id, book_id: book.id),
+                          class: "ligne-liste", data: { turbo_frame: "_top" } do %>
+                <%= render "resume_ouvrage", book: book %>
+              <% end %>
+            <% else %>
+              <%# Plus aucun exemplaire : la ligne reste lisible mais inerte. %>
+              <div class="ligne-liste opacity-60 cursor-not-allowed">
+                <%= render "resume_ouvrage", book: book %>
+              </div>
             <% end %>
-          <% else %>
-            <%# Plus aucun exemplaire : la ligne reste lisible mais inerte. %>
-            <div class="ligne-liste opacity-60 cursor-not-allowed">
-              <%= render "resume_ouvrage", book: book %>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   <% end %>
 <% end %>

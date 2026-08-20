@@ -54,10 +54,11 @@ cat = Category.all.index_by(&:slug)
 # sans redéployer l'application.
 
 {
-  "loan_days"         => "14",  # durée d'un prêt
-  "max_renewals"      => "1",   # renouvellements autorisés
-  "loan_quota"        => "1",   # livres simultanés par abonné
-  "membership_months" => "12"   # durée de l'abonnement
+  "loan_days"         => "14",   # durée d'un prêt
+  "max_renewals"      => "1",    # renouvellements autorisés
+  "loan_quota"        => "1",    # livres simultanés par abonné
+  "membership_months" => "12",   # durée de l'abonnement
+  "card_prefix"       => "TSL"   # préfixe des numéros de carte : TSL-2026-0087
 }.each do |key, value|
   Setting.find_or_create_by!(key: key) { |s| s.value = value }
 end

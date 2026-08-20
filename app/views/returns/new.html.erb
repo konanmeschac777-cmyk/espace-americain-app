@@ -1,0 +1,68 @@
+<% content_for :title, "Enregistrer un retour" %>
+
+<%= render "shared/entete", titre: "Enregistrer un retour" %>
+
+<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
+  <% if @confirmed_loan %>
+    <%= render "succes", loan: @confirmed_loan %>
+  <% else %>
+
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+    <% end %>
+
+    <%= form_with url: new_return_path, method: :get, class: "mb-4",
+                  data: { controller: "recherche",
+                          turbo_frame: "resultats_retours",
+                          turbo_action: "advance" } do %>
+      <label class="libelle" for="q">Titre du livre ou nom de l'abonné</label>
+      <div class="flex gap-2">
+        <input type="search" id="q" name="q" value="<%= @query %>"
+               class="champ" placeholder="orateur, ou Diarra"
+               autocomplete="off" autofocus
+               data-action="input->recherche#chercher">
+        <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
+      </div>
+      <p class="aide">Seuls les livres actuellement sortis sont cherchés.</p>
+    <% end %>
+
+    <%= turbo_frame_tag "resultats_retours" do %>
+    <% if @loans.any? %>
+      <p class="surtitre mb-2">
+        <%= @query.present? ? "Résultats" : "Livres sortis" %>
+        (<%= @loans.size %><%= "+" if @loans.size == ReturnsController::RESULTS_LIMIT %>)
+      </p>
+
+      <ul class="flex flex-col gap-2">
+        <% @loans.each do |loan| %>
+          <li><%= render "ligne", loan: loan %></li>
+        <% end %>
+      </ul>
+
+    <% elsif @nothing_on_loan %>
+      <%# Vrai état vide : tous les livres sont sur les étagères. %>
+      <div class="etat-vide">
+        <p class="etat-vide-titre">Aucun livre n'est actuellement emprunté</p>
+        <p class="etat-vide-texte">
+          Les 93 exemplaires sont sur les étagères. Il n'y a rien à rendre.
+        </p>
+      </div>
+
+    <% else %>
+      <div class="etat-vide">
+        <p class="etat-vide-titre">Aucun résultat</p>
+        <p class="etat-vide-texte">
+          Rien ne correspond à « <%= @query %> » parmi les livres sortis.
+          Le livre est peut-être déjà rentré.
+        </p>
+        <%= link_to "Voir tous les livres sortis", new_return_path,
+                    class: "bouton bouton-contour mt-4",
+                    data: { turbo_frame: "_top" } %>
+      </div>
+    <% end %>
+    <% end %>
+
+  <% end %>
+</main>
+
+<%= render "shared/nav", actif: :retour %>

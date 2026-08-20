@@ -21,4 +21,5 @@ class Setting < ApplicationRecord
   def self.max_renewals      = integer_for("max_renewals", 1)
   def self.loan_quota        = integer_for("loan_quota", 1)
   def self.membership_months = integer_for("membership_months", 12)
+  def self.card_prefix       = value_for("card_prefix") || "TSL"
 end

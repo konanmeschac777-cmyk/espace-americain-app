@@ -25,6 +25,22 @@ class Member < ApplicationRecord
     where("last_name LIKE :q OR first_name LIKE :q OR card_number LIKE :q", q: pattern)
   }
 
+  # Numéro de carte suivant, au format TSL-2026-0087.
+  #
+  # Il est calculé et non saisi : au comptoir, faire recopier un numéro à la
+  # main produit des doublons et des fautes de frappe, et le doublon ne se
+  # voit qu'une fois la carte remise.
+  #
+  # Le compteur repart à 1 chaque année : l'année fait partie du numéro, il
+  # n'y a donc pas de collision entre 2026 et 2027.
+  def self.next_card_number(on: Date.current)
+    prefix  = "#{Setting.card_prefix}-#{on.year}-"
+    dernier = where("card_number LIKE ?", "#{prefix}%").maximum(:card_number)
+    suivant = dernier ? dernier.split("-").last.to_i + 1 : 1
+
+    format("%s%04d", prefix, suivant)
+  end
+
   def full_name = "#{first_name} #{last_name}"
 
   # Un abonné n'a droit qu'à un livre à la fois : ce prêt-là, ou aucun.

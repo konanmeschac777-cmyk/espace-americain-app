@@ -1,0 +1,32 @@
+<%# Navigation basse. Un onglet par écran qui existe vraiment, et il dit ce
+    qu'il fait : « Inscrire » mène au formulaire d'inscription, pas à une
+    liste d'abonnés qui n'existe pas encore. Il deviendra « Abonnés » le
+    jour où la liste sera là. %>
+<% actif = local_assigns.fetch(:actif) %>
+
+<nav class="nav-basse grid-cols-3">
+  <%= link_to new_loan_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :pret}" do %>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"></rect>
+      <path d="M11 8v5M11 13l-2.2-2.2M11 13l2.2-2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span>Prêter</span>
+  <% end %>
+
+  <%= link_to new_return_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :retour}" do %>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"></rect>
+      <path d="M11 13V8M11 8L8.8 10.2M11 8l2.2 2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span>Retour</span>
+  <% end %>
+
+  <%= link_to new_member_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :abonnes}" do %>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <circle cx="9" cy="7.5" r="3.2" stroke="currentColor" stroke-width="1.8"></circle>
+      <path d="M3.4 17c0-3 2.5-4.6 5.6-4.6 1.2 0 2.3.24 3.2.68" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M16.5 12.4v5M14 14.9h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+    </svg>
+    <span>Inscrire</span>
+  <% end %>
+</nav>
