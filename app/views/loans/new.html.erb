@@ -1,11 +1,6 @@
 <% content_for :title, "Enregistrer un prêt" %>
 
-<header class="entete">
-  <div>
-    <p class="surtitre text-white/60">American Shelf de Tiassalé</p>
-    <h1 class="entete-titre">Enregistrer un prêt</h1>
-  </div>
-</header>
+<%= render "shared/entete", titre: "Enregistrer un prêt" %>
 
 <main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
   <% if @confirmed_loan %>

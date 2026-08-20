@@ -1,0 +1,21 @@
+<%# En-tête du back-office. `titre` est obligatoire, `retour` est un chemin
+    optionnel qui affiche une flèche de retour à gauche. %>
+<header class="entete">
+  <% if defined?(retour) && retour %>
+    <%= link_to retour, class: "flex h-10 w-10 shrink-0 items-center justify-center rounded text-white text-xl",
+                "aria-label": "Retour" do %>
+      &larr;
+    <% end %>
+  <% end %>
+
+  <div class="min-w-0 flex-1">
+    <p class="surtitre text-white/60">American Shelf de Tiassalé</p>
+    <h1 class="entete-titre truncate"><%= titre %></h1>
+  </div>
+
+  <%= button_to session_path, method: :delete,
+                class: "shrink-0 text-sm font-semibold text-white/80 underline",
+                form_class: "shrink-0" do %>
+    Quitter
+  <% end %>
+</header>

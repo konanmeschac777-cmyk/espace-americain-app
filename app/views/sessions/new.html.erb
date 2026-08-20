@@ -1,0 +1,47 @@
+<% content_for :title, "Connexion" %>
+
+<main class="min-h-screen flex flex-col justify-center px-4 py-10">
+  <div class="mx-auto w-full max-w-[400px]">
+
+    <%# Marque dessinée en formes simples : aucune image ni police d'icônes
+        à charger, l'écran s'affiche même sans réseau. %>
+    <div class="flex flex-col items-center mb-8">
+      <span class="flex h-14 w-14 items-center justify-center rounded bg-navy mb-3">
+        <span class="block h-6 w-6 border-t-4 border-b-4 border-white"></span>
+      </span>
+      <p class="surtitre">American Shelf de Tiassalé</p>
+      <h1 class="font-titre text-2xl font-extrabold text-encre mt-1">Espace bibliothécaire</h1>
+    </div>
+
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-5"><%= flash[:alert] %></p>
+    <% end %>
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-5"><%= flash[:notice] %></p>
+    <% end %>
+
+    <div class="carte p-5">
+      <%= form_with url: session_url do |form| %>
+        <div class="mb-4">
+          <%= form.label :email_address, "Adresse email", class: "libelle" %>
+          <%= form.email_field :email_address, required: true, autofocus: true,
+                autocomplete: "username", value: params[:email_address],
+                placeholder: "bibliothecaire@exemple.ci", class: "champ" %>
+        </div>
+
+        <div class="mb-5">
+          <%= form.label :password, "Mot de passe", class: "libelle" %>
+          <%= form.password_field :password, required: true,
+                autocomplete: "current-password", maxlength: 72, class: "champ" %>
+        </div>
+
+        <%= form.submit "Se connecter", class: "bouton bouton-primaire bouton-large bouton-grand" %>
+      <% end %>
+    </div>
+
+    <p class="text-center mt-5">
+      <%= link_to "Mot de passe oublié", new_password_path,
+                  class: "text-sm text-texte-discret underline" %>
+    </p>
+  </div>
+</main>
