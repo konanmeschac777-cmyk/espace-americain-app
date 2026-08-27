@@ -12,5 +12,13 @@ class Category < ApplicationRecord
   # ambiguïté de rangement : la tâche catalogue:coter le détecte.
   def shelf_prefix = slug.first(3).upcase
 
+  # Cote qu'aurait le prochain titre ajouté à cette catégorie, en aperçu.
+  # La tâche catalogue:coter reste la seule à renuméroter tout le rayon :
+  # ceci ne fait qu'ajouter à la suite, sans jamais retoucher les cotes
+  # déjà attribuées.
+  def next_shelf_mark
+    format("%s-%02d", shelf_prefix, books.active.count + 1)
+  end
+
   def to_s = name
 end

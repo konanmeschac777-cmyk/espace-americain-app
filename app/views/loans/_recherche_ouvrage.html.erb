@@ -1,59 +1,65 @@
-<% bloque = !member.can_borrow? %>
+<%= form_with url: new_loan_path, method: :get, class: "mb-4",
+              data: { controller: "recherche",
+                      turbo_frame: "resultats_ouvrages",
+                      turbo_action: "advance" } do %>
+  <%= hidden_field_tag :member_id, member.id %>
+  <%= hidden_field_tag :book_categorie, @book_categorie if @book_categorie.present? %>
+  <div class="flex items-center gap-2 bg-white rounded-[var(--radius-puce)] border border-bordure-forte px-4" style="min-height:52px;">
+    <span class="text-texte-estompe" aria-hidden="true">⌕</span>
+    <input type="search" id="book_q" name="book_q" value="<%= @book_query %>"
+           class="flex-1 border-0 bg-transparent py-3 text-base focus:outline-none"
+           placeholder="<%= t("app.pret.recherche_ouvrage_placeholder") %>"
+           autocomplete="off" autofocus
+           data-action="input->recherche#chercher">
+  </div>
+<% end %>
 
-<h2 class="text-lg mb-3">Quel ouvrage ?</h2>
-
-<% if bloque %>
-  <%# Inutile de faire chercher un livre qui ne pourra pas être prêté. %>
-  <p class="etat-vide-texte mb-4">
-    La recherche d'ouvrage est désactivée tant que la situation ci-dessus
-    n'est pas réglée.
-  </p>
-<% else %>
-  <%= form_with url: new_loan_path, method: :get, class: "mb-4",
-                data: { controller: "recherche",
-                        turbo_frame: "resultats_ouvrages",
-                        turbo_action: "advance" } do %>
-    <%= hidden_field_tag :member_id, member.id %>
-    <label class="libelle" for="book_q">Titre ou auteur</label>
-    <div class="flex gap-2">
-      <input type="search" id="book_q" name="book_q" value="<%= @book_query %>"
-             class="champ" placeholder="orateur, ou David Allen"
-             autocomplete="off" autofocus
-             data-action="input->recherche#chercher">
-      <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
-    </div>
-    <p class="aide">Les titres apparaissent au fur et à mesure de la frappe.</p>
+<div class="flex gap-2 overflow-x-auto pb-1 mb-4 -mx-1 px-1">
+  <%= link_to t("app.pret.tous"), new_loan_path(member_id: member.id, book_q: @book_query.presence),
+              class: "puce #{'puce-active' if @book_categorie.blank?}",
+              data: { turbo_frame: "resultats_ouvrages" } %>
+  <% @categories.each do |categorie| %>
+    <%= link_to nom_categorie(categorie), new_loan_path(member_id: member.id, book_q: @book_query.presence, book_categorie: categorie.slug),
+                class: "puce #{'puce-active' if @book_categorie == categorie.slug}",
+                data: { turbo_frame: "resultats_ouvrages" } %>
   <% end %>
+</div>
 
-  <%= turbo_frame_tag "resultats_ouvrages" do %>
-    <% if @book_query.blank? %>
-      <div class="etat-vide">
-        <p class="etat-vide-titre">Cherche l'ouvrage</p>
-        <p class="etat-vide-texte">Quelques lettres du titre suffisent.</p>
-      </div>
-    <% elsif @books.empty? %>
-      <div class="etat-vide">
-        <p class="etat-vide-titre">Aucun ouvrage trouvé</p>
-        <p class="etat-vide-texte">Rien ne correspond à « <%= @book_query %> » dans le catalogue.</p>
-      </div>
-    <% else %>
-      <ul class="flex flex-col gap-2">
-        <% @books.each do |book| %>
-          <li>
-            <% if book.available? %>
-              <%= link_to new_loan_path(member_id: member.id, book_id: book.id),
-                          class: "ligne-liste", data: { turbo_frame: "_top" } do %>
-                <%= render "resume_ouvrage", book: book %>
-              <% end %>
-            <% else %>
-              <%# Plus aucun exemplaire : la ligne reste lisible mais inerte. %>
-              <div class="ligne-liste opacity-60 cursor-not-allowed">
-                <%= render "resume_ouvrage", book: book %>
-              </div>
-            <% end %>
-          </li>
+<%= turbo_frame_tag "resultats_ouvrages" do %>
+  <% if @book_query.blank? && @book_categorie.blank? %>
+    <div class="etat-vide">
+      <p class="etat-vide-titre"><%= t("app.pret.cherche_ouvrage_titre") %></p>
+      <p class="etat-vide-texte"><%= t("app.pret.cherche_ouvrage_texte") %></p>
+    </div>
+  <% elsif @books.empty? %>
+    <div class="etat-vide">
+      <p class="etat-vide-titre"><%= t("app.pret.aucun_ouvrage_titre") %></p>
+      <p class="etat-vide-texte"><%= t("app.pret.aucun_ouvrage_texte", recherche: @book_query) %></p>
+    </div>
+  <% else %>
+    <div class="grid grid-cols-2 gap-3">
+      <% @books.each do |book| %>
+        <% disponible = book.available? %>
+        <%= link_to (disponible ? new_loan_path(member_id: member.id, book_id: book.id) : "#"),
+                    class: "flex flex-col gap-2 #{'pointer-events-none' unless disponible}",
+                    data: { turbo_frame: "_top" } do %>
+          <div class="relative rounded-[10px] p-3 flex flex-col justify-between <%= 'opacity-50' unless disponible %>"
+               style="aspect-ratio: 4/5; background-color: <%= couleur_dos(book) %>; box-shadow: 0 4px 12px rgba(10,34,64,0.16);">
+            <div>
+              <p class="surtitre" style="color: rgba(255,255,255,0.7);"><%= nom_categorie(book.category) %></p>
+              <p class="font-display font-semibold text-white mt-2" style="font-size:20px; line-height:1.15;"><%= book.title %></p>
+            </div>
+            <p class="text-sm italic" style="color: rgba(255,255,255,0.7);"><%= auteur(book) %></p>
+            <span class="absolute right-2 top-2 badge <%= disponible ? 'badge-dispo' : 'badge-retard' %>">
+              <%= book.copies_available %>/<%= book.total_copies %>
+            </span>
+          </div>
+          <div class="text-center">
+            <p class="font-display font-semibold text-encre text-sm truncate"><%= book.title %></p>
+            <p class="text-sm text-texte-discret truncate"><%= auteur(book) %></p>
+          </div>
         <% end %>
-      </ul>
-    <% end %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

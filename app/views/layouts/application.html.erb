@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<%= I18n.locale %>">
   <head>
-    <title><%= content_for(:title) || "American Shelf de Tiassalé" %></title>
+    <title><%= content_for(:title) || t("app.accueil.titre_page") %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="American Shelf de Tiassalé">
@@ -28,7 +28,8 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body data-controller="tiroir">
     <%= yield %>
+    <%= render "shared/tiroir" if tiroir_visible? %>
   </body>
 </html>

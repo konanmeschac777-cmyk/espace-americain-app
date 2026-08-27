@@ -1,6 +1,6 @@
-<% content_for :title, "Emprunts" %>
+<% content_for :title, t("app.admin.emprunts") %>
 
-<%= render "shared/entete", titre: "Emprunts en cours" %>
+<%= render "shared/entete", titre: t("app.admin.emprunts_en_cours") %>
 
 <main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
 
@@ -14,10 +14,12 @@
   <%# Les compteurs sont dans les puces : le bibliothécaire voit combien de
       retards il a sans changer d'écran. %>
   <div class="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-4 px-4">
-    <% LoansController::FILTRES.each do |cle, filtre| %>
+    <% libelles_filtres = { "tous" => t("app.admin.filtre_tous"), "cours" => t("app.admin.filtre_en_cours"),
+                            "bientot" => t("app.admin.filtre_bientot"), "retard" => t("app.admin.filtre_retard") } %>
+    <% LoansController::FILTRES.each_key do |cle| %>
       <%= link_to loans_path(filtre: cle),
                   class: "puce #{'puce-active' if @filtre == cle} #{'puce-travail' if cle == 'retard' && @filtre != cle && @compteurs['retard'].positive?}" do %>
-        <%= filtre[:libelle] %>
+        <%= libelles_filtres[cle] %>
         <span class="donnee"><%= @compteurs[cle] %></span>
       <% end %>
     <% end %>
@@ -33,20 +35,19 @@
     <div class="etat-vide">
       <% case @filtre %>
       <% when "retard" %>
-        <p class="etat-vide-titre">Aucun retard</p>
-        <p class="etat-vide-texte">Tous les livres sortis sont dans les délais.</p>
+        <p class="etat-vide-titre"><%= t("app.abonnes.aucun_retard_titre") %></p>
+        <p class="etat-vide-texte"><%= t("app.abonnes.aucun_retard_texte") %></p>
       <% when "bientot" %>
-        <p class="etat-vide-titre">Rien à réclamer cette semaine</p>
-        <p class="etat-vide-texte">Aucune échéance dans les deux prochains jours.</p>
+        <p class="etat-vide-titre"><%= t("app.admin.rien_a_reclamer_titre") %></p>
+        <p class="etat-vide-texte"><%= t("app.admin.rien_a_reclamer_texte") %></p>
       <% when "cours" %>
-        <p class="etat-vide-titre">Aucun emprunt tranquille</p>
+        <p class="etat-vide-titre"><%= t("app.admin.aucun_tranquille_titre") %></p>
         <p class="etat-vide-texte">
-          Tous les livres sortis arrivent à échéance ou sont en retard.
-          Regarde les autres filtres.
+          <%= t("app.admin.aucun_tranquille_texte") %>
         </p>
       <% else %>
-        <p class="etat-vide-titre">Aucun livre n'est sorti</p>
-        <p class="etat-vide-texte">Les 93 exemplaires sont sur les étagères.</p>
+        <p class="etat-vide-titre"><%= t("app.admin.aucun_sorti_titre") %></p>
+        <p class="etat-vide-texte"><%= t("app.admin.aucun_sorti_texte", n: Book.active.sum(:total_copies)) %></p>
       <% end %>
     </div>
   <% end %>

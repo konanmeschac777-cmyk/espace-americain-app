@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
   # Freine les tentatives répétées : sans cette limite, un mot de passe
   # court finit par tomber sous un essai automatisé.
   rate_limit to: 10, within: 3.minutes, only: :create,
-             with: -> { redirect_to new_session_path, alert: "Trop de tentatives. Réessaie dans quelques minutes." }
+             with: -> { redirect_to new_session_path, alert: t("app.flash.trop_de_tentatives") }
 
   def new
   end
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
     else
       # Le message ne dit pas lequel des deux est faux : le préciser
       # permettrait de deviner quelles adresses existent.
-      redirect_to new_session_path, alert: "Email ou mot de passe incorrect."
+      redirect_to new_session_path, alert: t("app.flash.identifiants_incorrects")
     end
   end
 

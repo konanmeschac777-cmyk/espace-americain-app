@@ -3,19 +3,25 @@
 <header class="entete">
   <% if defined?(retour) && retour %>
     <%= link_to retour, class: "flex h-10 w-10 shrink-0 items-center justify-center rounded text-white text-xl",
-                "aria-label": "Retour" do %>
+                "aria-label": t("app.commun.retour") do %>
       &larr;
     <% end %>
   <% end %>
 
+  <%# La marque ramène au tableau de bord : c'est le seul "logo cliquable"
+      de l'application, pas besoin d'un onglet de navigation de plus. %>
+  <%= link_to tableau_de_bord_path, class: "flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white p-1" do %>
+    <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+  <% end %>
+
   <div class="min-w-0 flex-1">
-    <p class="surtitre text-white/60">American Shelf de Tiassalé</p>
+    <p class="surtitre text-white/60"><%= t("app.tiroir.nom_app") %> de Tiassalé</p>
     <h1 class="entete-titre truncate"><%= titre %></h1>
   </div>
 
   <%= button_to session_path, method: :delete,
                 class: "shrink-0 text-sm font-semibold text-white/80 underline",
                 form_class: "shrink-0" do %>
-    Quitter
+    <%= t("app.tiroir.deconnexion") %>
   <% end %>
 </header>

@@ -1,5 +1,3 @@
-<h2 class="text-lg mb-3">Qui emprunte ?</h2>
-
 <%# turbo_frame vise la liste : seule elle est remplacée pendant la frappe.
     turbo_action "advance" garde l'URL à jour, pour qu'un rechargement ou
     un retour arrière retombe sur la même recherche. %>
@@ -7,35 +5,64 @@
               data: { controller: "recherche",
                       turbo_frame: "resultats_abonnes",
                       turbo_action: "advance" } do %>
-  <label class="libelle" for="member_q">Nom ou numéro de carte</label>
-  <div class="flex gap-2">
+  <%= hidden_field_tag :member_filtre, @member_filtre if @member_filtre != "tous" %>
+  <div class="flex items-center gap-2 bg-white rounded-[var(--radius-puce)] border border-bordure-forte px-4" style="min-height:52px;">
+    <span class="text-texte-estompe" aria-hidden="true">⌕</span>
     <input type="search" id="member_q" name="member_q" value="<%= @member_query %>"
-           class="champ" placeholder="Koné, ou TSL-2026-0087"
+           class="flex-1 border-0 bg-transparent py-3 text-base focus:outline-none"
+           placeholder="<%= t("app.pret.recherche_abonne_placeholder") %>"
            autocomplete="off" autofocus
            data-action="input->recherche#chercher">
-    <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
   </div>
-  <p class="aide">Les noms apparaissent au fur et à mesure de la frappe.</p>
 <% end %>
+
+<div class="flex gap-2 mb-4">
+  <% [ [ "tous", t("app.pret.filtre_tous") ], [ "disponibles", t("app.pret.filtre_disponibles") ], [ "bloques", t("app.pret.filtre_bloques") ] ].each do |cle, libelle| %>
+    <%= link_to libelle, new_loan_path(member_q: @member_query.presence, member_filtre: cle),
+                class: "puce #{'puce-active' if @member_filtre == cle}",
+                data: { turbo_frame: "resultats_abonnes" } %>
+  <% end %>
+</div>
 
 <%= turbo_frame_tag "resultats_abonnes" do %>
   <% if @member_query.blank? %>
     <%# État vide, avant toute frappe. %>
     <div class="etat-vide">
-      <p class="etat-vide-titre">Commence par chercher l'abonné</p>
+      <p class="etat-vide-titre"><%= t("app.pret.vide_titre") %></p>
       <p class="etat-vide-texte">
-        Tape les premières lettres de son nom, ou scanne le numéro de sa carte.
+        <%= t("app.pret.vide_texte") %>
       </p>
     </div>
   <% elsif @members.empty? %>
-    <div class="etat-vide">
-      <p class="etat-vide-titre">Aucun abonné trouvé</p>
-      <p class="etat-vide-texte">
-        Rien ne correspond à « <%= @member_query %> ». Vérifie l'orthographe,
-        ou inscris cette personne.
+    <div class="flex flex-col items-center text-center py-6">
+      <span class="flex h-13 w-13 items-center justify-center rounded-full bg-surface-alt text-texte-estompe text-xl mb-4" style="height:52px;width:52px;">⌕</span>
+      <p class="titre-ecran" style="font-size:19px;"><%= t("app.pret.personne_titre") %></p>
+      <p class="etat-vide-texte mt-2 max-w-[32ch]">
+        <%= t("app.pret.personne_texte") %>
       </p>
-      <%= link_to "Inscrire un nouvel abonné", new_member_path,
-                  class: "bouton bouton-primaire mt-4",
+
+      <% proches = Member.search(@member_query.to_s.split.first).by_name.limit(3) %>
+      <% if proches.any? %>
+        <div class="w-full text-left mt-6">
+          <p class="surtitre mb-3"><%= t("app.pret.noms_proches") %></p>
+          <ul class="flex flex-col gap-2">
+            <% proches.each do |member| %>
+              <li>
+                <%= link_to new_loan_path(member_id: member.id), class: "ligne-liste", data: { turbo_frame: "_top" } do %>
+                  <span class="min-w-0 flex-1">
+                    <span class="block font-semibold text-encre truncate"><%= member.full_name %></span>
+                    <span class="donnee block text-sm text-texte-discret"><%= member.card_number %></span>
+                  </span>
+                  <%= badge_abonne(member) %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= link_to t("app.pret.inscrire_nouvel_abonne"), new_member_path,
+                  class: "bouton bouton-primaire mt-6",
                   data: { turbo_frame: "_top" } %>
     </div>
   <% else %>
@@ -55,5 +82,10 @@
         </li>
       <% end %>
     </ul>
+
+    <p class="text-center text-sm text-texte-discret mt-4">
+      <%= t("app.pret.personne_ne_correspond") %>
+      <%= link_to t("app.pret.inscrire_nouvel_abonne"), new_member_path, class: "font-bold text-encre", data: { turbo_frame: "_top" } %>
+    </p>
   <% end %>
 <% end %>

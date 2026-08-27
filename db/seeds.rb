@@ -127,9 +127,74 @@ missing = Book.where(site: tiassale, author: nil).count
 raise "Fonds incorrect : #{titles} titres au lieu de 19"       unless titles == 19
 raise "Fonds incorrect : #{copies} exemplaires au lieu de 93"  unless copies == 93
 
+# --- Abonnés de référence -------------------------------------------------
+#
+# Six situations qui reviennent dans les maquettes Claude Design et dans les
+# écrans déjà construits : à jour sans emprunt, emprunt en cours dans les
+# délais, emprunt bientôt dû, emprunt en retard, adhésion bientôt expirée,
+# adhésion expirée, compte suspendu. Sans ces abonnés en base, chercher
+# "Diarra" ou "Kouadio" dans l'application ne renvoie rien, alors que les
+# maquettes les montrent partout.
+#
+# Les dates sont calculées par rapport à aujourd'hui plutôt que codées en
+# dur, pour que le jeu de données reste cohérent quel que soit le jour où
+# les seeds sont rejoués.
+
+MEMBRES_REFERENCE = {
+  "TSL-2026-0087" => { prenom: "Aminata", nom: "Koné",      telephone: "0708451230", expire_dans: 8.months },
+  "TSL-2026-0112" => { prenom: "Kouadio", nom: "N'Guessan",  telephone: "0564228904", expire_dans: 6.months },
+  "TSL-2026-0034" => { prenom: "Fatou",   nom: "Diarra",     telephone: "0142776318", expire_dans: 4.months },
+  "TSL-2026-0155" => { prenom: "Yao",     nom: "Kouassi",    telephone: "0791305527", expire_dans: 18.days },
+  "TSL-2026-0201" => { prenom: "Adjoua",  nom: "Brou",       telephone: "0512689403", expire_dans: -12.days },
+  "TSL-2026-0233" => { prenom: "Ibrahim", nom: "Traoré",     telephone: "0177054162", expire_dans: 5.months, suspendu: true }
+}.freeze
+
+MEMBRES_REFERENCE.each do |card_number, attrs|
+  member = Member.find_or_initialize_by(card_number: card_number)
+  member.assign_attributes(
+    site:        tiassale,
+    first_name:  attrs[:prenom],
+    last_name:   attrs[:nom],
+    phone:       attrs[:telephone],
+    joined_on:   member.joined_on || Date.current - 6.months,
+    expires_on:  Date.current + attrs[:expire_dans],
+    suspended:   attrs[:suspendu] || false
+  )
+  member.save!
+end
+
+par_carte = Member.where(card_number: MEMBRES_REFERENCE.keys).index_by(&:card_number)
+
+# Trois abonnés ont un emprunt en cours, pour illustrer les trois statuts
+# affichés par badge_echeance : à temps, bientôt dû, en retard. Les trois
+# autres restent volontairement sans emprunt : c'est ce qui illustre "à
+# jour, libre d'emprunter", "adhésion expirée" et "suspendu".
+PRETS_REFERENCE = [
+  # carte,           titre de l'ouvrage,                      emprunté il y a,  échéance dans
+  [ "TSL-2026-0112", "S'organiser pour réussir",                    3.days,   11.days ],
+  [ "TSL-2026-0155", "The One Thing, passez à l'essentiel",        12.days,    2.days ],
+  [ "TSL-2026-0034", "Devenez un grand orateur",                   20.days,   -6.days ]
+].freeze
+
+PRETS_REFERENCE.each do |card_number, titre, emprunte_il_y_a, echeance_dans|
+  member = par_carte.fetch(card_number)
+  book   = Book.find_by!(site: tiassale, title: titre)
+
+  next if Loan.exists?(member: member, book: book, returned_on: nil)
+
+  Loan.create!(
+    member: member,
+    book: book,
+    borrowed_on: Date.current - emprunte_il_y_a,
+    due_on: Date.current + echeance_dans
+  )
+end
+
 puts "Sites          : #{Site.count}"
 puts "Catégories     : #{Category.count}"
 puts "Réglages       : #{Setting.count}"
 puts "Ouvrages       : #{titles} titres, #{copies} exemplaires"
 puts "Auteurs à saisir : #{missing} fiches sans auteur"
 puts "Auteurs à confirmer : #{Book.where(site: tiassale, author_confirmed: false).where.not(author: nil).count} fiches"
+puts "Abonnés de référence : #{Member.where(card_number: MEMBRES_REFERENCE.keys).count}"
+puts "Prêts de référence   : #{Loan.where(member_id: par_carte.values.map(&:id)).open.count} en cours"

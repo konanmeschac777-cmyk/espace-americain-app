@@ -1,0 +1,117 @@
+<% content_for :title, @member.full_name %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete">
+    <%= render "shared/bouton_menu" %>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to members_path, class: "flux-bouton-rond", "aria-label": t("app.abonnes.titre_page_liste") do %>
+      &larr;
+    <% end %>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= t("app.abonnes.fiche_abonne") %> &middot; <%= @member.card_number %></p>
+    <h1 class="titre-ecran mb-5"><%= @member.full_name %></h1>
+
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+    <% end %>
+
+    <div class="carte p-4">
+      <div class="pb-4" style="border-bottom:1px solid var(--color-bordure);">
+        <div class="flex items-center gap-3">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy text-white font-titre font-bold text-sm">
+            <%= @member.first_name.first %><%= @member.last_name.first %>
+          </span>
+          <div class="min-w-0 flex-1">
+            <p class="text-encre">
+              <%= [ @member.neighborhood.presence, @member.age.present? ? t("app.abonnes.age_valeur", age: @member.age) : nil ].compact.join(" · ").presence || t("app.abonnes.profil_incomplet") %>
+            </p>
+            <p class="donnee text-sm text-texte-discret mt-0.5">
+              <%= @member.phone.present? ? "#{@member.phone_country_code} #{@member.phone}" : t("app.abonnes.telephone_non_renseigne") %>
+            </p>
+          </div>
+          <%= badge_adhesion(@member) %>
+        </div>
+
+        <div class="flex items-center justify-between mt-3">
+          <%= link_to t("app.abonnes.modifier"), edit_member_path(@member), class: "text-sm font-semibold text-navy underline" %>
+          <% if @member.suspended? %>
+            <%= button_to t("app.abonnes.lever_suspension"), lift_suspend_member_path(@member),
+                          class: "text-sm font-semibold text-navy underline bg-transparent" %>
+          <% else %>
+            <%= button_to t("app.abonnes.suspendre"), suspend_member_path(@member),
+                          class: "text-sm font-semibold underline bg-transparent",
+                          style: "color: var(--color-retard);",
+                          form: { data: { turbo_confirm: t("app.abonnes.confirmer_suspension", nom: @member.full_name) } } %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-4">
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="font-display font-semibold text-navy" style="font-size:32px; line-height:1;"><%= @member.loans.count %></p>
+          <p class="tuile-libelle mt-1"><%= pluriel(@member.loans.count, singulier: "app.abonnes.livres_empruntes_un", pluriel: "app.abonnes.livres_empruntes_plusieurs") %></p>
+        </div>
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="font-display font-semibold text-navy" style="font-size:32px; line-height:1;"><%= @retards_total %></p>
+          <p class="tuile-libelle mt-1">
+            <%= pluriel(@retards_total, singulier: "app.mots.retard.un", pluriel: "app.mots.retard.plusieurs") %>
+            <%= t("app.abonnes.retards_depuis_inscription") %>
+          </p>
+        </div>
+      </div>
+
+      <% if @loan %>
+        <p class="surtitre mt-5 mb-3"><%= t("app.abonnes.en_cours") %></p>
+        <div class="flex items-center gap-3">
+          <%= dos_livre(@loan.book) %>
+          <div class="min-w-0 flex-1">
+            <p class="font-display font-semibold text-encre truncate" style="font-size:15px;"><%= @loan.book.title %></p>
+            <p class="text-sm text-texte-discret"><%= t("app.abonnes.emprunte_le_complet", date: l(@loan.borrowed_on, format: "%-d %B %Y")) %></p>
+          </div>
+          <%= badge_echeance(@loan) %>
+        </div>
+      <% end %>
+
+      <p class="surtitre mt-5 mb-3"><%= t("app.abonnes.historique") %></p>
+      <% if @history.any? %>
+        <div class="flex flex-col gap-3">
+          <% @history.each do |loan| %>
+            <div class="flex items-center justify-between gap-3">
+              <span class="font-display font-semibold text-encre truncate" style="font-size:15px;"><%= loan.book.title %></span>
+              <span class="donnee text-sm text-texte-discret shrink-0"><%= l(loan.returned_on, format: "%-d %B") %></span>
+            </div>
+          <% end %>
+        </div>
+        <% if @history_total > @history.size %>
+          <% reste = @history_total - @history.size %>
+          <p class="text-sm text-texte-discret mt-3">
+            <%= pluriel(reste, singulier: "app.abonnes.emprunts_non_affiches_un", pluriel: "app.abonnes.emprunts_non_affiches_plusieurs") %>
+          </p>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-texte-discret"><%= t("app.abonnes.aucun_emprunt_rendu") %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-simple">
+  <% if @loan %>
+    <%= button_to t("app.pret.enregistrer_retour"), returns_path(loan_id: @loan.id), class: "action" %>
+  <% elsif @member.borrow_block_reason == :membership_expired %>
+    <%= button_to t("app.pret.reinscrire_un_an"), renew_member_path(@member), class: "action" %>
+  <% elsif @member.can_borrow? %>
+    <%= link_to t("app.tableau_de_bord.preter"), new_loan_path(member_id: @member.id), class: "action" %>
+  <% else %>
+    <span class="action" style="opacity:.5"><%= t("app.tableau_de_bord.preter") %></span>
+  <% end %>
+</div>

@@ -60,14 +60,22 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  # Gmail (astiassale@gmail.com) sert de serveur d'envoi : c'est ce compte
+  # qui délivre le lien de "mot de passe oublié". Le mot de passe utilisé
+  # ici doit être un mot de passe d'application Google (pas le mot de passe
+  # du compte), généré depuis myaccount.google.com/apppasswords une fois la
+  # validation en deux étapes activée sur ce compte.
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    user_name: Rails.application.credentials.dig(:smtp, :user_name),
+    password: Rails.application.credentials.dig(:smtp, :password),
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "gmail.com",
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+  config.action_mailer.raise_delivery_errors = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

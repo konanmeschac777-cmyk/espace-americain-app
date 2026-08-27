@@ -1,0 +1,59 @@
+<div class="flex items-center gap-3 pb-4" style="border-bottom:1px solid var(--color-bordure);">
+  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-texte-discret font-titre font-bold text-sm">
+    <%= loan.member.first_name.first %><%= loan.member.last_name.first %>
+  </span>
+  <div class="min-w-0 flex-1">
+    <p class="font-titre font-bold text-encre truncate"><%= loan.member.full_name %></p>
+    <p class="donnee text-sm text-texte-discret"><%= loan.member.card_number %></p>
+  </div>
+</div>
+
+<div class="flex items-start gap-3 pt-4">
+  <%= dos_livre(loan.book) %>
+  <div class="min-w-0 flex-1">
+    <p class="surtitre mb-1"><%= t("app.retour.emprunte_le", date: l(loan.borrowed_on, format: "%-d %B %Y").upcase) %></p>
+    <p class="titre-ouvrage"><%= loan.book.title %></p>
+    <p class="text-sm italic text-texte-discret"><%= auteur(loan.book) %></p>
+  </div>
+</div>
+
+<% if loan.overdue? %>
+  <div class="mt-4 rounded-[var(--radius-bloc)] p-5 text-center" style="background-color: var(--color-retard-fond);">
+    <p class="surtitre mb-2" style="color: var(--color-retard);"><%= t("app.retour.rendu_hors_delai") %></p>
+    <p class="font-display font-semibold text-3xl" style="color: var(--color-retard);">
+      <%= t("app.retour.jours_de_retard", n: loan.days_overdue, mot: pluriel(loan.days_overdue, singulier: "app.mots.jour.un", pluriel: "app.mots.jour.plusieurs")) %>
+    </p>
+    <p class="text-sm mt-2" style="color: var(--color-retard);"><%= t("app.retour.attendu_le", date: date_courte(loan.due_on)) %></p>
+  </div>
+
+  <div class="mt-4 rounded-[var(--radius-bloc)] p-4" style="background-color: var(--color-attention-fond);">
+    <div class="flex items-center gap-2">
+      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white text-xs font-bold" style="background-color: var(--color-attention);">!</span>
+      <p class="font-display font-semibold" style="font-size:17px; color: var(--color-attention);">
+        <%= t("app.retour.suspension_de", n: loan.days_overdue, mot: pluriel(loan.days_overdue, singulier: "app.mots.jour.un", pluriel: "app.mots.jour.plusieurs")) %>
+      </p>
+    </div>
+    <p class="text-sm mt-2" style="color: var(--color-attention);">
+      <%= t("app.retour.suspension_texte", date: date_courte(Date.current + loan.days_overdue)) %>
+    </p>
+  </div>
+<% elsif loan.days_until_due.zero? %>
+  <div class="mt-4 rounded-[var(--radius-bloc)] p-5 text-center" style="background-color: var(--color-dispo-fond);">
+    <p class="surtitre mb-2" style="color: var(--color-dispo);"><%= t("app.retour.rendu_dans_les_delais") %></p>
+    <p class="font-display font-semibold text-3xl" style="color: var(--color-dispo);"><%= t("app.retour.rendu_aujourdhui") %></p>
+    <p class="text-sm mt-2" style="color: var(--color-dispo);"><%= t("app.retour.attendu_aujourdhui", date: date_courte(loan.due_on)) %></p>
+  </div>
+<% else %>
+  <div class="mt-4 rounded-[var(--radius-bloc)] p-5 text-center" style="background-color: var(--color-dispo-fond);">
+    <p class="surtitre mb-2" style="color: var(--color-dispo);"><%= t("app.retour.rendu_dans_les_delais") %></p>
+    <p class="font-display font-semibold text-3xl" style="color: var(--color-dispo);">
+      <%= t("app.retour.jours_davance", n: loan.days_until_due, mot: pluriel(loan.days_until_due, singulier: "app.mots.jour.un", pluriel: "app.mots.jour.plusieurs")) %>
+    </p>
+    <p class="text-sm mt-2" style="color: var(--color-dispo);"><%= t("app.retour.attendu_le", date: date_courte(loan.due_on)) %></p>
+  </div>
+<% end %>
+
+<div class="mt-4 rounded-[var(--radius-bloc)] p-4 bg-surface-alt flex items-center justify-between">
+  <span class="text-sm text-texte-discret"><%= t("app.retour.exemplaires_apres_retour") %></span>
+  <span class="font-bold text-encre"><%= loan.book.copies_available + 1 %> sur <%= loan.book.total_copies %></span>
+</div>

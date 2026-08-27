@@ -1,0 +1,61 @@
+<% content_for :title, t("app.abonnes.titre_page_renew") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+  </header>
+
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1" style="color: var(--color-dispo);"><%= t("app.abonnes.adhesion_renouvelee") %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.abonnes.carte_reactivee") %></h1>
+
+    <div class="w-full">
+      <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-dispo-fond">
+        <span class="text-3xl font-bold text-dispo" aria-hidden="true">✓</span>
+      </span>
+
+      <div class="flex items-center gap-3 justify-center mb-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy text-white font-titre font-bold text-sm">
+          <%= @member.first_name.first %><%= @member.last_name.first %>
+        </span>
+        <div class="text-left">
+          <p class="font-titre font-bold text-encre"><%= @member.full_name %></p>
+          <p class="donnee text-sm text-texte-discret"><%= @member.card_number %></p>
+        </div>
+      </div>
+
+      <div class="rounded-[var(--radius-bloc)] p-5 bg-surface-alt text-center">
+        <p class="surtitre mb-2"><%= t("app.abonnes.valable_jusquau") %></p>
+        <p class="font-display font-semibold text-3xl text-navy leading-none"><%= date_courte(@member.expires_on) %></p>
+        <p class="text-sm text-texte-discret mt-2"><%= t("app.abonnes.un_an_gratuit") %></p>
+      </div>
+
+      <div class="mt-4 rounded-[var(--radius-bloc)] p-4 bg-surface-alt flex items-center justify-between">
+        <span class="text-sm text-texte-discret"><%= t("app.abonnes.adhesions_a_jour") %></span>
+        <span class="donnee font-bold text-encre"><%= @adhesions_a_jour %> sur <%= @total_membres %></span>
+      </div>
+
+      <% if @member.current_loan.nil? && @member.can_borrow? %>
+        <p class="text-sm text-texte-discret mt-4">
+          <%= t("app.abonnes.peut_emprunter_tout_de_suite") %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.abonnes.voir_la_fiche"), member_path(@member), class: "lien" %>
+  <% if @member.can_borrow? %>
+    <%= link_to t("app.abonnes.reprendre_le_pret"), new_loan_path(member_id: @member.id), class: "action" %>
+  <% else %>
+    <span class="action" style="opacity:.5"><%= t("app.abonnes.reprendre_le_pret") %></span>
+  <% end %>
+</div>

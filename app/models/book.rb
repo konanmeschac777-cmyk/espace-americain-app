@@ -7,8 +7,9 @@ class Book < ApplicationRecord
   belongs_to :site
   belongs_to :category
   has_many :loans, dependent: :restrict_with_error
+  has_one_attached :cover
 
-  validates :title, presence: true, uniqueness: { scope: :site_id, message: "existe déjà sur ce site" }
+  validates :title, presence: true, uniqueness: { scope: :site_id, message: proc { I18n.t("app.flash.titre_deja_existant") } }
   validates :language, presence: true
   validates :total_copies, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 

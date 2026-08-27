@@ -1,0 +1,29 @@
+<% titre_ecran = @completer ? t("app.catalogue.a_completer") : t("app.admin.modifier_ouvrage") %>
+<% content_for :title, titre_ecran %>
+
+<%= render "shared/entete", titre: titre_ecran, retour: books_path %>
+
+<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
+  <% if flash[:notice] %>
+    <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+  <% end %>
+
+  <% if @completer %>
+    <div class="bandeau bandeau-info mb-4">
+      <p>
+        <%= t("app.admin.fiche_a_completer", position: (@position || 0) + 1, total: @queue.size) %>
+      </p>
+    </div>
+  <% end %>
+
+  <h2 class="titre-ecran mb-4"><%= titre_ecran %></h2>
+  <%= render "form", book: @book, categories: @categories, completer: @completer %>
+
+  <% unless @completer %>
+    <%= button_to t("app.admin.archiver_ouvrage"), archive_book_path(@book), method: :post,
+                  class: "mt-4 text-sm text-texte-discret underline",
+                  form: { data: { turbo_confirm: t("app.admin.confirmer_archivage", titre: @book.title) } } %>
+  <% end %>
+</main>
+
+<%= render "shared/nav", actif: :ouvrages %>

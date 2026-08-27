@@ -30,10 +30,10 @@ class LoansController < ApplicationController
 
     if loan.renew!
       redirect_back fallback_location: loans_path,
-                    notice: "« #{loan.book.title} » est prolongé jusqu'au #{l(loan.due_on, format: :long)}."
+                    notice: t("app.flash.pret_prolonge", titre: loan.book.title, date: l(loan.due_on, format: :long))
     else
       redirect_back fallback_location: loans_path,
-                    alert: "Ce prêt a déjà été renouvelé une fois, il ne peut plus l'être."
+                    alert: t("app.flash.pret_deja_renouvele")
     end
   end
 
@@ -46,10 +46,13 @@ class LoansController < ApplicationController
     @member = Member.find_by(id: params[:member_id])
     @book   = Book.find_by(id: params[:book_id])
 
-    @member_query = params[:member_q].to_s
+    @member_query  = params[:member_q].to_s
+    @member_filtre = params[:member_filtre].presence || "tous"
     @book_query   = params[:book_q].to_s
+    @book_categorie = params[:book_categorie].presence
 
     @members = search_members if @member.nil?
+    @categories = Category.order(:name) if @member.present? && @book.nil?
     @books   = search_books   if @member.present? && @book.nil?
 
     @loan = Loan.prepare(book: @book, member: @member) if ready_to_confirm?
@@ -82,13 +85,20 @@ class LoansController < ApplicationController
   def search_members
     return Member.none if @member_query.blank?
 
-    Member.search(@member_query).by_name.limit(RESULTS_LIMIT)
+    resultats = Member.search(@member_query).by_name.limit(RESULTS_LIMIT * 3).to_a
+    case @member_filtre
+    when "disponibles" then resultats.select(&:can_borrow?).first(RESULTS_LIMIT)
+    when "bloques"     then resultats.reject(&:can_borrow?).first(RESULTS_LIMIT)
+    else resultats.first(RESULTS_LIMIT)
+    end
   end
 
   def search_books
-    return Book.none if @book_query.blank?
+    return Book.none if @book_query.blank? && @book_categorie.blank?
 
-    Book.active.search(@book_query).by_title.limit(RESULTS_LIMIT)
+    scope = Book.active.search(@book_query).by_title
+    scope = scope.joins(:category).where(categories: { slug: @book_categorie }) if @book_categorie.present?
+    scope.limit(RESULTS_LIMIT)
   end
 
   # Rassemble les quatre motifs de blocage : les trois qui viennent de
@@ -99,10 +109,10 @@ class LoansController < ApplicationController
 
   def blocking_message(reason)
     case reason
-    when :suspended          then "Cet abonné est suspendu, le prêt est impossible."
-    when :membership_expired then "L'abonnement est expiré, il doit être prolongé avant tout prêt."
-    when :already_borrowing  then "Cet abonné a déjà un livre en cours."
-    when :no_copy_available  then "Plus aucun exemplaire disponible pour cet ouvrage."
+    when :suspended          then t("app.flash.blocage_suspendu")
+    when :membership_expired then t("app.flash.blocage_adhesion_expiree")
+    when :already_borrowing  then t("app.flash.blocage_deja_un_livre")
+    when :no_copy_available  then t("app.flash.blocage_aucun_exemplaire")
     end
   end
 

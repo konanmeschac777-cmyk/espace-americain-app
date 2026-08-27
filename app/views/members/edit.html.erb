@@ -1,0 +1,71 @@
+<% content_for :title, t("app.abonnes.modifier") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to member_path(@member), class: "flux-bouton-rond flux-entete-droite", "aria-label": t("app.abonnes.fiche_abonne") do %>
+      &larr;
+    <% end %>
+  </header>
+
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1"><%= t("app.abonnes.eyebrow_modifier") %> &middot; <%= @member.card_number %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.abonnes.modifier") %></h1>
+
+    <div class="w-full text-left">
+      <%= form_with model: @member, url: member_path(@member), method: :patch, id: "formulaire_abonne" do |form| %>
+
+        <% if @member.errors.any? %>
+          <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+            <p class="font-bold"><%= t("app.abonnes.erreur_titre") %></p>
+            <ul class="mt-1">
+              <% @member.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="flex flex-col gap-4">
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.nom_prenoms") %></p>
+            <input type="text" name="member[full_name]" value="<%= @member.full_name %>"
+                   class="champ" autofocus autocomplete="name" required>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.telephone") %></p>
+            <div class="flex gap-2">
+              <%= form.select :phone_country_code,
+                    options_indicatifs_telephoniques(@member.phone_country_code),
+                    {}, class: "champ donnee", style: "width:110px; flex-shrink:0;" %>
+              <%= form.telephone_field :phone, class: "champ donnee flex-1", autocomplete: "tel", placeholder: "07 08 12 44 90" %>
+            </div>
+          </div>
+
+          <div style="width:104px;">
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.age") %></p>
+            <%= form.number_field :age, class: "champ", min: 1, max: 120, placeholder: "19" %>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.quartier") %></p>
+            <%= form.text_field :neighborhood, class: "champ", placeholder: "Tiassalé centre" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.commun.annuler"), member_path(@member), class: "lien" %>
+  <button type="submit" form="formulaire_abonne" class="action"><%= t("app.admin.enregistrer") %></button>
+</div>

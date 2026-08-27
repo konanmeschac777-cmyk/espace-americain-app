@@ -1,0 +1,11 @@
+<%= link_to member_path(member), class: "ligne-liste items-start", data: { turbo_frame: "_top" } do %>
+  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-texte-discret font-titre font-bold text-sm">
+    <%= member.first_name.first %><%= member.last_name.first %>
+  </span>
+  <div class="min-w-0 flex-1">
+    <span class="block font-titre font-bold text-encre"><%= member.full_name %></span>
+    <span class="donnee block text-sm text-texte-estompe mt-0.5"><%= member.card_number %></span>
+  </div>
+
+  <%= badge_ligne_abonne(member) %>
+<% end %>

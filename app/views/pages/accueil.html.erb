@@ -1,0 +1,56 @@
+<% content_for :title, t("app.accueil.titre_page") %>
+
+<div class="ecran-accueil">
+  <%# Photos officielles de la passation (assets/). slide-6.jpg est écartée :
+      elle porte le filigrane d'un modèle de téléphone. %>
+  <% [
+       [ "shelf-fond.jpg", t("app.accueil.photo_fond"), "0s" ],
+       [ "slide-1.jpg", t("app.accueil.photo_groupe"), "15s" ],
+       [ "slide-2.jpg", t("app.accueil.photo_remise"), "30s" ],
+       [ "slide-3.jpg", t("app.accueil.photo_public"), "45s" ],
+       [ "slide-4.jpg", t("app.accueil.photo_seance"), "60s" ],
+       [ "slide-5.jpg", t("app.accueil.photo_prise_de_parole"), "75s" ]
+     ].each do |fichier, alt, delai| %>
+    <%= image_tag fichier, alt: alt, class: "accueil-photo", style: "animation-delay: #{delai}" %>
+  <% end %>
+
+  <div class="accueil-motif" aria-hidden="true"></div>
+
+  <header class="accueil-entete">
+    <div class="flex items-center gap-3">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded bg-white p-1.5">
+        <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+      </span>
+      <div>
+        <p class="font-titre font-extrabold text-white text-lg leading-tight"><%= t("app.tiroir.nom_app") %></p>
+        <p class="surtitre text-white/70"><%= t("app.accueil.reseau") %></p>
+      </div>
+    </div>
+
+    <%= link_to langue_path, class: "accueil-langue" do %>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"></circle>
+        <path d="M1 7h12M7 1c1.8 1.7 1.8 9.7 0 12M7 1c-1.8 1.7-1.8 9.7 0 12" stroke="currentColor" stroke-width="1.3"></path>
+      </svg>
+      <%= I18n.locale.to_s.upcase %>
+    <% end %>
+  </header>
+
+  <main class="accueil-contenu">
+    <div>
+      <p class="surtitre text-white/70 mb-3"><%= t("app.accueil.ville") %></p>
+      <h1 class="titre-ecran titre-ecran-grand titre-ecran-clair" style="max-width: 9ch; text-wrap: balance;">
+        <%= t("app.accueil.titre") %>
+      </h1>
+      <p class="text-white/75 text-sm leading-relaxed mt-4" style="max-width: 34ch;">
+        <%= t("app.accueil.description", total: @total_copies) %>
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <%= link_to t("app.accueil.commencer"), new_session_path,
+                  class: "bouton bouton-large bouton-grand bg-white text-navy" %>
+      <p class="text-center text-sm text-white/60"><%= t("app.accueil.reserve") %></p>
+    </div>
+  </main>
+</div>

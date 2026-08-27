@@ -1,53 +1,46 @@
 <% indisponible = !book.available? %>
-<% bloque = !member.can_borrow? || indisponible %>
 
-<h2 class="text-lg mb-3">Vérifie et valide</h2>
-
-<div class="carte p-4 mb-4">
-  <p class="surtitre">Ouvrage</p>
-  <p class="titre-ouvrage text-lg"><%= book.title %></p>
-  <p class="text-sm text-texte-discret mb-3"><%= auteur(book) %></p>
-  <div class="flex items-center gap-2">
-    <%= badge_disponibilite(book) %>
-    <%= link_to "Changer", new_loan_path(member_id: member.id, book_q: book.title),
-                class: "text-sm font-semibold text-navy underline" %>
+<div class="carte p-4">
+  <div class="flex items-center gap-3 pb-4" style="border-bottom: 1px solid var(--color-bordure);">
+    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy text-white font-titre font-bold text-sm">
+      <%= member.first_name.first %><%= member.last_name.first %>
+    </span>
+    <div class="min-w-0 flex-1">
+      <p class="font-titre font-bold text-encre truncate"><%= member.full_name %></p>
+      <p class="donnee text-sm text-texte-discret"><%= member.card_number %></p>
+    </div>
+    <%= link_to t("app.commun.changer"), new_loan_path(member_q: member.last_name),
+                class: "text-sm font-bold text-navy shrink-0" %>
   </div>
+
+  <div class="flex items-start gap-3 py-4" style="border-bottom: 1px solid var(--color-bordure);">
+    <%= dos_livre(book) %>
+    <div class="min-w-0 flex-1">
+      <p class="surtitre"><%= nom_categorie(book.category) %></p>
+      <p class="titre-ouvrage mt-0.5"><%= book.title %></p>
+      <p class="text-sm italic text-texte-discret"><%= auteur(book) %></p>
+      <div class="mt-2"><%= badge_disponibilite(book) %></div>
+    </div>
+    <%= link_to t("app.commun.changer"), new_loan_path(member_id: member.id, book_q: book.title),
+                class: "text-sm font-bold text-navy shrink-0" %>
+  </div>
+
+  <% if indisponible %>
+    <div class="bandeau bandeau-blocage mt-4 flex-col items-start">
+      <p class="font-bold"><%= t("app.pret.plus_aucun_exemplaire") %></p>
+      <% if book.next_return_date %>
+        <p><%= t("app.pret.prochain_retour", date: date_courte(book.next_return_date)) %></p>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="pt-4 text-center">
+      <p class="surtitre"><%= t("app.pret.a_rapporter_le") %></p>
+      <p class="font-display font-semibold text-3xl text-navy leading-none mt-2">
+        <%= date_courte(Date.current + Setting.loan_days) %>
+      </p>
+      <p class="text-sm text-texte-discret mt-2">
+        <%= t("app.pret.jours_renouvelable", jours: Setting.loan_days) %>
+      </p>
+    </div>
+  <% end %>
 </div>
-
-<% if indisponible %>
-  <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
-    <p class="font-bold">Plus aucun exemplaire disponible.</p>
-    <% if book.next_return_date %>
-      <p>Le prochain retour est prévu le
-        <span class="donnee"><%= date_courte(book.next_return_date) %></span>.</p>
-    <% end %>
-  </div>
-<% end %>
-
-<% unless bloque %>
-  <%# La date de retour est l'information que le bibliothécaire dit à voix
-      haute et que l'abonné doit retenir. Elle mérite la plus grande taille
-      de l'écran. %>
-  <div class="carte p-5 mb-4 text-center bg-surface-alt">
-    <p class="surtitre">À rapporter le</p>
-    <p class="font-titre text-3xl font-extrabold text-navy leading-tight mt-1">
-      <%= date_courte(Date.current + Setting.loan_days) %>
-    </p>
-    <p class="text-sm text-texte-discret mt-2">
-      Dans <%= Setting.loan_days %> jours, renouvelable une fois
-    </p>
-  </div>
-<% end %>
-
-<% if bloque %>
-  <button type="button" class="bouton bouton-primaire bouton-large bouton-grand" disabled>
-    Valider le prêt
-  </button>
-<% else %>
-  <%= button_to "Valider le prêt",
-                loans_path(member_id: member.id, book_id: book.id),
-                class: "bouton bouton-primaire bouton-large bouton-grand" %>
-<% end %>
-
-<%= link_to "Tout recommencer", new_loan_path,
-            class: "block text-center text-sm text-texte-discret underline mt-4" %>

@@ -1,21 +1,63 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <% if alert = flash[:alert] %>
-    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg inline-block" id="alert"><%= alert %></p>
-  <% end %>
+<% content_for :title, t("app.mot_de_passe.titre_page_nouveau") %>
 
-  <h1 class="font-bold text-4xl">Update your password</h1>
+<div class="max-w-[430px] mx-auto min-h-screen bg-white flex flex-col">
+  <div class="h-[250px] relative overflow-hidden shrink-0 bg-navy">
+    <%= image_tag "slide-1.jpg",
+          alt: t("app.accueil.photo_groupe"),
+          class: "absolute inset-0 w-full h-full object-cover" %>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(10,34,64,0.34) 0%, rgba(10,34,64,0.10) 45%, rgba(10,34,64,0.28) 100%);"></div>
+    <%= link_to new_session_path, class: "absolute left-[18px] top-[18px] h-9 w-9 rounded-full bg-white/90 flex items-center justify-center text-xl text-navy", "aria-label": "Retour" do %>
+      &larr;
+    <% end %>
+  </div>
 
-  <%= form_with url: password_path(params[:token]), method: :put, class: "contents" do |form| %>
-    <div class="my-5">
-      <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-solid focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+  <div class="panneau-releve flex-1 flex flex-col px-[26px] pb-[26px]">
+    <div class="flex justify-center -mt-[26px]">
+      <span class="bg-white rounded-lg px-[11px] py-[9px] flex items-center shadow-[0_3px_10px_rgba(10,34,64,0.14)]">
+        <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-[34px] w-auto" %>
+      </span>
     </div>
 
-    <div class="my-5">
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-solid focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+    <div class="text-center mt-4">
+      <p class="surtitre"><%= @user.email_address %></p>
+      <h1 class="titre-ecran mt-1"><%= t("app.mot_de_passe.nouveau_mot_de_passe") %></h1>
     </div>
 
-    <div class="inline">
-      <%= form.submit "Save", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-    </div>
-  <% end %>
+    <% if alert = flash[:alert] %>
+      <p class="bandeau bandeau-blocage mt-5"><%= alert %></p>
+    <% end %>
+
+    <%= form_with url: password_path(params[:token]), method: :put, class: "mt-6 flex flex-col gap-4" do |form| %>
+      <div data-controller="mot-de-passe">
+        <%= form.label :password, t("app.mot_de_passe.nouveau_mot_de_passe"), class: "libelle" %>
+        <div class="flex items-center gap-2 bg-surface-alt rounded-[var(--radius-champ)] pr-4">
+          <%= form.password_field :password, required: true,
+                autocomplete: "new-password", maxlength: 72,
+                class: "champ-plein !bg-transparent flex-1",
+                data: { "mot-de-passe-target": "champ" } %>
+          <button type="button" class="text-sm font-semibold text-navy shrink-0"
+                  data-mot-de-passe-target="bouton" data-action="mot-de-passe#basculer"
+                  data-afficher="<%= t("app.connexion.afficher") %>" data-masquer="<%= t("app.connexion.masquer") %>">
+            <%= t("app.connexion.afficher") %>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :password_confirmation, t("app.mot_de_passe.confirmer"), class: "libelle" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password",
+              maxlength: 72, class: "champ-plein" %>
+      </div>
+
+      <div class="rounded-[var(--radius-bloc)] p-4 flex flex-col gap-2" style="background-color: var(--color-surface-alt);">
+        <p class="text-sm text-texte-discret"><%= t("app.mot_de_passe.regle_longueur") %></p>
+        <p class="text-sm text-texte-discret"><%= t("app.mot_de_passe.regle_majuscule") %></p>
+        <p class="text-sm text-texte-discret"><%= t("app.mot_de_passe.regle_different") %></p>
+      </div>
+
+      <%= form.submit t("app.mot_de_passe.enregistrer_connecter"), class: "bouton bouton-primaire bouton-large mt-2" %>
+    <% end %>
+
+    <div class="flex-1"></div>
+  </div>
 </div>

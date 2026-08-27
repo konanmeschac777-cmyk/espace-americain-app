@@ -1,0 +1,54 @@
+<div class="flux-fond">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+  </header>
+
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1" style="color: var(--color-dispo);"><%= t("app.catalogue.ajoute_au_fonds") %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.catalogue.livre_en_rayon") %></h1>
+
+    <div class="w-full">
+      <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-dispo-fond">
+        <span class="text-3xl font-bold text-dispo" aria-hidden="true">✓</span>
+      </span>
+
+      <div class="flex items-start gap-4 text-left">
+        <%= dos_livre(book) %>
+        <div class="min-w-0">
+          <p class="font-display font-semibold text-encre" style="font-size:20px;"><%= book.title %></p>
+          <p class="text-sm italic text-texte-discret mt-1"><%= auteur(book) %></p>
+          <div class="mt-2"><%= badge_disponibilite(book) %></div>
+        </div>
+      </div>
+
+      <div class="mt-5 rounded-[var(--radius-bloc)] p-5 bg-surface-alt text-center">
+        <p class="surtitre mb-2"><%= t("app.catalogue.a_ranger_sous_cote") %></p>
+        <% if book.shelf_mark.present? %>
+          <p class="font-display font-semibold text-3xl text-navy leading-none"><%= book.shelf_mark %></p>
+          <p class="text-sm text-texte-discret mt-2"><%= t("app.catalogue.rayon", nom: nom_categorie(book.category)) %></p>
+        <% else %>
+          <p class="text-sm text-texte-discret"><%= t("app.catalogue.pas_encore_attribuee") %></p>
+        <% end %>
+      </div>
+
+      <div class="mt-4 rounded-[var(--radius-bloc)] p-4 bg-surface-alt flex items-center justify-between">
+        <span class="text-sm text-texte-discret"><%= t("app.catalogue.fonds_compte_desormais") %></span>
+        <span class="font-bold text-encre">
+          <%= Book.active.sum(:total_copies) %> <%= pluriel(Book.active.sum(:total_copies), singulier: "app.mots.exemplaire.un", pluriel: "app.mots.exemplaire.plusieurs") %>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.catalogue.ajouter_un_autre"), new_book_path, class: "lien" %>
+  <%= link_to t("app.catalogue.voir_catalogue"), books_path, class: "action" %>
+</div>

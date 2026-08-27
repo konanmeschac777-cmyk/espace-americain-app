@@ -1,0 +1,98 @@
+<% content_for :title, t("app.abonnes.titre_page_liste") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= t("app.abonnes.cartes_delivrees", n: @total_membres) %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.abonnes.titre") %></h1>
+
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+    <% end %>
+
+    <%= form_with url: members_path, method: :get, class: "mb-4",
+                  data: { controller: "recherche", turbo_frame: "resultats_abonnes", turbo_action: "advance" } do %>
+      <% if @filtre != "tous" %>
+        <%= hidden_field_tag :filtre, @filtre %>
+      <% end %>
+      <div class="flex items-center gap-2 bg-surface-alt rounded-[var(--radius-puce)] px-4" style="min-height:50px;">
+        <span class="text-texte-estompe" aria-hidden="true">⌕</span>
+        <input type="search" id="recherche_abonnes" name="q" value="<%= @query %>"
+               class="flex-1 border-0 bg-transparent py-3 text-base focus:outline-none"
+               placeholder="<%= t("app.abonnes.recherche_placeholder") %>"
+               autocomplete="off" data-action="input->recherche#chercher">
+      </div>
+    <% end %>
+
+    <div class="flex gap-2 mb-4 overflow-x-auto">
+      <% { "tous" => t("app.abonnes.filtre_tous"), "en_retard" => t("app.abonnes.filtre_en_retard"), "a_reinscrire" => t("app.abonnes.filtre_a_reinscrire") }.each do |cle, libelle| %>
+        <%= link_to libelle, members_path(filtre: cle, q: @query.presence),
+                    class: "puce #{'puce-active' if @filtre == cle}",
+                    data: { turbo_frame: "resultats_abonnes" } %>
+      <% end %>
+    </div>
+
+    <%= turbo_frame_tag "resultats_abonnes" do %>
+      <% if @a_relancer&.any? %>
+        <p class="surtitre mb-2"><%= t("app.abonnes.demandent_action") %></p>
+        <ul class="flex flex-col gap-2 mb-5">
+          <% @a_relancer.each do |member| %>
+            <li><%= render "ligne", member: member %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @members.any? %>
+        <p class="surtitre mb-2">
+          <%= @filtre == "tous" ? t("app.abonnes.tous_les_abonnes") : { "en_retard" => t("app.abonnes.filtre_en_retard"), "a_reinscrire" => t("app.abonnes.filtre_a_reinscrire") }[@filtre]&.upcase %>
+        </p>
+        <ul class="flex flex-col gap-2">
+          <% @members.each do |member| %>
+            <li><%= render "ligne", member: member %></li>
+          <% end %>
+        </ul>
+      <% elsif @query.present? %>
+        <div class="etat-vide">
+          <p class="etat-vide-titre"><%= t("app.retour.aucun_resultat_titre") %></p>
+          <p class="etat-vide-texte"><%= t("app.abonnes.aucun_resultat_texte", recherche: @query) %></p>
+        </div>
+      <% else %>
+        <div class="etat-vide">
+          <% case @filtre %>
+          <% when "en_retard" %>
+            <p class="etat-vide-titre"><%= t("app.abonnes.aucun_retard_titre") %></p>
+            <p class="etat-vide-texte"><%= t("app.abonnes.aucun_retard_texte") %></p>
+          <% when "a_reinscrire" %>
+            <p class="etat-vide-titre"><%= t("app.abonnes.aucune_expiree_titre") %></p>
+            <p class="etat-vide-texte"><%= t("app.abonnes.aucune_expiree_texte") %></p>
+          <% else %>
+            <p class="etat-vide-titre"><%= t("app.abonnes.aucun_abonne_titre") %></p>
+            <p class="etat-vide-texte"><%= t("app.abonnes.aucun_abonne_texte") %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="mt-5 rounded-[var(--radius-bloc)] p-4 bg-surface-alt flex items-center justify-between">
+        <span class="text-sm text-texte-discret"><%= t("app.abonnes.adhesions_a_jour") %></span>
+        <span class="font-bold text-encre"><%= @adhesions_a_jour %> sur <%= @total_membres %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-simple">
+  <%= link_to t("app.abonnes.inscrire_abonne"), new_member_path, class: "action" %>
+</div>

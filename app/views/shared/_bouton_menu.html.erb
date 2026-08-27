@@ -1,0 +1,7 @@
+<%# Bouton qui ouvre le tiroir de navigation (écran 24). Passe clair: true
+    sur fond marine plein (le reçu de prêt). La position (absolue ou
+    élément d'une ligne flex) est décidée par l'appelant, pas ici. %>
+<button type="button" class="flux-bouton-rond <%= "flux-bouton-rond-clair" if local_assigns[:clair] %>"
+        aria-label="<%= t("app.commun.menu") %>" data-action="click->tiroir#ouvrir">
+  <span class="icone-menu" aria-hidden="true"><span></span><span></span><span></span></span>
+</button>

@@ -1,0 +1,60 @@
+<% content_for :title, @book.title %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete">
+    <%= render "shared/bouton_menu" %>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to books_path, class: "flux-bouton-rond", "aria-label": t("app.catalogue.titre_page") do %>
+      &larr;
+    <% end %>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1">
+      <%= t("app.catalogue.fiche_ouvrage") %><% if @book.shelf_mark.present? %> &middot; <span class="donnee"><%= @book.shelf_mark %></span><% end %>
+    </p>
+    <h1 class="titre-ecran mb-5"><%= @book.title %></h1>
+
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+
+    <div class="carte p-4">
+      <div class="flex items-start gap-4 pb-4" style="border-bottom:1px solid var(--color-bordure);">
+        <%= dos_livre(@book, grand: true) %>
+        <div class="min-w-0 flex-1">
+          <p class="surtitre mb-1"><%= nom_categorie(@book.category) %></p>
+          <p class="text-sm italic text-texte-discret"><%= auteur(@book) %></p>
+          <div class="mt-2"><%= badge_disponibilite(@book) %></div>
+          <% if @book.needs_completion? %>
+            <span class="badge badge-attention mt-2 inline-block"><%= t("app.catalogue.a_completer") %></span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-4">
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="tuile-libelle"><%= t("app.catalogue.cote") %></p>
+          <p class="donnee font-bold text-navy mt-1"><%= @book.shelf_mark.presence || "—" %></p>
+        </div>
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="tuile-libelle"><%= t("app.catalogue.exemplaires") %></p>
+          <p class="font-bold text-encre mt-1"><%= @book.total_copies %></p>
+        </div>
+      </div>
+
+      <p class="surtitre mt-5 mb-2"><%= t("app.catalogue.resume") %></p>
+      <p class="text-sm <%= @book.summary.present? ? "text-texte-discret" : "text-texte-estompe italic" %>">
+        <%= @book.summary.presence || t("app.catalogue.resume_non_renseigne") %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-simple">
+  <%= link_to t("app.admin.modifier_ouvrage"), edit_book_path(@book), class: "action" %>
+</div>

@@ -1,68 +1,79 @@
-<% content_for :title, "Enregistrer un retour" %>
+<% content_for :title, t("app.retour.titre_page") %>
 
-<%= render "shared/entete", titre: "Enregistrer un retour" %>
+<div class="flux-fond <%= "zone-flottante" if @loan %>">
+  <div class="flux-motif" aria-hidden="true"></div>
 
-<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
-  <% if @confirmed_loan %>
-    <%= render "succes", loan: @confirmed_loan %>
-  <% else %>
-
-    <% if flash[:alert] %>
-      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to root_path, class: "flux-bouton-rond flux-entete-droite", "aria-label": t("app.commun.fermer") do %>
+      ✕
     <% end %>
+  </header>
 
-    <%= form_with url: new_return_path, method: :get, class: "mb-4",
-                  data: { controller: "recherche",
-                          turbo_frame: "resultats_retours",
-                          turbo_action: "advance" } do %>
-      <label class="libelle" for="q">Titre du livre ou nom de l'abonné</label>
-      <div class="flex gap-2">
-        <input type="search" id="q" name="q" value="<%= @query %>"
-               class="champ" placeholder="orateur, ou Diarra"
-               autocomplete="off" autofocus
-               data-action="input->recherche#chercher">
-        <button type="submit" class="bouton bouton-primaire shrink-0">Chercher</button>
-      </div>
-      <p class="aide">Seuls les livres actuellement sortis sont cherchés.</p>
-    <% end %>
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1"><%= t("app.retour.eyebrow") %></p>
+    <h1 class="titre-ecran mb-5">
+      <% if @loan.nil? %>
+        <%= t("app.retour.quel_livre") %>
+      <% elsif @loan.overdue? %>
+        <%= t("app.retour.rendu_en_retard") %>
+      <% else %>
+        <%= t("app.retour.le_livre_revient") %>
+      <% end %>
+    </h1>
 
-    <%= turbo_frame_tag "resultats_retours" do %>
-    <% if @loans.any? %>
-      <p class="surtitre mb-2">
-        <%= @query.present? ? "Résultats" : "Livres sortis" %>
-        (<%= @loans.size %><%= "+" if @loans.size == ReturnsController::RESULTS_LIMIT %>)
-      </p>
+    <div class="w-full text-left">
+      <% if flash[:alert] %>
+        <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+      <% end %>
 
-      <ul class="flex flex-col gap-2">
-        <% @loans.each do |loan| %>
-          <li><%= render "ligne", loan: loan %></li>
+      <%= form_with url: new_return_path, method: :get, class: "mb-4",
+                    data: { controller: "recherche", turbo_frame: "resultats_retour", turbo_action: "advance" } do %>
+        <div class="flex items-center gap-2 bg-surface-alt rounded-[var(--radius-puce)] px-4" style="min-height:50px;">
+          <span class="text-texte-estompe" aria-hidden="true">⌕</span>
+          <input type="search" name="q" value="<%= @query %>"
+                 class="flex-1 border-0 bg-transparent py-3 text-base focus:outline-none"
+                 placeholder="<%= t("app.retour.recherche_placeholder") %>"
+                 autocomplete="off" autofocus
+                 data-action="input->recherche#chercher">
+          <% if @query.present? %>
+            <%= link_to "✕", new_return_path, class: "text-texte-estompe", data: { turbo_frame: "resultats_retour" } %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= turbo_frame_tag "resultats_retour" do %>
+        <% if @loan %>
+          <%= render "apercu", loan: @loan %>
+        <% elsif @loans&.any? %>
+          <p class="surtitre mb-2"><%= t("app.retour.resultats", n: @loans.size) %></p>
+          <%= render "liste", loans: @loans %>
+        <% elsif @nothing_on_loan %>
+          <div class="etat-vide">
+            <p class="etat-vide-titre"><%= t("app.retour.aucun_emprunte_titre") %></p>
+            <p class="etat-vide-texte"><%= t("app.retour.aucun_emprunte_texte") %></p>
+          </div>
+        <% elsif @query.present? %>
+          <div class="etat-vide">
+            <p class="etat-vide-titre"><%= t("app.retour.aucun_resultat_titre") %></p>
+            <p class="etat-vide-texte">
+              <%= t("app.retour.aucun_resultat_texte", recherche: @query) %>
+            </p>
+          </div>
+        <% else %>
+          <div class="etat-vide">
+            <p class="etat-vide-titre"><%= t("app.retour.commence_chercher_titre") %></p>
+            <p class="etat-vide-texte"><%= t("app.retour.commence_chercher_texte") %></p>
+          </div>
         <% end %>
-      </ul>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-    <% elsif @nothing_on_loan %>
-      <%# Vrai état vide : tous les livres sont sur les étagères. %>
-      <div class="etat-vide">
-        <p class="etat-vide-titre">Aucun livre n'est actuellement emprunté</p>
-        <p class="etat-vide-texte">
-          Les 93 exemplaires sont sur les étagères. Il n'y a rien à rendre.
-        </p>
-      </div>
-
-    <% else %>
-      <div class="etat-vide">
-        <p class="etat-vide-titre">Aucun résultat</p>
-        <p class="etat-vide-texte">
-          Rien ne correspond à « <%= @query %> » parmi les livres sortis.
-          Le livre est peut-être déjà rentré.
-        </p>
-        <%= link_to "Voir tous les livres sortis", new_return_path,
-                    class: "bouton bouton-contour mt-4",
-                    data: { turbo_frame: "_top" } %>
-      </div>
-    <% end %>
-    <% end %>
-
-  <% end %>
-</main>
-
-<%= render "shared/nav", actif: :retour %>
+<%= render "barre", loan: @loan %>

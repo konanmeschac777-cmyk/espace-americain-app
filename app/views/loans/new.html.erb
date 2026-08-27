@@ -1,33 +1,70 @@
-<% content_for :title, "Enregistrer un prêt" %>
+<% content_for :title, t("app.pret.titre_page") %>
 
-<%= render "shared/entete", titre: "Enregistrer un prêt" %>
-
-<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
-  <% if @confirmed_loan %>
+<% if @confirmed_loan %>
+  <div class="recu-fond">
+    <div class="recu-motif" aria-hidden="true"></div>
+    <div style="position:absolute; left:22px; top:22px; z-index:6;">
+      <%= render "shared/bouton_menu", clair: true %>
+    </div>
     <%= render "succes", loan: @confirmed_loan %>
-  <% else %>
-    <% etape = @member.nil? ? 1 : (@book.nil? ? 2 : 3) %>
-    <%= render "etapes", courante: etape %>
+  </div>
+<% else %>
+  <% etape = @member.nil? ? 1 : (@book.nil? ? 2 : 3) %>
+  <% bloque = @member&.borrow_block_reason %>
+  <% eyebrow, titre = if bloque == :already_borrowing then [ nil, t("app.pret.impossible") ]
+                       elsif bloque == :membership_expired then [ nil, t("app.pret.adhesion_expiree") ]
+                       elsif bloque == :suspended then [ nil, t("app.pret.impossible") ]
+                       else [ t("app.pret.eyebrow_etape", n: etape),
+                              [ t("app.pret.etape_1_titre"), t("app.pret.etape_2_titre"), t("app.pret.etape_3_titre") ][etape - 1] ]
+                       end %>
 
-    <% if flash[:alert] %>
-      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
-    <% end %>
-    <% if flash[:notice] %>
-      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
-    <% end %>
+  <div class="flux-fond zone-flottante">
+    <div class="flux-motif" aria-hidden="true"></div>
 
-    <% if etape == 1 %>
-      <%= render "recherche_abonne" %>
-    <% else %>
-      <%= render "abonne_choisi", member: @member %>
-
-      <% if etape == 2 %>
-        <%= render "recherche_ouvrage", member: @member %>
-      <% else %>
-        <%= render "confirmation", member: @member, book: @book, loan: @loan %>
+    <header class="flux-entete flux-entete-centre">
+      <% if bloque %>
+        <span class="flux-entete-gauche">
+          <%= render "shared/bouton_menu" %>
+        </span>
       <% end %>
-    <% end %>
-  <% end %>
-</main>
+      <span class="flex h-9 w-9 items-center justify-center">
+        <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+      </span>
+      <%= link_to root_path, class: "flux-bouton-rond flux-entete-droite", "aria-label": t("app.commun.fermer") do %>
+        ✕
+      <% end %>
+    </header>
 
-<%= render "shared/nav", actif: :pret %>
+    <div class="flux-corps flex flex-col items-center text-center">
+      <% if eyebrow %>
+        <p class="surtitre mb-1"><%= eyebrow %></p>
+      <% end %>
+      <h1 class="titre-ecran mb-5"><%= titre %></h1>
+
+      <div class="w-full text-left">
+        <% if flash[:alert] %>
+          <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+        <% end %>
+        <% if flash[:notice] %>
+          <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+        <% end %>
+
+        <% if etape == 1 %>
+          <%= render "recherche_abonne" %>
+        <% else %>
+          <%= render "abonne_choisi", member: @member %>
+
+          <% unless bloque %>
+            <% if etape == 2 %>
+              <%= render "recherche_ouvrage", member: @member %>
+            <% else %>
+              <%= render "confirmation", member: @member, book: @book, loan: @loan %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render "barre", etape: etape, member: @member, book: @book, bloque: bloque %>
+<% end %>

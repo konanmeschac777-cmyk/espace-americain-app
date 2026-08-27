@@ -1,0 +1,99 @@
+<% content_for :title, t("app.catalogue.titre_page") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= t("app.catalogue.eyebrow", n: @total_copies) %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.catalogue.titre") %></h1>
+
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+
+    <%= form_with url: books_path, method: :get, class: "mb-4",
+                  data: { controller: "recherche", turbo_frame: "resultats_ouvrages_catalogue", turbo_action: "advance" } do %>
+      <% if @filtre != "toutes" %>
+        <%= hidden_field_tag :categorie, @filtre %>
+      <% end %>
+      <div class="flex items-center gap-2 bg-surface-alt rounded-[var(--radius-puce)] px-4" style="min-height:50px;">
+        <span class="text-texte-estompe" aria-hidden="true">⌕</span>
+        <input type="search" id="recherche_catalogue" name="q" value="<%= @query %>"
+               class="flex-1 border-0 bg-transparent py-3 text-base focus:outline-none"
+               placeholder="<%= t("app.catalogue.recherche_placeholder") %>"
+               autocomplete="off" data-action="input->recherche#chercher">
+      </div>
+    <% end %>
+
+    <div class="flex gap-2 mb-4 overflow-x-auto">
+      <%= link_to t("app.catalogue.tout"), books_path(q: @query.presence),
+                  class: "puce #{'puce-active' if @filtre == 'toutes'}",
+                  data: { turbo_frame: "resultats_ouvrages_catalogue" } %>
+      <% @categories.each do |categorie| %>
+        <%= link_to nom_categorie(categorie), books_path(categorie: categorie.slug, q: @query.presence),
+                    class: "puce #{'puce-active' if @filtre == categorie.slug}",
+                    data: { turbo_frame: "resultats_ouvrages_catalogue" } %>
+      <% end %>
+      <%= link_to books_path(categorie: "completer"),
+                  class: "puce #{@filtre == 'completer' ? 'puce-active' : 'puce-travail'}",
+                  data: { turbo_frame: "resultats_ouvrages_catalogue" } do %>
+        <%= t("app.catalogue.a_completer") %> <span class="donnee"><%= @compteur_completer %></span>
+      <% end %>
+    </div>
+
+    <%= turbo_frame_tag "resultats_ouvrages_catalogue" do %>
+      <% if @groupes %>
+        <% @groupes.each do |categorie, livres| %>
+          <p class="surtitre mb-2"><%= nom_categorie(categorie).upcase %></p>
+          <ul class="flex flex-col gap-2 mb-5">
+            <% livres.each do |book| %>
+              <li><%= render "ligne", book: book %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% elsif @books.any? %>
+        <p class="surtitre mb-2">
+          <%= @books.size %> <%= pluriel(@books.size, singulier: "app.mots.ouvrage.un", pluriel: "app.mots.ouvrage.plusieurs") %>
+        </p>
+        <ul class="flex flex-col gap-2 mb-5">
+          <% @books.each do |book| %>
+            <li><%= render "ligne", book: book %></li>
+          <% end %>
+        </ul>
+      <% elsif @filtre == "completer" %>
+        <div class="etat-vide">
+          <p class="etat-vide-titre"><%= t("app.catalogue.toutes_completes_titre") %></p>
+          <p class="etat-vide-texte"><%= t("app.catalogue.toutes_completes_texte") %></p>
+        </div>
+      <% elsif @query.present? %>
+        <div class="etat-vide">
+          <p class="etat-vide-titre"><%= t("app.retour.aucun_resultat_titre") %></p>
+          <p class="etat-vide-texte"><%= t("app.catalogue.aucun_resultat_texte", recherche: @query) %></p>
+        </div>
+      <% else %>
+        <div class="etat-vide">
+          <p class="etat-vide-titre"><%= t("app.catalogue.aucun_dans_categorie_titre") %></p>
+          <p class="etat-vide-texte"><%= t("app.catalogue.aucun_dans_categorie_texte") %></p>
+        </div>
+      <% end %>
+
+      <div class="rounded-[var(--radius-bloc)] p-4 bg-surface-alt flex items-center justify-between">
+        <span class="text-sm text-texte-discret"><%= t("app.catalogue.titres_au_catalogue") %></span>
+        <span class="font-bold text-encre"><%= @total_titres %> <%= pluriel(@total_titres, singulier: "app.mots.titre_livre.un", pluriel: "app.mots.titre_livre.plusieurs") %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-simple">
+  <%= link_to t("app.catalogue.ajouter_ouvrage"), new_book_path, class: "action" %>
+</div>

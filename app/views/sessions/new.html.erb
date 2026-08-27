@@ -1,47 +1,71 @@
-<% content_for :title, "Connexion" %>
+<% content_for :title, t("app.connexion.titre_page") %>
 
-<main class="min-h-screen flex flex-col justify-center px-4 py-10">
-  <div class="mx-auto w-full max-w-[400px]">
+<div class="max-w-[430px] mx-auto min-h-screen bg-white flex flex-col">
+  <div class="h-[250px] relative overflow-hidden shrink-0 bg-navy">
+    <%= image_tag "slide-1.jpg",
+          alt: t("app.accueil.photo_groupe"),
+          class: "absolute inset-0 w-full h-full object-cover" %>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(10,34,64,0.34) 0%, rgba(10,34,64,0.10) 45%, rgba(10,34,64,0.28) 100%);"></div>
+    <%= link_to root_path, class: "absolute left-[18px] top-[18px] h-9 w-9 rounded-full bg-white/90 flex items-center justify-center text-xl text-navy", "aria-label": "Retour" do %>
+      &larr;
+    <% end %>
+  </div>
 
-    <%# Marque dessinée en formes simples : aucune image ni police d'icônes
-        à charger, l'écran s'affiche même sans réseau. %>
-    <div class="flex flex-col items-center mb-8">
-      <span class="flex h-14 w-14 items-center justify-center rounded bg-navy mb-3">
-        <span class="block h-6 w-6 border-t-4 border-b-4 border-white"></span>
+  <div class="panneau-releve flex-1 flex flex-col px-[26px] pb-[26px]">
+    <div class="flex justify-center -mt-[26px]">
+      <span class="bg-white rounded-lg px-[11px] py-[9px] flex items-center shadow-[0_3px_10px_rgba(10,34,64,0.14)]">
+        <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-[34px] w-auto" %>
       </span>
-      <p class="surtitre">American Shelf de Tiassalé</p>
-      <h1 class="font-titre text-2xl font-extrabold text-encre mt-1">Espace bibliothécaire</h1>
+    </div>
+
+    <div class="text-center mt-4">
+      <h1 class="titre-ecran"><%= t("app.connexion.titre") %></h1>
+      <p class="mt-2 text-sm leading-relaxed text-texte-estompe max-w-[33ch] mx-auto">
+        <%= t("app.connexion.description") %>
+      </p>
     </div>
 
     <% if flash[:alert] %>
-      <p class="bandeau bandeau-blocage mb-5"><%= flash[:alert] %></p>
+      <p class="bandeau bandeau-blocage mt-5"><%= flash[:alert] %></p>
     <% end %>
     <% if flash[:notice] %>
-      <p class="bandeau bandeau-info mb-5"><%= flash[:notice] %></p>
+      <p class="bandeau bandeau-info mt-5"><%= flash[:notice] %></p>
     <% end %>
 
-    <div class="carte p-5">
-      <%= form_with url: session_url do |form| %>
-        <div class="mb-4">
-          <%= form.label :email_address, "Adresse email", class: "libelle" %>
-          <%= form.email_field :email_address, required: true, autofocus: true,
-                autocomplete: "username", value: params[:email_address],
-                placeholder: "bibliothecaire@exemple.ci", class: "champ" %>
-        </div>
+    <%= form_with url: session_url, class: "mt-6 flex flex-col gap-4" do |form| %>
+      <div>
+        <%= form.label :email_address, t("app.connexion.email"), class: "libelle" %>
+        <%= form.email_field :email_address, required: true, autofocus: true,
+              autocomplete: "username", value: params[:email_address],
+              placeholder: "bibliothecaire@shelf.ci", class: "champ-plein" %>
+      </div>
 
-        <div class="mb-5">
-          <%= form.label :password, "Mot de passe", class: "libelle" %>
+      <div data-controller="mot-de-passe">
+        <%= form.label :password, t("app.connexion.mot_de_passe"), class: "libelle" %>
+        <div class="flex items-center gap-2 bg-surface-alt rounded-[var(--radius-champ)] pr-4">
           <%= form.password_field :password, required: true,
-                autocomplete: "current-password", maxlength: 72, class: "champ" %>
+                autocomplete: "current-password", maxlength: 72,
+                class: "champ-plein !bg-transparent flex-1",
+                data: { "mot-de-passe-target": "champ" } %>
+          <button type="button" class="text-sm font-semibold text-navy shrink-0"
+                  data-mot-de-passe-target="bouton" data-action="mot-de-passe#basculer"
+                  data-afficher="<%= t("app.connexion.afficher") %>" data-masquer="<%= t("app.connexion.masquer") %>">
+            <%= t("app.connexion.afficher") %>
+          </button>
         </div>
+        <p class="text-right mt-2">
+          <%= link_to t("app.connexion.oublie"), new_password_path, class: "text-sm font-semibold text-rouge underline" %>
+        </p>
+      </div>
 
-        <%= form.submit "Se connecter", class: "bouton bouton-primaire bouton-large bouton-grand" %>
-      <% end %>
-    </div>
+      <%= form.submit t("app.connexion.connecter"), class: "bouton bouton-primaire bouton-large mt-2" %>
+    <% end %>
 
-    <p class="text-center mt-5">
-      <%= link_to "Mot de passe oublié", new_password_path,
-                  class: "text-sm text-texte-discret underline" %>
+    <div class="flex-1"></div>
+
+    <p class="text-center text-sm text-texte-estompe mt-6">
+      <%= t("app.connexion.souci") %>
+      <span class="text-navy font-bold"><%= t("app.connexion.contact") %></span>
     </p>
   </div>
-</main>
+</div>

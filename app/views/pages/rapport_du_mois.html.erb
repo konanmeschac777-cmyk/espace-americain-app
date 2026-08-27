@@ -1,0 +1,77 @@
+<% content_for :title, t("app.rapport.titre_page") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete">
+    <%= render "shared/bouton_menu" %>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to tableau_de_bord_path, class: "flux-bouton-rond", "aria-label": t("app.abonnes.titre_page_liste") do %>
+      &darr;
+    <% end %>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= t("app.rapport.eyebrow", mois: l(@mois, format: "%B %Y").upcase) %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.rapport.titre") %></h1>
+
+    <div class="carte p-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="font-display font-semibold text-navy" style="font-size:32px; line-height:1;"><%= @prets_du_mois %></p>
+          <p class="tuile-libelle mt-1"><%= pluriel(@prets_du_mois, singulier: "app.rapport.pret_enregistre_un", pluriel: "app.rapport.prets_enregistres_plusieurs") %></p>
+        </div>
+        <div class="p-4 rounded-[var(--radius-bloc)]" style="background-color: var(--color-dispo-fond);">
+          <p class="font-display font-semibold" style="font-size:32px; line-height:1; color: var(--color-dispo);"><%= @nouveaux_abonnes %></p>
+          <p class="mt-1 text-sm" style="color: var(--color-dispo);"><%= pluriel(@nouveaux_abonnes, singulier: "app.rapport.nouvel_abonne_un", pluriel: "app.rapport.nouveaux_abonnes_plusieurs") %></p>
+        </div>
+      </div>
+
+      <% if @prets_du_mois.zero? && @plus_demandes.empty? %>
+        <div class="etat-vide mt-5">
+          <p class="etat-vide-titre"><%= t("app.rapport.pas_assez_donnees_titre") %></p>
+          <p class="etat-vide-texte"><%= t("app.rapport.pas_assez_donnees_texte") %></p>
+        </div>
+      <% else %>
+        <p class="surtitre mt-5 mb-3"><%= t("app.rapport.prets_par_semaine") %></p>
+        <div class="flex flex-col gap-2">
+          <% @semaines.each do |libelle, compte, proportion| %>
+            <div class="flex items-center gap-3">
+              <span class="donnee text-sm text-texte-estompe w-8 shrink-0"><%= libelle %></span>
+              <div class="flex-1 h-2 rounded-full bg-surface-alt overflow-hidden">
+                <div class="h-full rounded-full bg-navy" style="width: <%= proportion %>%"></div>
+              </div>
+              <span class="donnee text-sm text-texte-discret w-6 text-right shrink-0"><%= compte %></span>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @plus_demandes.any? %>
+          <p class="surtitre mt-5 mb-3"><%= t("app.rapport.plus_demandes") %></p>
+          <div class="flex flex-col gap-2">
+            <% @plus_demandes.each do |book, compte| %>
+              <div class="flex items-baseline justify-between gap-2">
+                <span class="font-display font-semibold text-encre truncate" style="font-size:15px;"><%= book.title %></span>
+                <span class="text-sm font-bold text-navy shrink-0"><%= compte %> <%= pluriel(compte, singulier: "app.mots.pret.un", pluriel: "app.mots.pret.plusieurs") %></span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="mt-5 pt-4 flex items-center justify-between" style="border-top:1px solid var(--color-bordure);">
+        <span class="text-sm text-texte-discret"><%= t("app.rapport.rendus_dans_les_delais") %></span>
+        <span class="font-bold text-encre"><%= @rendus_a_temps %> sur <%= @rendus_total %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.rapport.voir_mois", mois: l(@mois - 1.month, format: "%B").downcase), rapport_du_mois_path(mois: (@mois - 1.month).strftime("%Y-%m")), class: "lien" %>
+  <% if @mois < Date.current.beginning_of_month %>
+    <%= link_to t("app.rapport.voir_mois", mois: l(@mois + 1.month, format: "%B").downcase), rapport_du_mois_path(mois: (@mois + 1.month).strftime("%Y-%m")), class: "action" %>
+  <% end %>
+</div>

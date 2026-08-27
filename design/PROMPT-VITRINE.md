@@ -169,18 +169,179 @@ bibliothèque.
 
 ---
 
+# Deuxième vague : les écrans du 20 août
+
+Trois écrans se sont ajoutés depuis la première vitrine. Ils sont plus
+courts que celui du prêt, et chacun tient dans un prompt.
+
+**Rappel indispensable :** ces trois prompts supposent que le bloc COULEURS,
+TYPOGRAPHIE et FORMES du Prompt Vitrine a déjà été passé dans la même
+conversation. Sinon, recolle-le en tête de chacun.
+
+Depuis cette vague, tous les écrans portent une **barre de navigation basse
+à quatre onglets** : Prêter, Retour, Emprunts, Inscrire. Icônes en formes
+géométriques simples, onglet actif en navy avec un filet de 2 px au-dessus,
+les autres en gris.
+
+---
+
+## PROMPT RETOUR
+
+```
+Écran « Enregistrer un retour » du back-office, mobile 390 px, avec le
+design system. Même en-tête navy que l'écran de prêt : surtitre « AMERICAN
+SHELF DE TIASSALÉ », titre « Enregistrer un retour », lien « Quitter » à
+droite. Barre de navigation basse à quatre onglets, « Retour » actif.
+
+Un seul champ de recherche, libellé « Titre du livre ou nom de l'abonné »,
+suivi d'un bouton navy « Chercher ». Sous le champ, en petit et en gris :
+« Seuls les livres actuellement sortis sont cherchés. » C'est la règle qui
+rend le geste rapide : on ne cherche jamais dans tout le catalogue.
+
+DESSINE QUATRE ÉCRANS :
+
+1. LA LISTE DES LIVRES SORTIS. Surtitre « LIVRES SORTIS (3) », puis trois
+cartes, les retards en tête. Chaque carte contient, de haut en bas : le
+titre en gras sur deux lignes maximum, le nom de l'abonné suivi de son
+numéro de carte en monospace gris, la ligne « Échéance » avec la date en
+monospace, puis un badge d'état. À droite de la carte, un bouton navy de
+taille réduite « Retourner ».
+- Devenez un grand orateur / Fatou Diarra TSL-2026-0034 / Échéance 14 août
+  2026 / badge rouge « En retard de 6 jours »
+- The One Thing, passez à l'essentiel / Yao Kouassi TSL-2026-0155 /
+  Échéance 22 août 2026 / badge ambre « À rendre dans 2 jours »
+- S'organiser pour réussir / Kouadio N'Guessan TSL-2026-0112 / Échéance
+  31 août 2026 / badge vert « Dans les délais »
+
+2. RECHERCHE PAR NOM D'ABONNÉ. Le champ contient « Diarra », le surtitre
+devient « RÉSULTATS (1) », et seule la carte de Fatou Diarra reste.
+
+3. ÉTAT VIDE. Cadre en pointillés : « Aucun livre n'est actuellement
+emprunté », et dessous « Les 93 exemplaires sont sur les étagères. Il n'y
+a rien à rendre. » C'est une bonne nouvelle, pas un écran cassé.
+
+4. SUCCÈS APRÈS UN RETOUR EN RETARD. Carte centrée : cercle vert clair de
+64 px avec une coche verte, surtitre « RETOUR ENREGISTRÉ », le titre entre
+guillemets français « Devenez un grand orateur », puis en gris « Rendu par
+Fatou Diarra ». Sous cela, un bandeau ambre aligné à gauche : « Rendu avec
+6 jours de retard, l'échéance était le 14 août 2026. » Ton neutre, jamais
+de reproche. Un filet horizontal, puis en gris : « L'exemplaire est de
+nouveau disponible et Fatou Diarra peut emprunter à nouveau. » Enfin deux
+boutons pleine largeur empilés, « Nouveau retour » en navy et « Prêter un
+livre » en contour.
+```
+
+---
+
+## PROMPT INSCRIPTION
+
+```
+Écran « Nouvel abonné » du back-office, mobile 390 px, avec le design
+system. En-tête navy habituel, titre « Nouvel abonné ». Barre de
+navigation basse, onglet « Inscrire » actif.
+
+DESSINE DEUX ÉCRANS :
+
+1. LE FORMULAIRE. Quatre champs empilés, chacun avec son libellé en gras
+au-dessus :
+- « Prénom », vide
+- « Nom », vide
+- « Téléphone », vide, avec sous le champ en petit et en gris :
+  « Facultatif, mais c'est le seul moyen d'appeler en cas de retard. »
+- « Numéro de carte », pré-rempli en monospace avec TSL-2026-0235, et
+  dessous : « Calculé automatiquement. Ne le change que si tu utilises des
+  cartes déjà imprimées. »
+
+Puis une carte sur fond gris clair, surtitre « ADHÉSION », contenant
+« Du 20 août 2026 au 20 août 2027 » avec les dates en monospace, et
+dessous en gris « Gratuite, valable un an, renouvelable au comptoir ».
+Aucun champ de montant, aucun mode de paiement, aucun reçu : l'adhésion ne
+coûte rien.
+
+Enfin un bouton navy pleine largeur de 60 px, « Inscrire ».
+
+2. LE SUCCÈS. Carte centrée : cercle vert clair de 64 px avec une coche,
+surtitre « ABONNÉ INSCRIT », le nom « Mariam Sanogo » en gras. Un filet
+horizontal, puis le surtitre « À ÉCRIRE SUR LA CARTE » et, juste dessous,
+le numéro TSL-2026-0235 en monospace, en très grand, en navy, graisse 700.
+C'est l'élément dominant de l'écran : le bibliothécaire doit le recopier
+sur la carte physique, c'est le seul geste que l'application ne peut pas
+faire à sa place. Sous la carte, en gris : « Adhésion valable jusqu'au
+20 août 2027. » Puis deux boutons pleine largeur empilés, « Prêter un
+livre à Mariam » en navy et « Inscrire quelqu'un d'autre » en contour.
+```
+
+---
+
+## PROMPT EMPRUNTS
+
+```
+Écran « Emprunts en cours » du back-office, mobile 390 px, avec le design
+system. En-tête navy habituel. Barre de navigation basse, onglet
+« Emprunts » actif.
+
+En haut, une rangée de quatre puces de filtre défilant horizontalement,
+chacune portant son compteur dans une petite pastille en monospace :
+« Tous 3 », « En cours 1 », « Bientôt dus 1 », « En retard 1 ». La puce
+active est navy plein. La puce « En retard » se distingue des autres même
+inactive, fond ambre clair et texte ambre, dès que son compteur dépasse
+zéro.
+
+Chaque emprunt est une carte dépliable. Fermée, elle montre : le titre en
+gras sur deux lignes maximum, le nom de l'abonné suivi du numéro de carte
+en monospace gris, la ligne « Échéance » avec la date en monospace, un
+badge d'état, et à droite un chevron gris orienté vers le bas.
+
+DESSINE CINQ ÉCRANS :
+
+1. LA LISTE, PUCE « TOUS » ACTIVE. Trois cartes fermées, retards en tête :
+- Devenez un grand orateur / Fatou Diarra TSL-2026-0034 / Échéance 14 août
+  2026 / badge rouge « En retard de 6 jours »
+- The One Thing, passez à l'essentiel / Yao Kouassi TSL-2026-0155 /
+  Échéance 22 août 2026 / badge ambre « À rendre dans 2 jours »
+- S'organiser pour réussir / Kouadio N'Guessan TSL-2026-0112 / Échéance
+  31 août 2026 / badge vert « Dans les délais »
+
+2. UNE CARTE OUVERTE. La première carte est dépliée, son chevron pointe
+vers le haut. Sous elle, séparé par un filet et posé sur un fond gris
+clair, un panneau de trois boutons pleine largeur empilés :
+« Enregistrer le retour » en navy, « Renouveler 14 jours » en contour, et
+« Appeler 01 42 77 63 18 » en contour avec le numéro en monospace.
+
+3. UN PRÊT DÉJÀ RENOUVELÉ. Même carte ouverte, mais la ligne d'échéance
+porte en plus la mention « · déjà renouvelé », et le second bouton est
+remplacé par un bouton gris désactivé portant « Déjà renouvelé une fois ».
+Le bouton reste visible : le faire disparaître laisserait croire que le
+renouvellement n'existe pas.
+
+4. UN RETARD DE PLUS D'UN MOIS. Carte fermée avec un filet rouge vertical
+de 4 px sur son bord gauche, badge rouge « En retard de 47 jours ». Au-delà
+d'un mois, ce n'est plus un oubli mais un livre probablement perdu, et ça
+ne se traite pas comme un retard de trois jours. (Cas illustratif : le
+fonds n'a aucun retard de cette ampleur aujourd'hui.)
+
+5. L'ÉTAT VIDE DU FILTRE « EN RETARD ». La puce « En retard 0 » est active
+et redevenue neutre. Cadre en pointillés : « Aucun retard », et dessous
+« Tous les livres sortis sont dans les délais. »
+```
+
+---
+
 ## Données réelles à utiliser, jamais de Lorem ipsum
 
 **Abonnés en base** et l'état que chacun illustre :
 
-| Nom | Carte | Situation |
-|---|---|---|
-| Aminata Koné | TSL-2026-0087 | à jour, libre d'emprunter |
-| Kouadio N'Guessan | TSL-2026-0112 | a un livre en cours, dans les délais |
-| Fatou Diarra | TSL-2026-0034 | a un livre en retard de 6 jours |
-| Yao Kouassi | TSL-2026-0155 | adhésion expirant dans 18 jours |
-| Adjoua Brou | TSL-2026-0201 | adhésion expirée |
-| Ibrahim Traoré | TSL-2026-0233 | suspendu |
+| Nom | Carte | Téléphone | Situation |
+|---|---|---|---|
+| Aminata Koné | TSL-2026-0087 | 07 08 45 12 30 | à jour, libre d'emprunter |
+| Kouadio N'Guessan | TSL-2026-0112 | 05 64 22 89 04 | a un livre en cours, dans les délais |
+| Fatou Diarra | TSL-2026-0034 | 01 42 77 63 18 | a un livre en retard de 6 jours |
+| Yao Kouassi | TSL-2026-0155 | 07 91 30 55 27 | a un livre à rendre dans 2 jours, adhésion expirant dans 18 jours |
+| Adjoua Brou | TSL-2026-0201 | 05 12 68 94 03 | adhésion expirée |
+| Ibrahim Traoré | TSL-2026-0233 | 01 77 05 41 62 | suspendu |
+
+Les numéros s'affichent au format local. L'indicatif `+225` n'apparaît
+jamais à l'écran, il est ajouté seulement dans le lien d'appel.
 
 **Ouvrages et cotes**, les plus utiles pour les maquettes :
 

@@ -1,0 +1,44 @@
+<% content_for :title, t("app.langue.titre_page") %>
+
+<div class="flux-fond">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <div style="position:absolute; left:22px; top:22px; z-index:1;">
+    <%= render "shared/bouton_menu" %>
+  </div>
+
+  <div class="flux-corps flex flex-col items-center text-center">
+    <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-navy text-white text-2xl" aria-hidden="true">🌐</span>
+    <h1 class="titre-ecran mb-2"><%= t("app.langue.titre") %></h1>
+    <p class="text-sm text-texte-discret mb-5" style="max-width: 32ch;">
+      <%= t("app.langue.description") %>
+    </p>
+
+    <div class="w-full text-left">
+      <p class="surtitre mb-2"><%= t("app.langue.disponibles") %></p>
+      <div class="flex flex-col gap-2">
+        <% [ [ "fr", t("app.langue.francais") ], [ "en", t("app.langue.anglais") ] ].each do |code, nom| %>
+          <% actif = I18n.locale.to_s == code %>
+          <%= link_to langue_path(locale: code),
+                      class: "flex items-center gap-3 rounded-[var(--radius-bloc)] px-4 py-3 #{actif ? 'border-2 border-navy bg-surface-alt' : 'border border-bordure'}" do %>
+            <span class="donnee text-sm font-bold <%= actif ? 'text-navy' : 'text-texte-discret' %> w-8 shrink-0"><%= code.upcase %></span>
+            <div class="flex-1 min-w-0">
+              <p class="font-titre font-bold <%= actif ? 'text-encre' : 'text-texte-discret' %>"><%= nom %></p>
+              <% if actif %>
+                <p class="text-sm text-texte-discret"><%= t("app.langue.langue_active") %></p>
+              <% end %>
+            </div>
+            <% if actif %>
+              <span class="text-lg text-navy" aria-hidden="true">✓</span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.commun.retour"), tableau_de_bord_path, class: "lien" %>
+  <%= link_to t("app.langue.continuer"), tableau_de_bord_path, class: "action" %>
+</div>

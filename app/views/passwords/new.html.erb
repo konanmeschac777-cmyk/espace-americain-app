@@ -1,17 +1,79 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <% if alert = flash[:alert] %>
-    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg inline-block" id="alert"><%= alert %></p>
-  <% end %>
+<% content_for :title, t("app.mot_de_passe.titre_page_oublie") %>
 
-  <h1 class="font-bold text-4xl">Forgot your password?</h1>
+<div class="max-w-[430px] mx-auto min-h-screen bg-white flex flex-col">
+  <div class="h-[250px] relative overflow-hidden shrink-0 bg-navy">
+    <%= image_tag "slide-1.jpg",
+          alt: t("app.accueil.photo_groupe"),
+          class: "absolute inset-0 w-full h-full object-cover" %>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(10,34,64,0.34) 0%, rgba(10,34,64,0.10) 45%, rgba(10,34,64,0.28) 100%);"></div>
+    <%= link_to new_session_path, class: "absolute left-[18px] top-[18px] h-9 w-9 rounded-full bg-white/90 flex items-center justify-center text-xl text-navy", "aria-label": "Retour" do %>
+      &larr;
+    <% end %>
+  </div>
 
-  <%= form_with url: passwords_path, class: "contents" do |form| %>
-    <div class="my-5">
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "block shadow-sm rounded-md border border-gray-400 focus:outline-solid focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+  <div class="panneau-releve flex-1 flex flex-col px-[26px] pb-[26px]">
+    <div class="flex justify-center -mt-[26px]">
+      <span class="bg-white rounded-lg px-[11px] py-[9px] flex items-center shadow-[0_3px_10px_rgba(10,34,64,0.14)]">
+        <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-[34px] w-auto" %>
+      </span>
     </div>
 
-    <div class="inline">
-      <%= form.submit "Email reset instructions", class: "w-full sm:w-auto text-center rounded-lg px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-    </div>
-  <% end %>
+    <% if @sent %>
+      <div class="text-center mt-4">
+        <p class="surtitre"><%= t("app.mot_de_passe.eyebrow") %></p>
+        <h1 class="titre-ecran mt-1"><%= t("app.mot_de_passe.lien_envoye_titre") %></h1>
+        <p class="mt-2 text-sm leading-relaxed text-texte-estompe max-w-[33ch] mx-auto">
+          <%= t("app.mot_de_passe.lien_envoye_texte") %>
+        </p>
+      </div>
+
+      <div class="bg-surface-alt rounded-[var(--radius-bloc)] p-5 mt-5 text-center">
+        <span class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-xl" aria-hidden="true">✉</span>
+        <p class="donnee text-navy truncate"><%= @email_address %></p>
+        <p class="text-sm text-texte-discret mt-2"><%= t("app.mot_de_passe.lien_valable") %></p>
+      </div>
+
+      <div class="rounded-[var(--radius-bloc)] p-4 mt-4 text-left" style="background-color: var(--color-surface);">
+        <p class="surtitre"><%= t("app.mot_de_passe.si_message_narrive_pas") %></p>
+        <p class="text-sm text-texte-discret mt-2">
+          <%= t("app.mot_de_passe.verifiez_indesirables") %>
+        </p>
+      </div>
+
+      <div class="flex-1"></div>
+
+      <a href="mailto:<%= @email_address %>" class="bouton bouton-primaire bouton-large mt-4"><%= t("app.mot_de_passe.ouvrir_boite_mail") %></a>
+      <p class="text-center text-sm text-texte-discret mt-4">
+        <%= t("app.mot_de_passe.rien_recu") %>
+        <%= link_to t("app.mot_de_passe.renvoyer_lien"), new_password_path, class: "font-bold text-encre underline" %>
+      </p>
+    <% else %>
+      <div class="text-center mt-4">
+        <h1 class="titre-ecran"><%= t("app.mot_de_passe.titre_page_oublie") %></h1>
+        <p class="mt-2 text-sm leading-relaxed text-texte-estompe max-w-[33ch] mx-auto">
+          <%= t("app.mot_de_passe.description_formulaire") %>
+        </p>
+      </div>
+
+      <% if alert = flash[:alert] %>
+        <p class="bandeau bandeau-blocage mt-5"><%= alert %></p>
+      <% end %>
+
+      <%= form_with url: passwords_path, class: "mt-6 flex flex-col gap-4" do |form| %>
+        <div>
+          <%= form.label :email_address, t("app.connexion.email"), class: "libelle" %>
+          <%= form.email_field :email_address, required: true, autofocus: true,
+                autocomplete: "username", value: params[:email_address],
+                placeholder: "bibliothecaire@shelf.ci", class: "champ-plein" %>
+        </div>
+
+        <%= form.submit t("app.mot_de_passe.envoyer_lien"), class: "bouton bouton-primaire bouton-large mt-2" %>
+      <% end %>
+
+      <div class="flex-1"></div>
+
+      <%= link_to t("app.mot_de_passe.retour_connexion"), new_session_path,
+                  class: "block text-center text-sm text-texte-estompe underline mt-6" %>
+    <% end %>
+  </div>
 </div>

@@ -1,54 +1,75 @@
 <div class="carte p-4 mb-4">
-  <div class="flex items-start gap-3">
+  <div class="flex items-center gap-3">
+    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-texte-discret font-titre font-bold text-sm">
+      <%= member.first_name.first %><%= member.last_name.first %>
+    </span>
     <div class="min-w-0 flex-1">
-      <p class="surtitre">Abonné</p>
-      <p class="font-titre text-lg font-bold text-encre truncate"><%= member.full_name %></p>
+      <p class="font-titre font-bold text-encre truncate"><%= member.full_name %></p>
       <p class="donnee text-sm text-texte-discret"><%= member.card_number %></p>
     </div>
-    <%= link_to "Changer", new_loan_path(member_q: member.last_name),
-                class: "bouton bouton-contour bouton-petit shrink-0" %>
+    <%= link_to t("app.commun.changer"), new_loan_path(member_q: member.last_name),
+                class: "text-sm font-bold text-navy shrink-0" %>
   </div>
 </div>
 
 <%# Les quatre situations qui interdisent le prêt. Chacune dit ce qui se
-    passe et, quand c'est possible, comment le régler sur-le-champ. %>
+    passe et, quand c'est possible, comment le régler (le geste lui-même
+    est dans la barre flottante, pas ici). %>
 <% case member.borrow_block_reason %>
 <% when :already_borrowing %>
   <% en_cours = member.current_loan %>
   <div class="bandeau bandeau-attention mb-4 flex-col items-start">
-    <p class="font-bold">Cet abonné a déjà un livre en cours.</p>
-    <p>
-      « <%= en_cours.book.title %> », à rendre le
-      <span class="donnee"><%= date_courte(en_cours.due_on) %></span><% if en_cours.overdue? %>,
-      soit <%= en_cours.days_overdue %> jour<%= "s" if en_cours.days_overdue > 1 %> de retard<% end %>.
-    </p>
-    <p class="mt-1">Il doit le rapporter avant d'en emprunter un autre.</p>
+    <div class="flex items-center gap-2">
+      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-attention text-white text-sm font-bold">!</span>
+      <p class="font-display font-semibold" style="font-size:19px;"><%= t("app.pret.deja_un_livre_titre") %></p>
+    </div>
+    <p class="mt-2"><%= t("app.pret.deja_un_livre_texte") %></p>
+  </div>
+
+  <div class="flex items-start gap-3 bg-surface-alt rounded-[var(--radius-bloc)] p-4">
+    <%= dos_livre(en_cours.book) %>
+    <div class="min-w-0">
+      <p class="surtitre"><%= t("app.pret.en_cours_depuis", date: l(en_cours.borrowed_on, format: "%-d %B").upcase) %></p>
+      <p class="titre-ouvrage mt-1"><%= en_cours.book.title %></p>
+      <p class="text-sm italic text-texte-discret"><%= auteur(en_cours.book) %></p>
+      <div class="mt-2"><%= badge_echeance(en_cours) %></div>
+    </div>
   </div>
 
 <% when :membership_expired %>
   <div class="bandeau bandeau-attention mb-4 flex-col items-start">
-    <p class="font-bold">Abonnement expiré depuis le <%= date_courte(member.expires_on) %>.</p>
-    <%# L'adhésion est gratuite : il n'y a rien à encaisser, juste une
-        autorisation à donner. Le bandeau est en attention et non en
-        blocage, parce que la situation se règle d'un seul geste. %>
-    <p>La réinscription est gratuite, il suffit de la valider.</p>
-    <%= button_to "Réinscrire pour un an", renew_member_path(member, redirect_to_loan: true),
-                  class: "bouton bouton-primaire bouton-petit mt-3" %>
+    <div class="flex items-center gap-2">
+      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-attention text-white text-sm font-bold">!</span>
+      <p class="font-display font-semibold" style="font-size:19px;"><%= t("app.pret.expiree_depuis", date: date_courte(member.expires_on)) %></p>
+    </div>
+    <p class="mt-2"><%= t("app.pret.reinscription_gratuite") %></p>
+  </div>
+
+  <div class="bg-surface-alt rounded-[var(--radius-bloc)] p-4">
+    <p class="surtitre mb-3"><%= t("app.pret.ce_que_ca_change") %></p>
+    <div class="flex justify-between items-baseline pb-3" style="border-bottom:1px solid var(--color-bordure);">
+      <span class="text-sm text-texte-discret"><%= t("app.pret.adhesion_valable_jusquau") %></span>
+      <span class="font-bold text-encre"><%= date_courte(member.expires_on >> Setting.membership_months) %></span>
+    </div>
+    <div class="flex justify-between items-baseline pt-3">
+      <span class="text-sm text-texte-discret"><%= t("app.pret.montant_a_encaisser") %></span>
+      <span class="font-bold text-dispo"><%= t("app.pret.gratuit") %></span>
+    </div>
   </div>
 
 <% when :suspended %>
   <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
-    <p class="font-bold">Cet abonné est suspendu.</p>
-    <p>Aucun prêt n'est possible tant que la suspension n'est pas levée.</p>
+    <p class="font-bold"><%= t("app.pret.suspendu_titre") %></p>
+    <p><%= t("app.pret.suspendu_texte") %></p>
   </div>
 
 <% else %>
   <% if member.membership_expiring_soon? %>
     <div class="bandeau bandeau-info mb-4 flex-col items-start">
       <p>
-        Abonnement à renouveler bientôt, il expire le
+        <%= t("app.pret.expire_bientot_avant") %>
         <span class="donnee"><%= date_courte(member.expires_on) %></span>.
-        Le prêt reste possible.
+        <%= t("app.pret.expire_bientot_apres") %>
       </p>
     </div>
   <% end %>

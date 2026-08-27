@@ -1,0 +1,11 @@
+<%# Tant qu'aucun prêt précis n'est retenu, pas de barre : rien à confirmer. %>
+<% if loan %>
+  <div class="barre-flottante barre-flottante-action">
+    <% if loan.overdue? %>
+      <%= button_to t("app.retour.lever_suspension"), returns_path(loan_id: loan.id, waive_suspension: true), class: "lien bg-transparent" %>
+    <% else %>
+      <%= link_to t("app.pret.autre_abonne"), new_return_path, class: "lien" %>
+    <% end %>
+    <%= button_to t("app.pret.enregistrer_retour"), returns_path(loan_id: loan.id), class: "action" %>
+  </div>
+<% end %>

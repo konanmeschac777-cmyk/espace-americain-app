@@ -1,0 +1,47 @@
+<%# Tiroir de navigation (écran 24). Rendu une seule fois depuis le layout,
+    peu importe l'écran affiché derrière : le contrôleur Stimulus tiroir
+    (posé sur <body>) bascule .tiroir-ouvert pour le faire glisser. %>
+<div class="tiroir-voile" data-action="click->tiroir#fermer"></div>
+
+<nav class="tiroir-panneau" aria-label="<%= t("app.commun.menu") %>" data-action="click->tiroir#arreter">
+  <div style="padding:24px 22px 0; display:flex; align-items:center; gap:11px;">
+    <span style="background:#fff; border-radius:4px; padding:5px 6px; display:flex; align-items:center;">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", style: "height:22px;width:auto;display:block;" %>
+    </span>
+    <div>
+      <p class="font-titre font-extrabold text-white" style="font-size:16px; line-height:1.1;"><%= t("app.tiroir.nom_app") %></p>
+      <p class="tiroir-eyebrow" style="padding:3px 0 0;"><%= t("app.tiroir.tiassale") %></p>
+    </div>
+  </div>
+
+  <div class="tiroir-compte">
+    <span class="tiroir-avatar"><%= initiales_utilisateur %></span>
+    <div class="min-w-0 flex-1">
+      <p class="text-white font-bold truncate" style="font-size:15px;"><%= t("app.tiroir.role") %></p>
+      <p class="text-white/62 text-sm truncate"><%= Current.user.email_address %></p>
+    </div>
+  </div>
+
+  <div class="tiroir-section">
+    <p class="tiroir-eyebrow"><%= t("app.tiroir.section_comptoir") %></p>
+    <%= link_to t("app.tiroir.tableau_de_bord"), tableau_de_bord_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(tableau_de_bord_path)}" %>
+    <%= link_to t("app.tiroir.preter"), new_loan_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_loan_path)}" %>
+    <%= link_to t("app.tiroir.retour"), new_return_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_return_path)}" %>
+
+    <p class="tiroir-eyebrow"><%= t("app.tiroir.section_consulter") %></p>
+    <%= link_to t("app.tiroir.catalogue"), books_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(books_path)}" %>
+    <%= link_to t("app.tiroir.abonnes"), members_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(members_path)}" %>
+    <%= link_to t("app.tiroir.rapport"), rapport_du_mois_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(rapport_du_mois_path)}" %>
+
+    <p class="tiroir-eyebrow"><%= t("app.tiroir.section_administration") %></p>
+    <%= link_to t("app.tiroir.nouvelle_carte"), new_member_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_member_path)}" %>
+    <%= link_to t("app.tiroir.ajouter_ouvrage"), new_book_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_book_path)}" %>
+    <%= link_to t("app.tiroir.parametres"), langue_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(langue_path)}" %>
+  </div>
+
+  <div class="tiroir-pied">
+    <%= button_to t("app.tiroir.deconnexion"), session_path, method: :delete, class: "tiroir-deconnexion", form_class: "contents" %>
+  </div>
+</nav>
+
+<button type="button" class="tiroir-fermer" aria-label="<%= t("app.tiroir.fermer_menu") %>" data-action="click->tiroir#fermer">✕</button>

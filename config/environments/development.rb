@@ -40,6 +40,22 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
+  # Envoie vraiment par Gmail dès que les identifiants sont présents (utile
+  # pour tester "mot de passe oublié" en local avant la mise en ligne).
+  # Sans eux, aucun envoi n'est tenté : pas d'erreur, juste rien qui part.
+  if Rails.application.credentials.dig(:smtp, :user_name).present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      user_name: Rails.application.credentials.dig(:smtp, :user_name),
+      password: Rails.application.credentials.dig(:smtp, :password),
+      address: "smtp.gmail.com",
+      port: 587,
+      domain: "gmail.com",
+      authentication: :plain,
+      enable_starttls_auto: true
+    }
+  end
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

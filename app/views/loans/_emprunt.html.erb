@@ -9,9 +9,9 @@
       </span>
 
       <span class="block text-sm text-texte-estompe">
-        Échéance <span class="donnee"><%= date_courte(loan.due_on) %></span>
+        <%= t("app.admin.echeance") %> <span class="donnee"><%= date_courte(loan.due_on) %></span>
         <% if loan.renewals_count.positive? %>
-          &middot; déjà renouvelé
+          &middot; <%= t("app.admin.deja_renouvele") %>
         <% end %>
       </span>
 
@@ -24,27 +24,27 @@
   </summary>
 
   <div class="panneau-actions">
-    <%= button_to "Enregistrer le retour", returns_path(loan_id: loan.id),
+    <%= button_to t("app.pret.enregistrer_retour"), returns_path(loan_id: loan.id),
                   class: "bouton bouton-primaire bouton-large",
-                  form: { data: { turbo_confirm: "Confirmer le retour de « #{loan.book.title} » ?" } } %>
+                  form: { data: { turbo_confirm: t("app.pret.confirmer_retour", titre: loan.book.title) } } %>
 
     <% if loan.renewable? %>
-      <%= button_to "Renouveler #{Setting.loan_days} jours", renew_loan_path(loan),
+      <%= button_to t("app.admin.renouveler_jours", jours: Setting.loan_days), renew_loan_path(loan),
                     class: "bouton bouton-contour bouton-large" %>
     <% else %>
       <%# Le bouton reste visible mais inerte : le faire disparaître
           laisserait croire que le renouvellement n'existe pas. %>
       <button type="button" class="bouton bouton-large" disabled>
-        Déjà renouvelé une fois
+        <%= t("app.admin.deja_renouvele_bouton") %>
       </button>
     <% end %>
 
     <% if loan.member.phone.present? %>
-      <%= link_to lien_telephone(loan.member.phone), class: "bouton bouton-contour bouton-large" do %>
-        Appeler <span class="donnee ml-1"><%= loan.member.phone %></span>
+      <%= link_to lien_telephone(loan.member), class: "bouton bouton-contour bouton-large" do %>
+        <%= t("app.admin.appeler") %> <span class="donnee ml-1"><%= loan.member.phone_country_code %> <%= loan.member.phone %></span>
       <% end %>
     <% else %>
-      <p class="aide text-center">Aucun téléphone enregistré pour cet abonné.</p>
+      <p class="aide text-center"><%= t("app.admin.aucun_telephone") %></p>
     <% end %>
   </div>
 </details>

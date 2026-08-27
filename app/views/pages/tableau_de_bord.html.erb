@@ -1,0 +1,79 @@
+<% content_for :title, t("app.tableau_de_bord.titre_page") %>
+
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete">
+    <%= render "shared/bouton_menu" %>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to compte_path,
+                class: "flux-bouton-rond font-titre font-bold text-sm text-navy",
+                "aria-label": t("app.tableau_de_bord.mon_compte") do %>
+      <%= @initiales.first(2) %>
+    <% end %>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= l(Date.current, format: "%A %d %B %Y").upcase %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.tableau_de_bord.bonjour", initiales: @initiales) %></h1>
+
+    <%# Écran 23 : quand une action (mot de passe changé, etc.) ramène ici,
+        la confirmation s'affiche en haut, pas sur un écran séparé. %>
+    <% if flash[:notice] %>
+      <p class="bandeau bandeau-info mb-4"><%= flash[:notice] %></p>
+    <% end %>
+    <% if flash[:alert] %>
+      <p class="bandeau bandeau-blocage mb-4"><%= flash[:alert] %></p>
+    <% end %>
+
+    <div class="carte p-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-4 rounded-[var(--radius-bloc)] bg-surface-alt">
+          <p class="font-display font-semibold text-navy" style="font-size:32px; line-height:1;"><%= @prets_en_cours %></p>
+          <p class="tuile-libelle mt-1"><%= pluriel(@prets_en_cours, singulier: "app.tableau_de_bord.pret_en_cours_un", pluriel: "app.tableau_de_bord.prets_en_cours_plusieurs") %></p>
+        </div>
+        <div class="p-4 rounded-[var(--radius-bloc)]" style="background-color: var(--color-attention-fond);">
+          <p class="font-display font-semibold" style="font-size:32px; line-height:1; color: var(--color-attention);"><%= @retards %></p>
+          <p class="mt-1 text-sm" style="color: var(--color-attention);"><%= pluriel(@retards, singulier: "app.tableau_de_bord.retour_en_retard_un", pluriel: "app.tableau_de_bord.retours_en_retard_plusieurs") %></p>
+        </div>
+      </div>
+
+      <p class="surtitre mt-5 mb-3"><%= t("app.tableau_de_bord.a_rapporter_semaine") %></p>
+
+      <% if @a_relancer.any? %>
+        <div class="flex flex-col gap-3">
+          <% @a_relancer.each do |loan| %>
+            <%= link_to loans_path, class: "flex items-center gap-3" do %>
+              <%= dos_livre(loan.book) %>
+              <div class="min-w-0 flex-1">
+                <p class="font-display font-semibold text-encre truncate" style="font-size:15px;"><%= loan.book.title %></p>
+                <p class="text-sm text-texte-estompe truncate">
+                  <%= loan.member.full_name %> &middot; <span class="donnee"><%= loan.member.card_number %></span>
+                </p>
+              </div>
+              <%= badge_echeance(loan) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-texte-discret"><%= t("app.tableau_de_bord.aucun_a_rapporter") %></p>
+      <% end %>
+
+      <div class="flex items-center justify-between mt-5 pt-4" style="border-top:1px solid var(--color-bordure);">
+        <span class="text-sm text-texte-discret"><%= t("app.tableau_de_bord.exemplaires_en_rayon") %></span>
+        <span class="font-bold text-encre"><%= @disponibles %> sur <%= @total_copies %></span>
+      </div>
+    </div>
+
+    <%= link_to t("app.tableau_de_bord.voir_rapport"), rapport_du_mois_path,
+                class: "block text-center text-sm font-semibold text-navy underline mt-4" %>
+  </div>
+</div>
+
+<div class="barre-flottante">
+  <%= link_to new_loan_path, class: "onglet onglet-actif" do %><%= t("app.tableau_de_bord.preter") %><% end %>
+  <%= link_to new_return_path, class: "onglet" do %><%= t("app.tableau_de_bord.retour") %><% end %>
+  <%= link_to members_path, class: "onglet" do %><%= t("app.tableau_de_bord.abonnes") %><% end %>
+</div>

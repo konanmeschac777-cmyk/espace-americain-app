@@ -1,16 +1,15 @@
-<%# Navigation basse. Un onglet par écran qui existe vraiment, et il dit ce
-    qu'il fait : « Inscrire » mène au formulaire d'inscription, pas à une
-    liste d'abonnés qui n'existe pas encore. Il deviendra « Abonnés » le
-    jour où la liste sera là. %>
+<%# Navigation basse. Un onglet par écran qui existe vraiment. « Abonnés »
+    mène à la liste ; inscrire quelqu'un de nouveau se fait depuis le
+    bouton flottant de cette liste, pas depuis un onglet dédié. %>
 <% actif = local_assigns.fetch(:actif) %>
 
-<nav class="nav-basse grid-cols-4">
+<nav class="nav-basse grid-cols-5">
   <%= link_to new_loan_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :pret}" do %>
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
       <rect x="3" y="4" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"></rect>
       <path d="M11 8v5M11 13l-2.2-2.2M11 13l2.2-2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <span>Prêter</span>
+    <span><%= t("app.tableau_de_bord.preter") %></span>
   <% end %>
 
   <%= link_to new_return_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :retour}" do %>
@@ -18,22 +17,30 @@
       <rect x="3" y="4" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.8"></rect>
       <path d="M11 13V8M11 8L8.8 10.2M11 8l2.2 2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <span>Retour</span>
+    <span><%= t("app.tableau_de_bord.retour") %></span>
   <% end %>
 
   <%= link_to loans_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :emprunts}" do %>
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
       <path d="M4 6h14M4 11h14M4 16h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
     </svg>
-    <span>Emprunts</span>
+    <span><%= t("app.admin.emprunts") %></span>
   <% end %>
 
-  <%= link_to new_member_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :abonnes}" do %>
+  <%= link_to books_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :ouvrages}" do %>
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-      <circle cx="9" cy="7.5" r="3.2" stroke="currentColor" stroke-width="1.8"></circle>
-      <path d="M3.4 17c0-3 2.5-4.6 5.6-4.6 1.2 0 2.3.24 3.2.68" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-      <path d="M16.5 12.4v5M14 14.9h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M11 5.5C9.3 4.5 6.8 4 4.5 4.3v11.9c2.3-.3 4.8.2 6.5 1.2M11 5.5c1.7-1 4.2-1.5 6.5-1.2v11.9c-2.3-.3-4.8.2-6.5 1.2M11 5.5v11.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <span>Inscrire</span>
+    <span><%= t("app.admin.ouvrages") %></span>
+  <% end %>
+
+  <%= link_to members_path, class: "nav-onglet #{'nav-onglet-actif' if actif == :abonnes}" do %>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <circle cx="8" cy="7.5" r="3" stroke="currentColor" stroke-width="1.8"></circle>
+      <path d="M2.8 17c0-3 2.4-4.4 5.2-4.4s5.2 1.4 5.2 4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      <circle cx="16" cy="8.2" r="2.2" stroke="currentColor" stroke-width="1.6"></circle>
+      <path d="M13.6 17c0-2.4 1.3-3.8 3-4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+    </svg>
+    <span><%= t("app.tableau_de_bord.abonnes") %></span>
   <% end %>
 </nav>

@@ -1,0 +1,40 @@
+<% content_for :title, t("app.compte.titre_page") %>
+
+<div class="flux-fond">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to tableau_de_bord_path, class: "flux-bouton-rond flux-entete-droite", "aria-label": "Retour au tableau de bord" do %>
+      &larr;
+    <% end %>
+  </header>
+
+  <div class="flux-corps">
+    <p class="surtitre mb-1"><%= t("app.compte.eyebrow") %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.compte.titre") %></h1>
+
+    <div class="carte p-4">
+      <div class="flex items-center gap-3 pb-4" style="border-bottom:1px solid var(--color-bordure);">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-navy font-titre font-bold text-sm">
+          <%= @initiales %>
+        </span>
+        <div class="min-w-0 flex-1">
+          <p class="font-titre font-bold text-encre truncate"><%= t("app.tiroir.nom_app") %> de Tiassalé</p>
+          <p class="text-sm text-texte-discret truncate"><%= Current.user.email_address %></p>
+        </div>
+      </div>
+
+      <%= link_to langue_path, class: "flex items-center justify-between pt-4" do %>
+        <span class="text-sm text-encre font-semibold"><%= t("app.compte.langue") %></span>
+        <span class="text-sm text-texte-discret"><%= I18n.locale == :fr ? t("app.langue.francais") : t("app.langue.anglais") %> &rsaquo;</span>
+      <% end %>
+    </div>
+
+    <%= button_to t("app.tiroir.deconnexion"), session_path, method: :delete,
+                  class: "bouton bouton-contour bouton-large mt-6 w-full",
+                  form_class: "contents" %>
+  </div>
+</div>

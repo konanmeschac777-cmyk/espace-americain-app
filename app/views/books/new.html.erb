@@ -1,0 +1,112 @@
+<% content_for :title, @confirmed_book ? t("app.catalogue.titre_page_ajoute") : t("app.catalogue.titre_page_nouveau") %>
+
+<% if @confirmed_book %>
+  <%= render "succes", book: @confirmed_book %>
+<% else %>
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
+
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to books_path, class: "flux-bouton-rond flux-entete-droite", "aria-label": t("app.commun.fermer") do %>
+      ✕
+    <% end %>
+  </header>
+
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1"><%= t("app.catalogue.eyebrow_ajouter") %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.catalogue.nouvel_ouvrage") %></h1>
+
+    <div class="w-full text-left">
+      <%= form_with model: @book, url: books_path, id: "formulaire_ouvrage", multipart: true do |form| %>
+
+        <% if @book.errors.any? %>
+          <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+            <p class="font-bold"><%= t("app.abonnes.erreur_titre") %></p>
+            <ul class="mt-1">
+              <% @book.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="flex items-start gap-4 pb-5" style="border-bottom:1px solid var(--color-bordure);">
+          <label class="shrink-0 flex flex-col items-center justify-center gap-1 rounded-[var(--radius-champ)] text-texte-estompe cursor-pointer"
+                 style="width:88px;height:110px;border:1px dashed var(--color-bordure-forte);">
+            <span aria-hidden="true">📷</span>
+            <span class="text-xs">Photo</span>
+            <%= form.file_field :cover, accept: "image/*", class: "sr-only" %>
+          </label>
+          <div class="min-w-0">
+            <p class="font-bold text-encre"><%= t("app.catalogue.couverture") %></p>
+            <p class="text-sm text-texte-discret mt-1"><%= t("app.catalogue.couverture_facultatif") %></p>
+            <div class="flex gap-2 mt-3">
+              <label class="bouton bouton-primaire bouton-petit cursor-pointer">
+                <%= t("app.catalogue.prendre_photo") %>
+                <%= form.file_field :cover, accept: "image/*", capture: "environment", class: "sr-only" %>
+              </label>
+              <label class="bouton bouton-contour bouton-petit cursor-pointer">
+                <%= t("app.catalogue.galerie") %>
+                <%= form.file_field :cover, accept: "image/*", class: "sr-only" %>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 pt-5">
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.catalogue.titre_champ") %></p>
+            <%= form.text_field :title, class: "champ", autofocus: true, required: true %>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.catalogue.auteur_champ") %></p>
+            <%= form.text_field :author, class: "champ", placeholder: t("app.catalogue.auteur_champ") %>
+          </div>
+
+          <div data-controller="cote">
+            <div class="flex gap-3">
+              <div class="flex-1">
+                <p class="text-sm font-bold text-encre mb-2"><%= t("app.catalogue.categorie") %></p>
+                <%
+                  choix = [ [ t("app.catalogue.choisir"), "", { data: {} } ] ] + @categories.map { |c|
+                    [ nom_categorie(c), c.id, { data: { cote: c.next_shelf_mark, rayon: t("app.catalogue.rayon", nom: nom_categorie(c)) } } ]
+                  }
+                %>
+                <%= form.select :category_id, options_for_select(choix, @book.category_id),
+                      {}, class: "champ", required: true,
+                      data: { cote_target: "categorie", action: "change->cote#actualiser" } %>
+              </div>
+              <div style="width:120px;" data-controller="compteur">
+                <p class="text-sm font-bold text-encre mb-2"><%= t("app.catalogue.exemplaires") %></p>
+                <div class="flex items-center gap-1 bg-surface-alt rounded-[var(--radius-champ)] px-1" style="height:50px;">
+                  <button type="button" class="w-8 h-8 shrink-0 text-lg text-navy" data-action="compteur#decrementer">&minus;</button>
+                  <%= form.number_field :total_copies, min: 1, class: "champ !bg-transparent !border-0 text-center px-0", style: "height:auto;", data: { compteur_target: "champ" } %>
+                  <button type="button" class="w-8 h-8 shrink-0 text-lg text-navy" data-action="compteur#incrementer">+</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="carte p-4 bg-surface-alt mt-4 text-center">
+              <p class="surtitre mb-2"><%= t("app.catalogue.cote_attribuee") %></p>
+              <p class="donnee font-bold text-navy" style="font-size:28px; letter-spacing:0.02em;" data-cote-target="cote">—</p>
+              <p class="text-sm text-texte-discret mt-2" data-cote-target="rayon"><%= t("app.catalogue.choisis_categorie") %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.commun.annuler"), books_path, class: "lien" %>
+  <button type="submit" form="formulaire_ouvrage" class="action"><%= t("app.catalogue.ajouter_au_fonds") %></button>
+</div>
+<% end %>

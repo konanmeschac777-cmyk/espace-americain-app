@@ -1,0 +1,42 @@
+<%# Barre flottante du flux de prêt. Le contenu de gauche change selon l'état :
+    des points de progression tant qu'aucun abonné n'est choisi ou à la
+    confirmation, la mini-fiche de l'abonné à l'étape 2, et des actions
+    de secours quand le prêt est bloqué. %>
+<div class="barre-flottante barre-flottante-action">
+  <% if bloque == :already_borrowing %>
+    <%= link_to t("app.pret.autre_abonne"), new_loan_path, class: "lien" %>
+    <%= button_to t("app.pret.enregistrer_retour"), returns_path(loan_id: member.current_loan.id),
+                  class: "action", form: { data: { turbo_confirm: t("app.pret.confirmer_retour", titre: member.current_loan.book.title) } } %>
+  <% elsif bloque == :membership_expired %>
+    <%= link_to t("app.pret.plus_tard"), new_loan_path, class: "lien" %>
+    <%= button_to t("app.pret.reinscrire_un_an"), renew_member_path(member, redirect_to_loan: true), class: "action" %>
+  <% elsif bloque == :suspended %>
+    <%= link_to t("app.pret.autre_abonne"), new_loan_path, class: "lien" %>
+    <span class="action" style="opacity:.5"><%= t("app.pret.suspendu_court") %></span>
+  <% elsif etape == 2 %>
+    <div class="flex items-center gap-3 flex-1 min-w-0">
+      <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white font-titre font-bold text-xs">
+        <%= member.first_name.first %><%= member.last_name.first %>
+      </span>
+      <span class="min-w-0 truncate text-white text-sm font-semibold">
+        <%= member.full_name %> &middot; <%= t("app.pret.etape_2_sur_3") %>
+      </span>
+    </div>
+  <% elsif etape == 3 %>
+    <div class="flex items-center gap-2 flex-1">
+      <% 3.times do |i| %>
+        <span class="h-2 w-2 rounded-full" style="background: rgba(255,255,255,<%= i == 2 ? '1' : '0.32' %>)"></span>
+      <% end %>
+      <span class="text-white/80 text-sm ml-2"><%= t("app.pret.confirmer_court") %></span>
+    </div>
+    <%= button_to t("app.pret.valider_pret"), loans_path(member_id: member.id, book_id: book.id), class: "action" %>
+  <% else %>
+    <div class="flex items-center gap-2 flex-1">
+      <% 3.times do |i| %>
+        <span class="h-2 w-2 rounded-full" style="background: rgba(255,255,255,<%= i.zero? ? '1' : '0.32' %>)"></span>
+      <% end %>
+      <span class="text-white/80 text-sm ml-2"><%= t("app.pret.abonne_court") %></span>
+    </div>
+    <span class="action" style="opacity:.5"><%= t("app.pret.continuer") %></span>
+  <% end %>
+</div>

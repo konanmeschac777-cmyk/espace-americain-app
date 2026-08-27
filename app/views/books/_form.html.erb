@@ -1,0 +1,116 @@
+<%= form_with model: book, multipart: true,
+              url: (book.persisted? ? book_path(book, completer: (completer ? true : nil)) : books_path) do |form| %>
+
+  <% if book.errors.any? %>
+    <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+      <p class="font-bold"><%= t("app.abonnes.erreur_titre") %></p>
+      <ul class="mt-1">
+        <% book.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="flex flex-col gap-4">
+
+    <%# La photo se prend au comptoir, livre en main : disponible aussi
+        bien à la création qu'en modification, pour rattraper les fiches
+        déjà au catalogue au fil de l'eau. %>
+    <div class="flex items-start gap-4 pb-4" style="border-bottom:1px solid var(--color-bordure);">
+      <label class="shrink-0 flex flex-col items-center justify-center gap-1 rounded-[var(--radius-champ)] text-texte-estompe cursor-pointer overflow-hidden"
+             style="width:88px;height:110px;border:1px dashed var(--color-bordure-forte);">
+        <% if book.cover.attached? %>
+          <%= image_tag book.cover, class: "w-full h-full object-cover", alt: book.title %>
+        <% else %>
+          <span aria-hidden="true">📷</span>
+          <span class="text-xs">Photo</span>
+        <% end %>
+        <%= form.file_field :cover, accept: "image/*", class: "sr-only" %>
+      </label>
+      <div class="min-w-0">
+        <p class="font-bold text-encre"><%= t("app.catalogue.couverture") %></p>
+        <p class="text-sm text-texte-discret mt-1"><%= t("app.catalogue.couverture_facultatif") %></p>
+        <div class="flex gap-2 mt-3">
+          <label class="bouton bouton-primaire bouton-petit cursor-pointer">
+            <%= t("app.catalogue.prendre_photo") %>
+            <%= form.file_field :cover, accept: "image/*", capture: "environment", class: "sr-only" %>
+          </label>
+          <label class="bouton bouton-contour bouton-petit cursor-pointer">
+            <%= t("app.catalogue.galerie") %>
+            <%= form.file_field :cover, accept: "image/*", class: "sr-only" %>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <% if completer %>
+      <%# Le titre et la quantité viennent de l'import, ils ne se retapent
+          pas : seuls l'auteur et la catégorie manquent vraiment. %>
+      <div class="carte bg-surface-alt p-4">
+        <p class="surtitre"><%= t("app.admin.deja_renseigne") %></p>
+        <p class="font-titre font-bold text-encre mt-1"><%= book.title %></p>
+        <p class="text-sm text-texte-discret mt-1">
+          <%= book.total_copies %> <%= pluriel(book.total_copies, singulier: "app.mots.exemplaire.un", pluriel: "app.mots.exemplaire.plusieurs") %>
+        </p>
+      </div>
+    <% else %>
+      <div>
+        <%= form.label :title, t("app.catalogue.titre_champ"), class: "libelle" %>
+        <%= form.text_field :title, class: "champ", autofocus: true, required: true %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :author, t("app.catalogue.auteur_champ"), class: "libelle" %>
+      <%= form.text_field :author, class: "champ", autofocus: completer,
+            placeholder: t("app.catalogue.auteur_champ") %>
+      <p class="aide"><%= t("app.admin.laisse_vide") %></p>
+    </div>
+
+    <div>
+      <%= form.label :category_id, t("app.catalogue.categorie"), class: "libelle" %>
+      <%= form.collection_select :category_id, categories, :id, ->(c) { nom_categorie(c) },
+            { prompt: t("app.catalogue.choisir") }, { class: "champ", required: true } %>
+    </div>
+
+    <% unless completer %>
+      <div class="flex gap-3">
+        <div class="flex-1">
+          <%= form.label :total_copies, t("app.catalogue.exemplaires"), class: "libelle" %>
+          <%= form.number_field :total_copies, class: "champ", min: 1, required: true %>
+        </div>
+        <div class="flex-1">
+          <%= form.label :language, t("app.admin.langue_champ"), class: "libelle" %>
+          <%= form.select :language, [ [ t("app.admin.francais_champ"), "fr" ], [ t("app.admin.anglais_champ"), "en" ] ], {}, class: "champ" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :shelf_mark, t("app.catalogue.cote_attribuee").capitalize, class: "libelle" %>
+        <%= form.text_field :shelf_mark, class: "champ donnee", placeholder: "ex. COM-05" %>
+        <p class="aide">
+          <%= t("app.admin.cote_facultative") %>
+        </p>
+      </div>
+
+      <div>
+        <%= form.label :collection, t("app.admin.collection_champ"), class: "libelle" %>
+        <%= form.text_field :collection, class: "champ" %>
+      </div>
+
+      <div>
+        <%= form.label :received_on, t("app.admin.date_reception"), class: "libelle" %>
+        <%= form.date_field :received_on, class: "champ" %>
+      </div>
+
+      <div>
+        <%= form.label :summary, t("app.admin.resume"), class: "libelle" %>
+        <%= form.text_area :summary, class: "champ", rows: 4 %>
+      </div>
+    <% end %>
+
+    <%= form.submit(completer ? t("app.admin.enregistrer_suivant") : (book.persisted? ? t("app.admin.enregistrer") : t("app.catalogue.ajouter_au_fonds")),
+          class: "bouton bouton-primaire bouton-large bouton-grand") %>
+  </div>
+<% end %>

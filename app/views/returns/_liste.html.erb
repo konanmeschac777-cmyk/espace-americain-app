@@ -1,0 +1,16 @@
+<ul class="flex flex-col gap-2">
+  <% loans.each do |loan| %>
+    <li>
+      <%= link_to new_return_path(loan_id: loan.id), class: "ligne-liste", data: { turbo_frame: "_top" } do %>
+        <%= dos_livre(loan.book) %>
+        <span class="min-w-0 flex-1">
+          <span class="block font-semibold text-encre truncate"><%= loan.book.title %></span>
+          <span class="block text-sm text-texte-discret truncate">
+            <%= loan.member.full_name %> &middot; <span class="donnee"><%= loan.member.card_number %></span>
+          </span>
+        </span>
+        <%= badge_echeance(loan) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

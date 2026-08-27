@@ -1,75 +1,81 @@
-<% content_for :title, "Nouvel abonné" %>
+<% content_for :title, t("app.abonnes.titre_page_nouveau") %>
 
-<%= render "shared/entete", titre: "Nouvel abonné" %>
+<div class="flux-fond zone-flottante">
+  <div class="flux-motif" aria-hidden="true"></div>
 
-<main class="zone-ecran mx-auto w-full max-w-[430px] px-4 py-4">
-  <% if @confirmed_member %>
-    <%= render "succes", member: @confirmed_member %>
-  <% else %>
-
-    <%= form_with model: @member, url: members_path do |form| %>
-
-      <% if @member.errors.any? %>
-        <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
-          <p class="font-bold">Il manque quelque chose.</p>
-          <ul class="mt-1">
-            <% @member.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <div class="flex flex-col gap-4">
-
-        <div>
-          <%= form.label :first_name, "Prénom", class: "libelle" %>
-          <%= form.text_field :first_name, class: "champ", autofocus: true,
-                autocomplete: "given-name", required: true %>
-        </div>
-
-        <div>
-          <%= form.label :last_name, "Nom", class: "libelle" %>
-          <%= form.text_field :last_name, class: "champ",
-                autocomplete: "family-name", required: true %>
-        </div>
-
-        <div>
-          <%= form.label :phone, "Téléphone", class: "libelle" %>
-          <%= form.telephone_field :phone, class: "champ",
-                autocomplete: "tel", placeholder: "07 08 45 12 30" %>
-          <p class="aide">
-            Facultatif, mais c'est le seul moyen d'appeler en cas de retard.
-          </p>
-        </div>
-
-        <div>
-          <%= form.label :card_number, "Numéro de carte", class: "libelle" %>
-          <%= form.text_field :card_number, class: "champ donnee" %>
-          <p class="aide">
-            Calculé automatiquement. Ne le change que si tu utilises des
-            cartes déjà imprimées.
-          </p>
-        </div>
-
-        <%# Les deux dates ne sont pas saisies : l'adhésion court un an à
-            partir d'aujourd'hui. Les montrer évite d'avoir à les deviner. %>
-        <div class="carte p-4 bg-surface-alt">
-          <p class="surtitre">Adhésion</p>
-          <p class="mt-1">
-            Du <span class="donnee"><%= date_courte(Date.current) %></span>
-            au <span class="donnee"><%= date_courte(Date.current >> Setting.membership_months) %></span>
-          </p>
-          <p class="text-sm text-texte-discret mt-1">
-            Gratuite, valable un an, renouvelable au comptoir.
-          </p>
-        </div>
-
-        <%= form.submit "Inscrire", class: "bouton bouton-primaire bouton-large bouton-grand" %>
-      </div>
+  <header class="flux-entete flux-entete-centre">
+    <span class="flux-entete-gauche">
+      <%= render "shared/bouton_menu" %>
+    </span>
+    <span class="flex h-9 w-9 items-center justify-center">
+      <%= image_tag "american-spaces-mark.png", alt: "American Spaces", class: "h-full w-full object-contain" %>
+    </span>
+    <%= link_to root_path, class: "flux-bouton-rond flux-entete-droite", "aria-label": t("app.commun.fermer") do %>
+      ✕
     <% end %>
+  </header>
 
-  <% end %>
-</main>
+  <div class="flux-corps flex flex-col items-center text-center">
+    <p class="surtitre mb-1"><%= t("app.abonnes.eyebrow_inscrire") %></p>
+    <h1 class="titre-ecran mb-5"><%= t("app.abonnes.nouvelle_carte") %></h1>
 
-<%= render "shared/nav", actif: :abonnes %>
+    <div class="w-full text-left">
+      <%= form_with model: @member, url: members_path, id: "formulaire_abonne" do |form| %>
+
+        <% if @member.errors.any? %>
+          <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
+            <p class="font-bold"><%= t("app.abonnes.erreur_titre") %></p>
+            <ul class="mt-1">
+              <% @member.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="flex flex-col gap-4">
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.nom_prenoms") %></p>
+            <input type="text" name="member[full_name]" value="<%= @member.full_name if @member.first_name %>"
+                   class="champ" autofocus autocomplete="name" required>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.telephone") %></p>
+            <div class="flex gap-2">
+              <%= form.select :phone_country_code,
+                    options_indicatifs_telephoniques(@member.phone_country_code),
+                    {}, class: "champ donnee", style: "width:110px; flex-shrink:0;" %>
+              <%= form.telephone_field :phone, class: "champ donnee flex-1", autocomplete: "tel", placeholder: "07 08 12 44 90" %>
+            </div>
+          </div>
+
+          <div style="width:104px;">
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.age") %></p>
+            <%= form.number_field :age, class: "champ", min: 1, max: 120, placeholder: "19" %>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.quartier") %></p>
+            <%= form.text_field :neighborhood, class: "champ", placeholder: "Tiassalé centre" %>
+          </div>
+        </div>
+
+        <div class="carte p-4 bg-surface-alt mt-5 text-center">
+          <p class="surtitre mb-2"><%= t("app.abonnes.numero_attribue") %></p>
+          <p class="donnee font-bold text-navy" style="font-size:28px; letter-spacing:0.02em;"><%= @member.card_number %></p>
+          <p class="text-sm text-texte-discret mt-2">
+            <%= t("app.abonnes.valable_gratuit", date: date_courte(@member.expires_on)) %>
+          </p>
+        </div>
+
+        <%= form.hidden_field :card_number %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="barre-flottante barre-flottante-action">
+  <%= link_to t("app.commun.annuler"), root_path, class: "lien" %>
+  <button type="submit" form="formulaire_abonne" class="action"><%= t("app.abonnes.creer_carte") %></button>
+</div>
