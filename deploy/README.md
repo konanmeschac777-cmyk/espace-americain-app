@@ -31,6 +31,30 @@ mise à jour. **Aucune n'est nécessaire pour prêter un livre.**
 - Une connexion internet **le jour de l'installation uniquement**, pour
   télécharger Ubuntu et Docker. Après, plus jamais.
 
+## À vérifier avant de partir : les navigateurs du comptoir
+
+C'est le point qui peut faire échouer toute l'installation, et il se
+vérifie en trente secondes, depuis n'importe où.
+
+Sur chaque téléphone et chaque poste qui servira au comptoir, ouvrir le
+navigateur et regarder sa version (Chrome : menu ⋮ → Paramètres → À propos
+de Chrome). Il faut au minimum :
+
+| Navigateur | Version minimale | Sortie |
+|---|---|---|
+| Chrome / Edge | 111 | mars 2023 |
+| Safari (iPhone) | 16.4 | mars 2023 |
+| Firefox | 113 | mai 2023 |
+
+En dessous, l'application affiche une page d'explication et rien d'autre :
+la feuille de style et le JavaScript utilisent des fonctionnalités que ces
+navigateurs ne connaissent pas, et la page s'afficherait nue ou sans menu.
+
+**Pourquoi c'est bloquant ici et pas ailleurs :** une fois le serveur en
+place, le Wi-Fi de l'Espace ne donne pas internet. Un navigateur trop
+ancien ne pourra donc plus se mettre à jour sur place. Il faut le faire
+**avant**, avec une connexion mobile, ou prévoir un autre appareil.
+
 ---
 
 ## Étape 1 — Installer Ubuntu Server
