@@ -107,6 +107,11 @@ en:
       regle_majuscule: "One uppercase letter and one number"
       regle_different: "Different from the old password"
       enregistrer_connecter: "Save and sign in"
+      hors_ligne_eyebrow: "CANNOT SEND"
+      hors_ligne_titre: "The server has no internet"
+      hors_ligne_texte: "The Space's server runs without a connection, so it cannot send any email. Your account is intact — you simply need to go through the server to choose a new password."
+      hors_ligne_marche_a_suivre: "WHAT TO DO"
+      hors_ligne_etape: "Ask whoever looks after the server to run this command on it, choosing a new password. You can sign in again right away."
 
     pret:
       titre_page: "Log a loan"

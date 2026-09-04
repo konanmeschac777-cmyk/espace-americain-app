@@ -26,19 +26,27 @@ test:
 #
 # Similarly, if you deploy your application as a Docker container, you must
 # ensure the database is located in a persisted volume.
+# Serveur local de l'Espace. Les quatre fichiers vivent dans le même dossier,
+# celui que la sauvegarde nocturne recopie sur la clé USB. DATABASE_DIR permet
+# de les déplacer sur un disque monté sans toucher à ce fichier ; c'est ce que
+# fait le volume Docker décrit dans deploy/README.md.
+#
+# Seule "primary" contient le fonds, les abonnés et les prêts. Les trois
+# autres sont des bases techniques de Rails, reconstructibles : en cas de
+# restauration, c'est primary qui compte.
 production:
   primary:
     <<: *default
-    # database: path/to/persistent/storage/production.sqlite3
+    database: <%= ENV.fetch("DATABASE_DIR", "storage") %>/production.sqlite3
   cache:
     <<: *default
-    # database: path/to/persistent/storage/production_cache.sqlite3
+    database: <%= ENV.fetch("DATABASE_DIR", "storage") %>/production_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    # database: path/to/persistent/storage/production_queue.sqlite3
+    database: <%= ENV.fetch("DATABASE_DIR", "storage") %>/production_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    # database: path/to/persistent/storage/production_cable.sqlite3
+    database: <%= ENV.fetch("DATABASE_DIR", "storage") %>/production_cable.sqlite3
     migrations_paths: db/cable_migrate

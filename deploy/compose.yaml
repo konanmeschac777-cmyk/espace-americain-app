@@ -1,0 +1,53 @@
+# Serveur local de l'American Shelf de Tiassalé.
+#
+#   docker compose up -d --build   construit puis démarre
+#   docker compose logs -f         suit ce que fait l'application
+#   docker compose down            arrête
+#
+# L'installation complète du poste est décrite dans README.md, à côté.
+
+services:
+  app:
+    build:
+      context: ..
+    image: espace-americain-app
+    container_name: shelf
+
+    # Repart toute seule après une coupure de courant et à chaque allumage du
+    # poste. C'est ce qui fait que personne n'a de commande à taper le matin.
+    restart: unless-stopped
+
+    # Le port 80 permet de taper http://192.168.1.50 sans numéro derrière.
+    ports:
+      - "80:3000"
+
+    environment:
+      RAILS_ENV: production
+
+      # Réseau local, pas de certificat : forcer le HTTPS renverrait chaque
+      # requête vers une adresse https:// inexistante et le comptoir n'aurait
+      # qu'un écran blanc, sans message d'erreur.
+      RAILS_FORCE_SSL: "false"
+
+      # Sans internet, aucun e-mail ne peut partir. L'écran "mot de passe
+      # oublié" affiche alors la commande à passer sur ce poste plutôt qu'un
+      # formulaire dont rien ne sortirait.
+      OFFLINE_SERVER: "true"
+
+      # Adresse du poste sur le réseau de l'Espace. À remplacer par celle que
+      # le routeur lui réserve (README.md, étape 3).
+      APP_HOST: "192.168.1.50"
+
+      # Déchiffre config/credentials.yml.enc. La clé n'est pas dans l'image,
+      # .dockerignore l'exclut volontairement : elle se pose à la main sur le
+      # poste, dans deploy/.env (README.md, étape 5).
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:?manquant - voir README.md, etape 5}
+
+    volumes:
+      # Tout ce qui ne doit jamais disparaître : les quatre bases SQLite et
+      # les couvertures d'ouvrages photographiées au comptoir. C'est ce
+      # dossier, et lui seul, que backup.sh recopie chaque soir.
+      #
+      # Un dossier réel plutôt qu'un volume Docker nommé : on peut le lire,
+      # le copier et le restaurer sans connaître Docker.
+      - /srv/shelf/storage:/rails/storage

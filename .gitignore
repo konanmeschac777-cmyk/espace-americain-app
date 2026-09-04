@@ -10,6 +10,12 @@
 # Ignore all environment files.
 /.env*
 
+# Y compris ceux des sous-dossiers : deploy/.env porte la clé de déchiffrement
+# des identifiants sur le serveur de l'Espace. La règle ci-dessus est ancrée à
+# la racine et ne l'attraperait pas.
+.env
+.env.*
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*

@@ -169,6 +169,11 @@ fr:
       regle_majuscule: "Une majuscule et un chiffre"
       regle_different: "Différent de l'ancien mot de passe"
       enregistrer_connecter: "Enregistrer et se connecter"
+      hors_ligne_eyebrow: "ENVOI IMPOSSIBLE"
+      hors_ligne_titre: "Le serveur n'a pas internet"
+      hors_ligne_texte: "Le serveur de l'Espace fonctionne sans connexion : il ne peut envoyer aucun e-mail. Ton compte est intact, il faut simplement passer par le serveur pour choisir un nouveau mot de passe."
+      hors_ligne_marche_a_suivre: "MARCHE À SUIVRE"
+      hors_ligne_etape: "Demande au responsable du serveur de lancer cette commande sur le poste, en choisissant un nouveau mot de passe. Tu pourras te reconnecter aussitôt."
 
     pret:
       titre_page: "Enregistrer un prêt"

@@ -18,7 +18,31 @@
       </span>
     </div>
 
-    <% if @sent %>
+    <% if @offline %>
+      <%# Serveur local sans internet : il n'y a pas d'e-mail à attendre, donc
+          pas de formulaire à remplir. On donne directement la seule voie qui
+          marche, la commande à passer sur le poste serveur. %>
+      <div class="text-center mt-4">
+        <p class="surtitre"><%= t("app.mot_de_passe.hors_ligne_eyebrow") %></p>
+        <h1 class="titre-ecran mt-1"><%= t("app.mot_de_passe.hors_ligne_titre") %></h1>
+        <p class="mt-2 text-sm leading-relaxed text-texte-estompe max-w-[33ch] mx-auto">
+          <%= t("app.mot_de_passe.hors_ligne_texte") %>
+        </p>
+      </div>
+
+      <div class="rounded-[var(--radius-bloc)] p-4 mt-5 text-left" style="background-color: var(--color-surface);">
+        <p class="surtitre"><%= t("app.mot_de_passe.hors_ligne_marche_a_suivre") %></p>
+        <p class="text-sm text-texte-discret mt-2"><%= t("app.mot_de_passe.hors_ligne_etape") %></p>
+        <p class="donnee text-xs text-navy mt-3 rounded border border-bordure bg-white p-3 break-all">
+          bin/rails "bibliothecaire:creer[<%= @email_address.presence || "adresse-du-compte" %>,nouveau-mot-de-passe]"
+        </p>
+      </div>
+
+      <div class="flex-1"></div>
+
+      <%= link_to t("app.mot_de_passe.retour_connexion"), new_session_path,
+                  class: "bouton bouton-primaire bouton-large mt-4" %>
+    <% elsif @sent %>
       <div class="text-center mt-4">
         <p class="surtitre"><%= t("app.mot_de_passe.eyebrow") %></p>
         <h1 class="titre-ecran mt-1"><%= t("app.mot_de_passe.lien_envoye_titre") %></h1>

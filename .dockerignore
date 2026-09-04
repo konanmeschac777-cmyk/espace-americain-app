@@ -10,6 +10,12 @@
 # Ignore all environment files.
 /.env*
 
+# Y compris ceux des sous-dossiers : deploy/.env porte la clé de déchiffrement
+# des identifiants. La règle ci-dessus est ancrée à la racine, sans ces deux
+# lignes la clé serait recopiée dans l'image au moment du build.
+.env
+.env.*
+
 # Ignore all default key files.
 /config/master.key
 /config/credentials/*.key
