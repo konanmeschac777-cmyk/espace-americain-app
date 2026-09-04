@@ -19,7 +19,12 @@ class ReturnsController < ApplicationController
 
     if @loan.nil? && @query.present?
       resultats = Loan.open.includes(:book, :member).search(@query).oldest_due_first.limit(RESULTS_LIMIT)
-      @loan = resultats.sole rescue nil
+
+      # Un seul résultat mène droit à l'aperçu du retour, sinon on montre
+      # la liste. Le « rescue nil » d'avant attrapait toute StandardError :
+      # une panne de base passait pour « aucun résultat », et le comptoir
+      # voyait une liste vide au lieu d'une erreur.
+      @loan = resultats.first if resultats.size == 1
       @loans = resultats unless @loan
     end
 
@@ -41,7 +46,7 @@ class ReturnsController < ApplicationController
       if ActiveModel::Type::Boolean.new.cast(params[:waive_suspension])
         member.lift_suspension!
       else
-        member.update!(suspended_until: Date.current + loan.days_late)
+        member.suspend_for_late_return!(loan.days_late)
       end
     end
 

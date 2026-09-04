@@ -19,13 +19,16 @@ class MembersController < ApplicationController
     else Member.all
     end
 
-    @members = portee.search(@query).by_name.limit(RESULTS_LIMIT)
+    # open_loans (et son ouvrage) sont préchargés pour le badge de chaque
+    # ligne, qui a besoin du prêt en cours et de son retard éventuel. Sans
+    # ça, soixante abonnés affichés faisaient soixante requêtes de plus.
+    @members = portee.search(@query).by_name.includes(open_loans: :book).limit(RESULTS_LIMIT)
 
     # Toujours visible sous l'onglet "Tous" : ce qui demande une action,
     # peu importe le filtre choisi juste après.
     if @filtre == "tous"
       @a_relancer = en_retard.or(Member.expired).or(Member.suspended)
-                             .search(@query).by_name.limit(5)
+                             .search(@query).by_name.includes(open_loans: :book).limit(5)
     end
 
     @total_membres = Member.count
@@ -139,11 +142,5 @@ class MembersController < ApplicationController
     return [ mots.first, mots.first ] if mots.size == 1
 
     [ mots[0..-2].join(" "), mots.last ]
-  end
-
-  # Le MVP ne sert que Tiassalé. Le jour où une autre antenne ouvre, c'est
-  # ici que le site viendra de la session du bibliothécaire.
-  def current_site
-    @current_site ||= Site.active.first || Site.first
   end
 end

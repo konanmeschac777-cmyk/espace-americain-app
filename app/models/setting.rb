@@ -25,9 +25,23 @@ class Setting < ApplicationRecord
   validates :value, presence: true
   validate :valeur_acceptable
 
+  after_commit :oublier_le_cache
+  after_rollback :oublier_le_cache
+
   # Setting.value_for("loan_days") => "14"
+  #
+  # Les cinq réglages sont chargés d'un coup et gardés le temps de la
+  # requête : ils sont lus plusieurs fois par écran, et une lecture par
+  # appel faisait autant d'allers-retours vers la base.
   def self.value_for(key)
-    find_by(key: key)&.value
+    Current.reglages ||= pluck(:key, :value).to_h
+    Current.reglages[key]
+  end
+
+  # Vide le cache de la requête après une écriture, pour que la valeur
+  # relue soit celle qu'on vient d'enregistrer et non celle d'avant.
+  def self.oublier_le_cache
+    Current.reglages = nil
   end
 
   # Le second argument sert de filet si le réglage a été supprimé en base.
@@ -86,6 +100,8 @@ class Setting < ApplicationRecord
   def entier? = REGLAGES.dig(key, :min).present?
 
   private
+
+  def oublier_le_cache = self.class.oublier_le_cache
 
   def valeur_acceptable
     regle = REGLAGES[key]

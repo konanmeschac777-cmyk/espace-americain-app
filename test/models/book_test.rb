@@ -123,4 +123,44 @@ class BookTest < ActiveSupport::TestCase
 
     assert_not livre.destroy, "l'archivage existe pour ça : l'historique doit rester lisible"
   end
+
+  # --- Le recomptage de l'étagère -----------------------------------------
+  #
+  # Le bibliothécaire recompte les exemplaires en rayon et corrige la
+  # fiche. Les exemplaires sortis ne sont pas sur l'étagère : les oublier
+  # rendait la disponibilité négative, et l'écran de prêt affichait « -1/2 ».
+
+  test "le nombre d'exemplaires ne descend pas sous les prêts en cours" do
+    livre = books(:orateur)
+    livre.update!(total_copies: 5)
+    pret_en_cours(book: livre, member: members(:aya), du_dans: 7)
+    pret_en_cours(book: livre, member: members(:kouadio), du_dans: 7)
+
+    livre.total_copies = 1
+
+    assert_not livre.valid?
+    assert livre.errors[:total_copies].any?
+  end
+
+  test "le nombre d'exemplaires peut descendre jusqu'aux prêts en cours" do
+    livre = books(:orateur)
+    livre.update!(total_copies: 5)
+    pret_en_cours(book: livre, member: members(:aya), du_dans: 7)
+
+    livre.total_copies = 1
+
+    assert livre.valid?, "un seul exemplaire sorti, un seul déclaré : c'est cohérent"
+    assert_equal 0, livre.copies_available
+  end
+
+  test "la disponibilité ne peut plus devenir négative" do
+    livre = books(:orateur)
+    livre.update!(total_copies: 3)
+    3.times { |i| pret_en_cours(book: livre, member: Member.by_name.offset(i).first, du_dans: 7) }
+
+    livre.total_copies = 1
+
+    assert_not livre.save
+    assert_operator livre.reload.copies_available, :>=, 0
+  end
 end

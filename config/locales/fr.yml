@@ -24,6 +24,10 @@ fr:
   errors:
     format: "%{attribute} %{message}"
     messages:
+      avant_emprunt: "doit être après la date d'emprunt"
+      trop_peu_pour_les_prets:
+        one: "ne peut pas descendre sous 1 : un exemplaire est encore sorti"
+        other: "ne peut pas descendre sous %{count} : autant d'exemplaires sont encore sortis"
       blank: "doit être rempli"
       taken: "est déjà utilisé"
       invalid: "n'est pas valide"

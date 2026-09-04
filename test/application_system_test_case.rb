@@ -23,10 +23,25 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   # Connecte un bibliothécaire en passant par le vrai formulaire : c'est le
   # premier écran de la journée, il mérite d'être traversé pour de bon.
+  #
+  # Les deux champs sont relus avant de valider. Sans cette relecture, le
+  # clic partait parfois avant que le navigateur n'ait enregistré la
+  # saisie : le formulaire arrivait vide au serveur, qui renvoyait à
+  # l'écran de connexion, et le test échouait une fois sur dix sans que
+  # rien ne soit cassé. Les assertions de Capybara patientent, contrairement
+  # à fill_in.
   def se_connecter(user, mot_de_passe: "password")
     visit new_session_path
-    fill_in I18n.t("app.connexion.email"), with: user.email_address
-    fill_in I18n.t("app.connexion.mot_de_passe"), with: mot_de_passe
+
+    champ_email = I18n.t("app.connexion.email")
+    champ_mot_de_passe = I18n.t("app.connexion.mot_de_passe")
+
+    fill_in champ_email, with: user.email_address
+    fill_in champ_mot_de_passe, with: mot_de_passe
+
+    assert_field champ_email, with: user.email_address
+    assert_field champ_mot_de_passe, with: mot_de_passe
+
     click_on I18n.t("app.connexion.connecter")
   end
 end

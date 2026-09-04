@@ -99,6 +99,8 @@ class Loan < ApplicationRecord
   def due_after_borrowed
     return if due_on.blank? || borrowed_on.blank?
 
-    errors.add(:due_on, "doit être après la date d'emprunt") if due_on < borrowed_on
+    # Par symbole et non par chaîne : écrit en dur, ce message restait en
+    # français au milieu d'une interface en anglais.
+    errors.add(:due_on, :avant_emprunt) if due_on < borrowed_on
   end
 end

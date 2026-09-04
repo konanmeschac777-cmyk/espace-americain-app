@@ -194,4 +194,21 @@ class LoanTest < ActiveSupport::TestCase
     assert_includes Loan.open.search(""), loan
     assert_includes Loan.open.search(nil), loan
   end
+
+  # Le message était écrit en dur en français : il restait tel quel au
+  # milieu d'une interface en anglais.
+  test "le refus d'échéance se lit dans la langue de l'écran" do
+    loan = Loan.new(book: @book, member: @member,
+                    borrowed_on: Date.current, due_on: Date.current - 1)
+
+    I18n.with_locale(:en) do
+      loan.valid?
+      assert_match "must be after", loan.errors.full_messages.first
+    end
+
+    I18n.with_locale(:fr) do
+      loan.valid?
+      assert_match "après la date d'emprunt", loan.errors.full_messages.first
+    end
+  end
 end

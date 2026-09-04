@@ -1,4 +1,48 @@
 en:
+  # Rails fournit déjà l'anglais pour les formats de date, les connecteurs
+  # de liste et les messages de validation courants : on ne redéclare ici
+  # que ce qui est propre au projet, et les noms de modèles et de champs,
+  # qui apparaissent dans les messages d'erreur.
+  errors:
+    messages:
+      avant_emprunt: "must be after the borrowing date"
+      trop_peu_pour_les_prets:
+        one: "cannot go below 1: one copy is still out on loan"
+        other: "cannot go below %{count}: that many copies are still out on loan"
+
+  activerecord:
+    models:
+      book: Title
+      member: Member
+      loan: Loan
+      category: Category
+      site: Site
+      setting: Setting
+    attributes:
+      book:
+        title: Title
+        author: Author
+        category: Category
+        language: Language
+        total_copies: Number of copies
+        shelf_mark: Shelf mark
+        collection: Collection
+        received_on: Received on
+        summary: Summary
+      member:
+        card_number: Card number
+        first_name: First name
+        last_name: Last name
+        phone: Phone
+        joined_on: Joined on
+        expires_on: Expires on
+      loan:
+        book: Title
+        member: Member
+        borrowed_on: Borrowed on
+        due_on: Due on
+        returned_on: Returned on
+
   app:
     commun:
       fermer: "Close"

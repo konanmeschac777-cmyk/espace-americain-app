@@ -195,4 +195,36 @@ class MemberTest < ActiveSupport::TestCase
 
     assert_not membre.destroy, "l'historique des prêts doit rester consultable"
   end
+
+  # --- La suspension posée par un retard ----------------------------------
+
+  test "un retour en retard suspend autant de jours que le retard" do
+    membre = members(:aya)
+
+    membre.suspend_for_late_return!(6)
+
+    assert_equal Date.current + 6, membre.suspended_until
+    assert membre.currently_suspended?
+  end
+
+  # Une sanction décidée par le responsable ne doit pas tomber parce que
+  # l'abonné rapporte un livre : c'est justement le moment où il repasse
+  # au comptoir.
+  test "un retour en retard ne raccourcit pas une suspension plus longue" do
+    membre = members(:aya)
+    membre.update!(suspended_until: Date.current + 30)
+
+    membre.suspend_for_late_return!(2)
+
+    assert_equal Date.current + 30, membre.suspended_until
+  end
+
+  test "un retard plus long qu'une suspension en cours l'allonge" do
+    membre = members(:aya)
+    membre.update!(suspended_until: Date.current + 3)
+
+    membre.suspend_for_late_return!(10)
+
+    assert_equal Date.current + 10, membre.suspended_until
+  end
 end

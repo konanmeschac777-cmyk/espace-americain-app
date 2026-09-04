@@ -19,7 +19,9 @@ class BooksController < ApplicationController
     else current_category&.books&.active || Book.active
     end
 
-    @books = @books.search(@query).by_title.includes(:category).limit(RESULTS_LIMIT)
+    # open_loans est préchargé pour le badge de disponibilité : sans lui,
+    # chaque ligne comptait ses exemplaires sortis par une requête à part.
+    @books = @books.search(@query).by_title.includes(:category, :open_loans).limit(RESULTS_LIMIT)
 
     # Groupé par catégorie seulement dans la vue d'ensemble : dès qu'on
     # filtre ou qu'on cherche, une liste simple suffit et évite des
@@ -132,11 +134,5 @@ class BooksController < ApplicationController
     # d'origine laisse un auteur deviné et non confirmé.
     attrs[:author_confirmed] = attrs[:author].present?
     attrs
-  end
-
-  # Le MVP ne sert que Tiassalé. Le jour où une autre antenne ouvre, c'est
-  # ici que le site viendra de la session du bibliothécaire.
-  def current_site
-    @current_site ||= Site.active.first || Site.first
   end
 end

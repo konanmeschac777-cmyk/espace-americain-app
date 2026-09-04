@@ -7,6 +7,11 @@ class Member < ApplicationRecord
   belongs_to :site
   has_many :loans, dependent: :restrict_with_error
 
+  # Les prêts en cours, en association à part pour que la liste des abonnés
+  # puisse les précharger : sans elle, chaque ligne allait chercher son
+  # prêt en base, une requête par abonné affiché.
+  has_many :open_loans, -> { open }, class_name: "Loan", inverse_of: :member
+
   EXPIRING_SOON_DAYS = 30
 
   # Indicatifs téléphoniques par pays, pour le champ téléphone : indicatif,
@@ -126,7 +131,8 @@ class Member < ApplicationRecord
   def full_name = "#{first_name} #{last_name}"
 
   # Un abonné n'a droit qu'à un livre à la fois : ce prêt-là, ou aucun.
-  def current_loan = loans.open.first
+  # Passe par open_loans pour profiter du préchargement des listes.
+  def current_loan = open_loans.first
 
   def membership_expired? = expires_on < Date.current
 
@@ -150,7 +156,7 @@ class Member < ApplicationRecord
   def borrow_block_reason
     return :suspended         if currently_suspended?
     return :membership_expired if membership_expired?
-    return :already_borrowing  if loans.open.count >= Setting.loan_quota
+    return :already_borrowing  if open_loans.size >= Setting.loan_quota
 
     nil
   end
@@ -160,6 +166,21 @@ class Member < ApplicationRecord
   # pas depuis l'écran de retour.
   def lift_suspension!
     update!(suspended_until: nil)
+  end
+
+  # Suspension automatique posée par un retour en retard : autant de jours
+  # d'interdiction que de jours de retard.
+  #
+  # Elle ne raccourcit jamais une suspension déjà en cours. Sans ce garde-
+  # fou, un abonné suspendu un mois pour dégradation retrouvait le droit
+  # d'emprunter en rapportant un livre avec deux jours de retard : la
+  # nouvelle échéance, plus courte, écrasait l'ancienne. C'est la même
+  # règle que renew! et renew_membership!, qui repartent toujours de la
+  # date la plus lointaine.
+  def suspend_for_late_return!(days_late)
+    echeance = Date.current + days_late
+
+    update!(suspended_until: [ suspended_until, echeance ].compact.max)
   end
 
   # Suspension manuelle, décidée par le responsable (vol, dégradation,
