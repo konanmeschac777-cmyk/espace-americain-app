@@ -1,4 +1,4 @@
-<% content_for :title, t("app.reglages.titre_page") %>
+<% content_for :title, t("app.parametres.titre_page") %>
 
 <div class="flux-fond zone-flottante">
   <div class="flux-motif" aria-hidden="true"></div>
@@ -16,10 +16,10 @@
   </header>
 
   <div class="flux-corps flex flex-col items-center text-center">
-    <p class="surtitre mb-1"><%= t("app.reglages.eyebrow") %></p>
-    <h1 class="titre-ecran mb-2"><%= t("app.reglages.titre") %></h1>
+    <p class="surtitre mb-1"><%= t("app.parametres.eyebrow") %></p>
+    <h1 class="titre-ecran mb-2"><%= t("app.parametres.titre") %></h1>
     <p class="text-sm text-texte-discret mb-5" style="max-width: 34ch;">
-      <%= t("app.reglages.description") %>
+      <%= t("app.parametres.description") %>
     </p>
 
     <div class="w-full text-left">
@@ -30,22 +30,24 @@
       <% erreurs = @reglages.select { |reglage| reglage.errors.any? } %>
       <% if erreurs.any? %>
         <div class="bandeau bandeau-blocage mb-4 flex-col items-start">
-          <p class="font-bold"><%= t("app.reglages.erreur_titre") %></p>
+          <p class="font-bold"><%= t("app.parametres.erreur_titre") %></p>
           <ul class="mt-1">
             <% erreurs.each do |reglage| %>
-              <li><%= t("app.reglages.#{reglage.key}.erreur") %></li>
+              <li><%= t("app.parametres.#{reglage.key}.erreur") %></li>
             <% end %>
           </ul>
         </div>
       <% end %>
 
-      <%= form_with url: reglages_path, method: :patch, id: "formulaire_reglages" do %>
+      <p class="surtitre mb-3"><%= t("app.parametres.section_comptoir") %></p>
+
+      <%= form_with url: parametres_path, method: :patch, id: "formulaire_reglages" do %>
         <div class="flex flex-col gap-4">
           <% @reglages.each do |reglage| %>
             <% regle = Setting::REGLAGES[reglage.key] %>
             <div>
-              <p class="text-sm font-bold text-encre mb-1"><%= t("app.reglages.#{reglage.key}.libelle") %></p>
-              <p class="text-sm text-texte-discret mb-2"><%= t("app.reglages.#{reglage.key}.aide") %></p>
+              <p class="text-sm font-bold text-encre mb-1"><%= t("app.parametres.#{reglage.key}.libelle") %></p>
+              <p class="text-sm text-texte-discret mb-2"><%= t("app.parametres.#{reglage.key}.aide") %></p>
 
               <% if reglage.entier? %>
                 <input type="number" name="reglages[<%= reglage.key %>]" value="<%= reglage.value %>"
@@ -66,9 +68,24 @@
       <%# Ce que les réglages ne font pas : c'est la question que le
           responsable se pose en changeant la durée d'un prêt. %>
       <div class="rounded-[var(--radius-bloc)] p-4 mt-5" style="background-color: var(--color-surface);">
-        <p class="surtitre mb-2"><%= t("app.reglages.portee_titre") %></p>
-        <p class="text-sm text-texte-discret"><%= t("app.reglages.portee_texte") %></p>
+        <p class="surtitre mb-2"><%= t("app.parametres.portee_titre") %></p>
+        <p class="text-sm text-texte-discret"><%= t("app.parametres.portee_texte") %></p>
       </div>
+
+      <%# La langue vit ici plutôt que sur sa propre entrée de menu : c'est
+          un réglage de l'application comme les autres. Elle garde son écran,
+          parce qu'elle se change d'un clic et non par un formulaire. %>
+      <p class="surtitre mt-6 mb-3"><%= t("app.parametres.section_application") %></p>
+
+      <%= link_to langue_path, class: "carte flex items-center justify-between p-4" do %>
+        <div class="min-w-0">
+          <p class="text-sm font-bold text-encre"><%= t("app.compte.langue") %></p>
+          <p class="text-sm text-texte-discret"><%= t("app.parametres.langue_aide") %></p>
+        </div>
+        <span class="text-sm text-texte-discret shrink-0 ml-3">
+          <%= I18n.locale == :fr ? t("app.langue.francais") : t("app.langue.anglais") %> &rsaquo;
+        </span>
+      <% end %>
     </div>
   </div>
 </div>

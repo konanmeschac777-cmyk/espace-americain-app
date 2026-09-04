@@ -55,10 +55,10 @@ Rails.application.routes.draw do
   # Écran 20 : informatif pour l'instant, seul le français existe vraiment.
   get "langue", to: "pages#langue", as: :langue
 
-  # Les règles du comptoir : durée d'un prêt, quota, durée d'adhésion.
-  # Une ressource au singulier : il n'y a qu'un jeu de réglages, pas de
-  # liste à parcourir ni d'identifiant à passer dans l'adresse.
-  resource :reglages, only: [ :show, :update ], controller: "settings"
+  # Les paramètres : les règles du comptoir (durée d'un prêt, quota, durée
+  # d'adhésion) et la langue. Une ressource au singulier : il n'y a qu'un
+  # jeu de réglages, pas de liste ni d'identifiant à passer dans l'adresse.
+  resource :parametres, only: [ :show, :update ], controller: "settings"
 
   # Informations du compte connecté (atteint depuis l'avatar du tableau de
   # bord). C'est ici que se trouve la déconnexion.

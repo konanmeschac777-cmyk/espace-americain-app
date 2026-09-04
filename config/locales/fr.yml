@@ -116,7 +116,6 @@ fr:
       rapport: "Rapport du mois"
       nouvelle_carte: "Nouvelle carte"
       ajouter_ouvrage: "Ajouter un ouvrage"
-      reglages: "Règles du comptoir"
       parametres: "Paramètres"
       deconnexion: "Se déconnecter"
       fermer_menu: "Fermer le menu"
@@ -473,12 +472,15 @@ fr:
       fiche_a_completer: "Fiche %{position} sur %{total} à compléter. Seuls l'auteur et la catégorie sont indispensables ici."
       archiver_ouvrage: "Archiver cet ouvrage"
 
-    reglages:
+    parametres:
       titre_page: "Règles du comptoir"
       eyebrow: "ADMINISTRATION"
-      titre: "Les règles du comptoir"
-      description: "Ce que l'application applique à chaque prêt. Change une valeur, elle vaut dès l'emprunt suivant."
+      titre: "Paramètres"
+      description: "Les règles que l'application applique à chaque prêt, et la langue des écrans."
       erreur_titre: "Ces valeurs ne peuvent pas être enregistrées :"
+      section_comptoir: "RÈGLES DU COMPTOIR"
+      section_application: "APPLICATION"
+      langue_aide: "La langue des écrans, sur cet appareil."
       portee_titre: "CE QUI NE CHANGE PAS"
       portee_texte: "Les prêts déjà enregistrés gardent leur échéance : elle est écrite dans le prêt le jour de l'emprunt. Allonger la durée ne rallonge pas ce qui est déjà sorti, et les adhésions en cours gardent leur date."
       loan_days:

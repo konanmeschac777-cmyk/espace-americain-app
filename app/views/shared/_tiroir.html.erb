@@ -36,8 +36,7 @@
     <p class="tiroir-eyebrow"><%= t("app.tiroir.section_administration") %></p>
     <%= link_to t("app.tiroir.nouvelle_carte"), new_member_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_member_path)}" %>
     <%= link_to t("app.tiroir.ajouter_ouvrage"), new_book_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(new_book_path)}" %>
-    <%= link_to t("app.tiroir.reglages"), reglages_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(reglages_path)}" %>
-    <%= link_to t("app.tiroir.parametres"), langue_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(langue_path)}" %>
+    <%= link_to t("app.tiroir.parametres"), parametres_path, class: "tiroir-lien #{'tiroir-lien-actif' if current_page?(parametres_path)}" %>
   </div>
 
   <div class="tiroir-pied">

@@ -1,7 +1,8 @@
-# Les règles du comptoir : durée d'un prêt, renouvellements, quota, durée
-# d'adhésion, préfixe des cartes.
+# L'écran des paramètres : les règles du comptoir (durée d'un prêt,
+# renouvellements, quota, durée d'adhésion, préfixe des cartes) et, en
+# dessous, la langue de l'application.
 #
-# Elles vivaient en base depuis le début mais ne se changeaient qu'en
+# Ces règles vivaient en base depuis le début mais ne se changeaient qu'en
 # console, donc en pratique seulement depuis le poste serveur. Le
 # responsable de l'Espace peut maintenant les régler depuis le comptoir.
 #
@@ -17,7 +18,7 @@ class SettingsController < ApplicationController
     @reglages = Setting.enregistrer(valeurs_saisies)
 
     if @reglages.all? { |reglage| reglage.errors.empty? }
-      redirect_to reglages_path, notice: t("app.flash.reglages_enregistres")
+      redirect_to parametres_path, notice: t("app.flash.reglages_enregistres")
     else
       render :show, status: :unprocessable_entity
     end

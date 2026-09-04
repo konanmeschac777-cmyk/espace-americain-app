@@ -43,7 +43,7 @@ class ComptoirTest < ApplicationSystemTestCase
     # abouti et l'écran suivant renverrait au formulaire.
     assert_current_path tableau_de_bord_path
 
-    visit reglages_path
+    visit parametres_path
     fill_in "reglages[loan_days]", with: "21"
     click_on I18n.t("app.admin.enregistrer")
 

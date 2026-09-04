@@ -54,7 +54,6 @@ en:
       rapport: "Monthly report"
       nouvelle_carte: "New card"
       ajouter_ouvrage: "Add a title"
-      reglages: "Counter rules"
       parametres: "Settings"
       deconnexion: "Log out"
       fermer_menu: "Close menu"
@@ -411,12 +410,15 @@ en:
       fiche_a_completer: "Record %{position} of %{total} to complete. Only the author and category are needed here."
       archiver_ouvrage: "Archive this title"
 
-    reglages:
+    parametres:
       titre_page: "Counter rules"
       eyebrow: "ADMINISTRATION"
-      titre: "The counter rules"
-      description: "What the application applies to every loan. Change a value and it takes effect from the next loan on."
+      titre: "Settings"
+      description: "The rules the application applies to every loan, and the language of the screens."
       erreur_titre: "These values cannot be saved:"
+      section_comptoir: "COUNTER RULES"
+      section_application: "APPLICATION"
+      langue_aide: "The language of the screens, on this device."
       portee_titre: "WHAT DOES NOT CHANGE"
       portee_texte: "Loans already logged keep their due date: it is written into the loan on the day it goes out. Making loans longer does not extend what is already borrowed, and current memberships keep their date."
       loan_days:
