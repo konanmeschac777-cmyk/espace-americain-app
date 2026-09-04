@@ -115,5 +115,4 @@ class LoansController < ApplicationController
     when :no_copy_available  then t("app.flash.blocage_aucun_exemplaire")
     end
   end
-
 end

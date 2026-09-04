@@ -1,5 +1,15 @@
 # See https://git-scm.com/docs/gitattributes for more about git attribute files.
 
+# Tout ce qui s'exécute garde des fins de ligne Unix, y compris dans la copie
+# de travail sous Windows. Le dépôt est déjà en LF, mais avec autocrlf=true
+# un simple clone repose des CRLF sur le disque — et « docker build » recopie
+# le disque, pas le dépôt. Un script dont le « #!/usr/bin/env bash » se
+# termine par un retour chariot fait chercher à Linux un interpréteur nommé
+# « bash\r » : le script meurt sur « bad interpreter ». C'est ce que le
+# Dockerfile rattrape à coups de sed ; ces deux lignes traitent la cause.
+bin/* text eol=lf
+*.sh text eol=lf
+
 # Mark the database schema as having been generated.
 db/schema.rb linguist-generated
 

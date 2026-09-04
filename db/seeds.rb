@@ -77,6 +77,10 @@ end
 RECEPTION = Date.new(2026, 5, 1)
 COLLECTION = "Nouveaux Horizons"
 
+# rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+# Le fonds se relit comme le tableau dont il sort : une ligne par titre,
+# colonnes alignées. Les espaces que réclame le style maison décaleraient
+# chaque ligne et rendraient une erreur de quantité invisible.
 books = [
   # titre,                                                   ex., catégorie,                auteur
   ["Parlez, l'art de parler en public",                        12, "communication",           nil],
@@ -99,6 +103,7 @@ books = [
   ["Devenir Business Coach",                                    2, "entrepreneuriat",         nil],
   ["Devenez Riche, programme de 6 semaines",                    2, "entrepreneuriat",         "Ramit Sethi"]
 ]
+# rubocop:enable Layout/SpaceInsideArrayLiteralBrackets
 
 books.each do |title, copies, category_slug, author|
   book = Book.find_or_initialize_by(site: tiassale, title: title)

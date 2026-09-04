@@ -3,7 +3,10 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ master ]
+    # La branche du projet est « main ». Tant que cette ligne disait
+    # « master », aucun push direct n'était vérifié : seules les pull
+    # requests de Dependabot déclenchaient le CI.
+    branches: [ main ]
 
 jobs:
   scan_ruby:
