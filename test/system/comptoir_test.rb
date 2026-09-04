@@ -34,6 +34,23 @@ class ComptoirTest < ApplicationSystemTestCase
     assert_no_current_path tableau_de_bord_path
   end
 
+  # Le bouton « Enregistrer » vit dans la barre flottante du bas, donc en
+  # dehors du formulaire : c'est l'attribut form="..." qui les relie. Un
+  # test de contrôleur ne verrait pas cette liaison se rompre.
+  test "les règles du comptoir se changent depuis l'écran" do
+    se_connecter(@bibliothecaire)
+    # Sans cette attente, « visit » partirait avant que la connexion n'ait
+    # abouti et l'écran suivant renverrait au formulaire.
+    assert_current_path tableau_de_bord_path
+
+    visit reglages_path
+    fill_in "reglages[loan_days]", with: "21"
+    click_on I18n.t("app.admin.enregistrer")
+
+    assert_text I18n.t("app.flash.reglages_enregistres")
+    assert_equal 21, Setting.loan_days
+  end
+
   test "depuis le tableau de bord, les écrans du comptoir s'atteignent" do
     se_connecter(@bibliothecaire)
 

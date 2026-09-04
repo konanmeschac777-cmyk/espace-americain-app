@@ -54,6 +54,7 @@ en:
       rapport: "Monthly report"
       nouvelle_carte: "New card"
       ajouter_ouvrage: "Add a title"
+      reglages: "Counter rules"
       parametres: "Settings"
       deconnexion: "Log out"
       fermer_menu: "Close menu"
@@ -410,7 +411,37 @@ en:
       fiche_a_completer: "Record %{position} of %{total} to complete. Only the author and category are needed here."
       archiver_ouvrage: "Archive this title"
 
+    reglages:
+      titre_page: "Counter rules"
+      eyebrow: "ADMINISTRATION"
+      titre: "The counter rules"
+      description: "What the application applies to every loan. Change a value and it takes effect from the next loan on."
+      erreur_titre: "These values cannot be saved:"
+      portee_titre: "WHAT DOES NOT CHANGE"
+      portee_texte: "Loans already logged keep their due date: it is written into the loan on the day it goes out. Making loans longer does not extend what is already borrowed, and current memberships keep their date."
+      loan_days:
+        libelle: "Loan length"
+        aide: "In days. The due date is counted from the day the book goes out."
+        erreur: "A loan length is counted in days, between 1 and 90."
+      max_renewals:
+        libelle: "Renewals allowed"
+        aide: "How many times a member may extend the same loan. 0 to forbid it."
+        erreur: "The number of renewals ranges from 0 to 5."
+      loan_quota:
+        libelle: "Books per member"
+        aide: "How many books a member may have out at the same time."
+        erreur: "The number of books per member ranges from 1 to 10."
+      membership_months:
+        libelle: "Membership length"
+        aide: "In months. Membership is free: this length is how we know who still comes to the Space."
+        erreur: "A membership length is counted in months, between 1 and 60."
+      card_prefix:
+        libelle: "Card prefix"
+        aide: "The start of card numbers, for example TSL-2026-0087."
+        erreur: "The card prefix is 2 to 5 capital letters, with no digits or spaces."
+
     flash:
+      reglages_enregistres: "The counter rules are saved."
       livre_archive: "“%{titre}” is archived, it no longer appears in the catalogue."
       fiche_completee_restantes_un: "“%{titre}” completed. 1 record left."
       fiche_completee_restantes_plusieurs: "“%{titre}” completed. %{n} records left."

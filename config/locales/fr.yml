@@ -116,6 +116,7 @@ fr:
       rapport: "Rapport du mois"
       nouvelle_carte: "Nouvelle carte"
       ajouter_ouvrage: "Ajouter un ouvrage"
+      reglages: "Règles du comptoir"
       parametres: "Paramètres"
       deconnexion: "Se déconnecter"
       fermer_menu: "Fermer le menu"
@@ -472,7 +473,37 @@ fr:
       fiche_a_completer: "Fiche %{position} sur %{total} à compléter. Seuls l'auteur et la catégorie sont indispensables ici."
       archiver_ouvrage: "Archiver cet ouvrage"
 
+    reglages:
+      titre_page: "Règles du comptoir"
+      eyebrow: "ADMINISTRATION"
+      titre: "Les règles du comptoir"
+      description: "Ce que l'application applique à chaque prêt. Change une valeur, elle vaut dès l'emprunt suivant."
+      erreur_titre: "Ces valeurs ne peuvent pas être enregistrées :"
+      portee_titre: "CE QUI NE CHANGE PAS"
+      portee_texte: "Les prêts déjà enregistrés gardent leur échéance : elle est écrite dans le prêt le jour de l'emprunt. Allonger la durée ne rallonge pas ce qui est déjà sorti, et les adhésions en cours gardent leur date."
+      loan_days:
+        libelle: "Durée d'un prêt"
+        aide: "En jours. L'échéance est calculée à partir du jour de l'emprunt."
+        erreur: "La durée d'un prêt se compte en jours, entre 1 et 90."
+      max_renewals:
+        libelle: "Renouvellements autorisés"
+        aide: "Combien de fois un abonné peut prolonger le même prêt. 0 pour l'interdire."
+        erreur: "Le nombre de renouvellements va de 0 à 5."
+      loan_quota:
+        libelle: "Livres par abonné"
+        aide: "Combien de livres un abonné peut avoir dehors en même temps."
+        erreur: "Le nombre de livres par abonné va de 1 à 10."
+      membership_months:
+        libelle: "Durée d'une adhésion"
+        aide: "En mois. L'adhésion est gratuite : cette durée sert à savoir qui fréquente encore l'Espace."
+        erreur: "La durée d'une adhésion se compte en mois, entre 1 et 60."
+      card_prefix:
+        libelle: "Préfixe des cartes"
+        aide: "Le début des numéros de carte, par exemple TSL-2026-0087."
+        erreur: "Le préfixe des cartes s'écrit en 2 à 5 lettres majuscules, sans chiffre ni espace."
+
     flash:
+      reglages_enregistres: "Les règles du comptoir sont enregistrées."
       livre_archive: "« %{titre} » est archivé, il n'apparaît plus au catalogue."
       fiche_completee_restantes_un: "« %{titre} » complété. 1 fiche restante."
       fiche_completee_restantes_plusieurs: "« %{titre} » complété. %{n} fiches restantes."
