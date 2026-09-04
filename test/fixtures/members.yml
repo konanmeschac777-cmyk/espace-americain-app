@@ -1,0 +1,77 @@
+# Les dates sont relatives à aujourd'hui : une fixture datée en dur
+# deviendrait fausse au fil des mois, et les tests d'échéance avec elle.
+#
+# L'année du numéro de carte suit elle aussi la date du jour : le compteur
+# de Member.next_card_number repart à 1 chaque année.
+
+# Le cas normal : à jour, rien d'emprunté, libre d'emprunter.
+aya:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0087
+  first_name: Aya
+  last_name: Koné
+  phone: 07 08 45 12 30
+  phone_country_code: "+225"
+  neighborhood: Tiassalé centre
+  age: 22
+  joined_on: <%= 5.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 7.months.from_now.to_date.to_fs(:db) %>
+  suspended: false
+
+# Deuxième abonné à jour : sert dès qu'un test a besoin de deux personnes
+# distinctes (deux prêts simultanés sur un même titre, par exemple).
+kouadio:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0112
+  first_name: Kouadio
+  last_name: N'Guessan
+  phone: 05 64 22 89 04
+  phone_country_code: "+225"
+  joined_on: <%= 7.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 5.months.from_now.to_date.to_fs(:db) %>
+  suspended: false
+
+# Adhésion dépassée : le prêt est bloqué et la fiche remonte dans
+# « à réinscrire ».
+adjoua:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0201
+  first_name: Adjoua
+  last_name: Brou
+  joined_on: <%= 12.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 12.days.ago.to_date.to_fs(:db) %>
+  suspended: false
+
+# Suspension manuelle, décidée au comptoir. Sans date de fin : elle se lève
+# au dossier, pas toute seule.
+ibrahim:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0233
+  first_name: Ibrahim
+  last_name: Traoré
+  joined_on: <%= 8.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 4.months.from_now.to_date.to_fs(:db) %>
+  suspended: true
+
+# Suspension automatique posée par un retour en retard, encore en cours.
+fatou:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0034
+  first_name: Fatou
+  last_name: Diarra
+  joined_on: <%= 6.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 6.months.from_now.to_date.to_fs(:db) %>
+  suspended: false
+  suspended_until: <%= 3.days.from_now.to_date.to_fs(:db) %>
+
+# Même suspension automatique, mais arrivée à son terme : l'abonné doit
+# pouvoir emprunter à nouveau sans qu'on ait à intervenir.
+yao:
+  site: tiassale
+  card_number: TSL-<%= Date.current.year %>-0155
+  first_name: Yao
+  last_name: Kouassi
+  joined_on: <%= 10.months.ago.to_date.to_fs(:db) %>
+  expires_on: <%= 18.days.from_now.to_date.to_fs(:db) %>
+  suspended: false
+  suspended_until: <%= 2.days.ago.to_date.to_fs(:db) %>

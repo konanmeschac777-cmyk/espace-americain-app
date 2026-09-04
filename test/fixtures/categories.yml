@@ -1,0 +1,9 @@
+# Deux des six catégories du fonds réel. Leurs slugs donnent deux préfixes
+# de cote distincts, COM et PRO, ce qui suffit à vérifier le rangement.
+communication:
+  name: Communication & prise de parole
+  slug: communication
+
+productivite:
+  name: Productivité & organisation
+  slug: productivite

@@ -1,0 +1,12 @@
+# Seul Tiassalé est actif : c'est l'antenne que le MVP sert. Abidjan est là
+# pour vérifier que rien ne traverse d'une antenne à l'autre — un même titre
+# doit pouvoir exister dans les deux sans conflit.
+tiassale:
+  code: TIAS
+  name: American Shelf de Tiassalé
+  active: true
+
+abidjan:
+  code: ABO
+  name: American Space d'Abidjan
+  active: false

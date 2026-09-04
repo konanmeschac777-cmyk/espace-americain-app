@@ -1,0 +1,68 @@
+# Chaque ouvrage couvre un état que le comptoir doit savoir traiter.
+
+# Un seul exemplaire : c'est le titre qui devient indisponible dès le
+# premier prêt, donc celui qui déclenche le blocage « plus d'exemplaire ».
+orateur:
+  site: tiassale
+  category: communication
+  title: Devenez un grand orateur
+  author: Aristote Bamba
+  author_confirmed: true
+  language: fr
+  total_copies: 1
+  shelf_mark: COM-01
+  collection: Nouveaux Horizons
+  active: true
+
+# Trois exemplaires : deux prêts en même temps doivent rester possibles,
+# et le troisième reste disponible.
+organiser:
+  site: tiassale
+  category: productivite
+  title: S'organiser pour réussir
+  author: David Allen
+  author_confirmed: true
+  language: fr
+  total_copies: 3
+  shelf_mark: PRO-01
+  collection: Nouveaux Horizons
+  active: true
+
+# Tel qu'importé du fichier d'origine : ni auteur, ni cote. C'est la file
+# « à compléter » du catalogue.
+essentiel:
+  site: tiassale
+  category: productivite
+  title: The One Thing, passez à l'essentiel
+  author_confirmed: false
+  language: fr
+  total_copies: 2
+  collection: Nouveaux Horizons
+  active: true
+
+# Auteur relevé mais pas encore vérifié sur la couverture : à compléter
+# aussi, pour une raison différente.
+influence:
+  site: tiassale
+  category: communication
+  title: Influence et manipulation
+  author: R. Cialdini
+  author_confirmed: false
+  language: fr
+  total_copies: 1
+  shelf_mark: COM-02
+  collection: Nouveaux Horizons
+  active: true
+
+# Archivé : son historique de prêts reste consultable, mais il ne doit
+# apparaître ni au catalogue ni dans la recherche d'un prêt.
+retire:
+  site: tiassale
+  category: communication
+  title: Un titre retiré du fonds
+  author: Anonyme
+  author_confirmed: true
+  language: fr
+  total_copies: 1
+  shelf_mark: COM-03
+  active: false

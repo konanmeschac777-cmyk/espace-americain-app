@@ -1,0 +1,21 @@
+# Les réglages tels qu'ils sont en production. Les tests qui vérifient qu'un
+# réglage est bien lu (et non codé en dur) modifient la valeur ici même.
+loan_days:
+  key: loan_days
+  value: "14"
+
+max_renewals:
+  key: max_renewals
+  value: "1"
+
+loan_quota:
+  key: loan_quota
+  value: "1"
+
+membership_months:
+  key: membership_months
+  value: "12"
+
+card_prefix:
+  key: card_prefix
+  value: "TSL"
