@@ -40,6 +40,11 @@
 /node_modules/
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Sauf la feuille de style compilée : le processeur du poste serveur ne peut
+# pas exécuter le binaire Tailwind, l'image doit donc recevoir le résultat
+# déjà construit plutôt que de le refabriquer. Voir .gitignore et le Dockerfile.
+!/app/assets/builds/tailwind.css
 /public/assets
 
 # Ignore CI service files.

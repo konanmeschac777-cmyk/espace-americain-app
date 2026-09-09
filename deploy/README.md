@@ -150,8 +150,28 @@ docker compose up -d --build
 ```
 
 La première construction télécharge Ruby et installe les bibliothèques :
-comptez **quinze à trente minutes** sur une machine ancienne. C'est la seule
-fois. Les démarrages suivants sont immédiats.
+comptez **quinze à trente minutes** sur une machine ancienne — une bonne heure
+sur le poste installé à Tiassalé. C'est la seule fois. Les démarrages suivants
+sont immédiats.
+
+> **La feuille de style ne se construit pas sur le serveur.** Le poste de
+> l'Espace est un Pentium E5500 de 2010, dépourvu des instructions SSE4.1 et
+> SSE4.2 qu'exige le binaire Tailwind v4 : lancé là-bas, il est abattu par le
+> processeur (`SIGILL`) avant d'avoir écrit une ligne.
+>
+> `app/assets/builds/tailwind.css` est donc **construit sur un poste de
+> développement et versionné**, contrairement à l'usage. Le Dockerfile fournit
+> au serveur un exécutable Tailwind qui ne fait rien, et Propshaft reprend le
+> fichier déjà compilé. Le résultat est identique.
+>
+> **Conséquence à retenir :** après toute modification des vues ou des styles,
+> il faut régénérer la feuille sur un poste de développement et la commiter,
+> sinon les classes nouvellement employées manqueront à l'écran :
+>
+> ```bash
+> bin/rails tailwindcss:build
+> git add app/assets/builds/tailwind.css
+> ```
 
 Vérifier :
 

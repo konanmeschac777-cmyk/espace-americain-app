@@ -56,8 +56,24 @@ RUN chmod +x bin/* && \
     sed -i "s/\r$//g" bin/* && \
     sed -i 's/ruby\.exe$/ruby/' bin/*
 
+# Le poste serveur de l'American Shelf est un Pentium E5500 de 2010 : il n'a
+# ni SSE4.1 ni SSE4.2, et le binaire Tailwind v4 — compilé pour un jeu
+# d'instructions plus récent — y meurt sur SIGILL dès son premier appel.
+#
+# La feuille de style est donc construite en amont sur un poste de
+# développement et versionnée dans app/assets/builds/tailwind.css. Ici on
+# fournit au gem un exécutable qui ne fait rien : tailwindcss-ruby cherche le
+# binaire dans TAILWINDCSS_INSTALL_DIR dès que cette variable est définie, ce
+# qui neutralise l'étape sans toucher au gem. Propshaft reprend ensuite le
+# fichier déjà construit, et le résultat est identique.
+RUN mkdir -p /usr/local/tailwindcss-noop && \
+    printf '#!/bin/sh\nexit 0\n' > /usr/local/tailwindcss-noop/tailwindcss && \
+    chmod +x /usr/local/tailwindcss-noop/tailwindcss
+
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 \
+    TAILWINDCSS_INSTALL_DIR=/usr/local/tailwindcss-noop \
+    ./bin/rails assets:precompile
 
 
 

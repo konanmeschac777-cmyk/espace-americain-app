@@ -43,6 +43,13 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
+# Exception : la feuille de style compilée est versionnée. Le poste serveur de
+# l'Espace est un Pentium E5500 de 2010, dépourvu de SSE4.1 et SSE4.2 ; le
+# binaire Tailwind v4 s'y arrête sur SIGILL et ne peut donc pas la construire
+# sur place. Elle est produite sur un poste de développement, commitée, puis
+# reprise telle quelle dans l'image Docker. Voir deploy/README.md, étape 6.
+!/app/assets/builds/tailwind.css
+
 # Canvas de design publié : 2,2 Mo de code d'éditeur, régénéré depuis les
 # fichiers .dc.html et canvas.json du même dossier. Seules les sources sont
 # versionnées.
