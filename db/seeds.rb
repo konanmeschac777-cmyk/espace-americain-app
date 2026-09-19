@@ -145,13 +145,18 @@ raise "Fonds incorrect : #{copies} exemplaires au lieu de 93"  unless copies == 
 # dur, pour que le jeu de données reste cohérent quel que soit le jour où
 # les seeds sont rejoués.
 
+# Les professions couvrent les deux chemins du formulaire : cinq abonnés
+# portent un identifiant de la liste, Adjoua une profession hors liste,
+# saisie sous « Autre » et enregistrée telle quelle. Sans elles, chaque
+# fiche de démonstration affichait « profil incomplet ».
+
 MEMBRES_REFERENCE = {
-  "TSL-2026-0087" => { prenom: "Aminata", nom: "Koné",      telephone: "0708451230", expire_dans: 8.months },
-  "TSL-2026-0112" => { prenom: "Kouadio", nom: "N'Guessan",  telephone: "0564228904", expire_dans: 6.months },
-  "TSL-2026-0034" => { prenom: "Fatou",   nom: "Diarra",     telephone: "0142776318", expire_dans: 4.months },
-  "TSL-2026-0155" => { prenom: "Yao",     nom: "Kouassi",    telephone: "0791305527", expire_dans: 18.days },
-  "TSL-2026-0201" => { prenom: "Adjoua",  nom: "Brou",       telephone: "0512689403", expire_dans: -12.days },
-  "TSL-2026-0233" => { prenom: "Ibrahim", nom: "Traoré",     telephone: "0177054162", expire_dans: 5.months, suspendu: true }
+  "TSL-2026-0087" => { prenom: "Aminata", nom: "Koné",      telephone: "0708451230", expire_dans: 8.months, profession: "etudiant" },
+  "TSL-2026-0112" => { prenom: "Kouadio", nom: "N'Guessan",  telephone: "0564228904", expire_dans: 6.months, profession: "enseignant" },
+  "TSL-2026-0034" => { prenom: "Fatou",   nom: "Diarra",     telephone: "0142776318", expire_dans: 4.months, profession: "commercant" },
+  "TSL-2026-0155" => { prenom: "Yao",     nom: "Kouassi",    telephone: "0791305527", expire_dans: 18.days,  profession: "eleve" },
+  "TSL-2026-0201" => { prenom: "Adjoua",  nom: "Brou",       telephone: "0512689403", expire_dans: -12.days, profession: "Couturière" },
+  "TSL-2026-0233" => { prenom: "Ibrahim", nom: "Traoré",     telephone: "0177054162", expire_dans: 5.months, profession: "fonctionnaire", suspendu: true }
 }.freeze
 
 MEMBRES_REFERENCE.each do |card_number, attrs|
@@ -163,6 +168,7 @@ MEMBRES_REFERENCE.each do |card_number, attrs|
     phone:       attrs[:telephone],
     joined_on:   member.joined_on || Date.current - 6.months,
     expires_on:  Date.current + attrs[:expire_dans],
+    profession:  attrs[:profession],
     suspended:   attrs[:suspendu] || false
   )
   member.save!

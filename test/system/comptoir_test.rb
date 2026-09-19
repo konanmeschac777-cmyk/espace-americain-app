@@ -61,4 +61,24 @@ class ComptoirTest < ApplicationSystemTestCase
     click_on I18n.t("app.tableau_de_bord.voir_rapport")
     assert_current_path rapport_du_mois_path
   end
+
+  # Le champ libre de « Profession » n'existe à l'écran que si le
+  # JavaScript répond : c'est lui qui le sort de son état masqué sur le
+  # choix « Autre ». Un test de contrôleur voit l'attribut hidden dans la
+  # page, pas le fait qu'il se lève au bon moment.
+  test "choisir « Autre » ouvre le champ libre de la profession" do
+    se_connecter(@bibliothecaire)
+    assert_current_path tableau_de_bord_path
+
+    visit new_member_path
+    champ_libre = "input[name='member[profession_autre]']"
+
+    assert_no_selector champ_libre, visible: true
+
+    select I18n.t("app.abonnes.profession_autre"), from: "member[profession]"
+    assert_selector champ_libre, visible: true
+
+    select I18n.t("app.professions.enseignant"), from: "member[profession]"
+    assert_no_selector champ_libre, visible: true
+  end
 end

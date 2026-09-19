@@ -55,6 +55,7 @@ class MembersController < ApplicationController
   def create
     @member = Member.new(member_params)
     @member.first_name, @member.last_name = split_full_name(params.dig(:member, :full_name))
+    appliquer_profession(@member)
     @member.site       = current_site
     @member.joined_on  = Date.current
     @member.expires_on = Date.current >> Setting.membership_months
@@ -98,6 +99,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @member.assign_attributes(member_update_params)
     @member.first_name, @member.last_name = split_full_name(params.dig(:member, :full_name))
+    appliquer_profession(@member)
 
     if @member.save
       redirect_to member_path(@member), notice: t("app.flash.fiche_modifiee", nom: @member.full_name)
@@ -131,6 +133,29 @@ class MembersController < ApplicationController
   # avec la carte physique déjà remise à l'abonné.
   def member_update_params
     params.expect(member: [ :phone, :phone_country_code, :age, :neighborhood ])
+  end
+
+  # La profession arrive en deux morceaux : le choix de la liste, et le
+  # texte libre qui n'a de sens que sous « Autre ». Un seul est retenu.
+  #
+  # La valeur sentinelle « autre » n'est jamais enregistrée : choisie sans
+  # rien écrire à côté, elle laisse la profession vide. C'est ce qui rend
+  # le formulaire sûr même là où le JavaScript ne s'exécute pas.
+  #
+  # Une requête qui ne porte pas le menu ne parle pas de profession : elle
+  # laisse celle du fichier en place. Sans ce garde-fou, une modification
+  # partielle effacerait sans bruit une profession déjà saisie.
+  def appliquer_profession(member)
+    return unless params[:member].key?(:profession)
+
+    choix = params[:member][:profession].to_s
+
+    member.profession =
+      if choix == Member::PROFESSION_AUTRE
+        params[:member][:profession_autre].to_s.strip.presence
+      else
+        choix.presence
+      end
   end
 
   # Le formulaire ne propose qu'un seul champ, "Nom et prénoms" : c'est ce

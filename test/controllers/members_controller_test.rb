@@ -81,6 +81,105 @@ class MembersControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name=?][value=?]", "member[card_number]", Member.next_card_number
   end
 
+  # --- Profession ---------------------------------------------------------
+
+  test "une profession de la liste est enregistrée par son identifiant" do
+    post members_path, params: { member: {
+      full_name: "Awa Diabaté", card_number: Member.next_card_number,
+      profession: "enseignant"
+    } }
+
+    assert_equal "enseignant", Member.order(:id).last.profession,
+      "c'est l'identifiant qui est stocké, pas le libellé traduit"
+  end
+
+  test "« Autre » enregistre le texte saisi à côté, jamais la sentinelle" do
+    post members_path, params: { member: {
+      full_name: "Awa Diabaté", card_number: Member.next_card_number,
+      profession: Member::PROFESSION_AUTRE, profession_autre: "  Chauffeur de taxi  "
+    } }
+
+    assert_equal "Chauffeur de taxi", Member.order(:id).last.profession
+  end
+
+  # Le cas d'un navigateur où le JavaScript ne s'exécute pas : le champ
+  # libre reste masqué et le menu envoie « autre » tout seul. Mieux vaut
+  # une profession vide que cette valeur technique dans le fichier.
+  test "« Autre » sans rien écrire à côté laisse la profession vide" do
+    post members_path, params: { member: {
+      full_name: "Awa Diabaté", card_number: Member.next_card_number,
+      profession: Member::PROFESSION_AUTRE, profession_autre: "   "
+    } }
+
+    assert_nil Member.order(:id).last.profession
+  end
+
+  test "une profession hors liste rouvre le champ libre à la modification" do
+    membre = members(:aya)
+    membre.update!(profession: "Chauffeur de taxi")
+
+    get edit_member_path(membre)
+
+    assert_response :success
+    assert_select "select[name=?] option[selected][value=?]", "member[profession]", Member::PROFESSION_AUTRE
+    assert_select "input[name=?][value=?]", "member[profession_autre]", "Chauffeur de taxi"
+    assert_select "div[data-profession-target=?][hidden]", "autre", 0,
+      "le champ libre doit être ouvert, pas masqué, quand il porte déjà une valeur"
+  end
+
+  # Le champ libre part masqué côté serveur plutôt que d'être masqué par le
+  # JavaScript après coup : sur les téléphones du comptoir, il apparaîtrait
+  # puis disparaîtrait à chaque ouverture du formulaire.
+  test "le champ libre part masqué sur un formulaire vierge" do
+    get new_member_path
+
+    assert_response :success
+    assert_select "div[data-profession-target=?][hidden]", "autre", 1
+  end
+
+  # L'identifiant stocké ne veut rien dire pour le bibliothécaire : c'est
+  # sur la fiche qu'il redevient un mot, et dans la langue de l'application.
+  test "la fiche affiche le libellé traduit de la profession" do
+    get member_path(members(:aya))
+
+    assert_response :success
+    assert_select "body", /Étudiant\(e\)/
+    assert_select "body", { text: /etudiant/, count: 0 },
+      "l'identifiant stocké ne doit jamais atteindre l'écran"
+  end
+
+  test "une profession hors liste s'affiche telle qu'elle a été écrite" do
+    membre = members(:aya)
+    membre.update!(profession: "Chauffeur de taxi")
+
+    get member_path(membre)
+
+    assert_select "body", /Chauffeur de taxi/
+  end
+
+  test "modifier une fiche enregistre la nouvelle profession" do
+    membre = members(:aya)
+
+    patch member_path(membre), params: { member: {
+      full_name: "Aya Koné", phone: membre.phone, profession: "enseignant"
+    } }
+
+    assert_redirected_to member_path(membre)
+    assert_equal "enseignant", membre.reload.profession
+  end
+
+  # Le formulaire de la fiche envoie toujours le menu « Profession ». Une
+  # requête qui ne le porte pas ne parle pas de profession : l'effacer
+  # reviendrait à perdre une saisie que personne n'a demandé de retirer.
+  test "une modification sans le champ profession ne l'efface pas" do
+    membre = members(:aya)
+
+    patch member_path(membre), params: { member: { full_name: "Aya Koné", phone: "01 02 03 04 05" } }
+
+    assert_equal "etudiant", membre.reload.profession
+    assert_equal "01 02 03 04 05", membre.phone
+  end
+
   # --- Réinscription ------------------------------------------------------
 
   test "réinscrire prolonge d'un an et affiche la nouvelle date" do

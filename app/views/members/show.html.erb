@@ -32,7 +32,7 @@
           </span>
           <div class="min-w-0 flex-1">
             <p class="text-encre">
-              <%= [ @member.neighborhood.presence, @member.age.present? ? t("app.abonnes.age_valeur", age: @member.age) : nil ].compact.join(" · ").presence || t("app.abonnes.profil_incomplet") %>
+              <%= profil_abonne(@member) %>
             </p>
             <p class="donnee text-sm text-texte-discret mt-0.5">
               <%= @member.phone.present? ? "#{@member.phone_country_code} #{@member.phone}" : t("app.abonnes.telephone_non_renseigne") %>

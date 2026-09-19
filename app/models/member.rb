@@ -14,6 +14,25 @@ class Member < ApplicationRecord
 
   EXPIRING_SOON_DAYS = 30
 
+  # Professions proposées à l'inscription. C'est l'identifiant qui est
+  # enregistré, pas le libellé : l'application est bilingue, et une liste
+  # d'identifiants stables est aussi ce qui permet de compter les abonnés
+  # par profession. Même principe que les catégories d'ouvrages.
+  #
+  # L'ordre suit la fréquence attendue au comptoir d'un American Space,
+  # pas l'alphabet : les élèves et les étudiants d'abord.
+  #
+  # Une profession hors liste est enregistrée telle qu'elle a été écrite.
+  # Ne correspondant à aucun identifiant, elle s'affiche verbatim.
+  PROFESSIONS = %w[
+    eleve etudiant enseignant fonctionnaire commercant
+    artisan agriculteur profession-liberale sans-emploi retraite
+  ].freeze
+
+  # Valeur du choix « Autre » dans le menu déroulant. Elle n'est jamais
+  # enregistrée : le formulaire la remplace par le texte saisi à côté.
+  PROFESSION_AUTRE = "autre"
+
   # Indicatifs téléphoniques par pays, pour le champ téléphone : indicatif,
   # nom en français, code ISO du pays (sert à générer le drapeau). La Côte
   # d'Ivoire est en tête : c'est le cas de presque tous les abonnés, elle

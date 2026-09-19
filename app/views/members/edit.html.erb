@@ -59,6 +59,8 @@
             <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.quartier") %></p>
             <%= form.text_field :neighborhood, class: "champ", placeholder: "Tiassalé centre" %>
           </div>
+
+          <%= render "members/champ_profession", form: form %>
         </div>
       <% end %>
     </div>

@@ -43,6 +43,40 @@ module ApplicationHelper
     t("app.categories.#{category.slug}", default: category.name)
   end
 
+  # Libellé d'une profession. Les valeurs de la liste sont des identifiants
+  # traduits ; une profession saisie sous « Autre » s'affiche telle quelle.
+  def nom_profession(valeur)
+    return nil if valeur.blank?
+
+    Member::PROFESSIONS.include?(valeur) ? t("app.professions.#{valeur}") : valeur
+  end
+
+  # Vrai pour une profession saisie à la main : elle ne figure pas dans la
+  # liste, c'est donc que le bibliothécaire est passé par « Autre ».
+  def profession_hors_liste?(valeur)
+    valeur.present? && Member::PROFESSIONS.exclude?(valeur)
+  end
+
+  # Les choix du menu « Profession ». Une profession hors liste replie le
+  # menu sur « Autre », ce qui rouvre le champ libre à côté, déjà rempli.
+  def options_professions(valeur)
+    choix = [ [ t("app.abonnes.profession_choisir"), "" ] ] +
+            Member::PROFESSIONS.map { |identifiant| [ t("app.professions.#{identifiant}"), identifiant ] } +
+            [ [ t("app.abonnes.profession_autre"), Member::PROFESSION_AUTRE ] ]
+
+    options_for_select(choix, profession_hors_liste?(valeur) ? Member::PROFESSION_AUTRE : valeur)
+  end
+
+  # Le résumé du profil, sous le nom, sur la fiche d'un abonné. Vide, il
+  # devient « profil incomplet » plutôt qu'une ligne blanche.
+  def profil_abonne(member)
+    [
+      nom_profession(member.profession),
+      member.neighborhood.presence,
+      (t("app.abonnes.age_valeur", age: member.age) if member.age.present?)
+    ].compact.join(" · ").presence || t("app.abonnes.profil_incomplet")
+  end
+
   # Auteur d'un ouvrage, ou la mention qui invite à le renseigner.
   # Le fonds a été importé sans les auteurs : l'absence est le cas courant,
   # elle ne doit pas ressembler à un bug.

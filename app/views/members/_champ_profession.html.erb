@@ -1,0 +1,23 @@
+<%# Profession de l'abonné. Une liste plutôt qu'un champ libre : c'est ce
+    qui permettra de compter les abonnés par profession, ce qu'une saisie
+    libre rendrait impossible (« élève », « Eleve », « eleve au lycée »).
+
+    Le choix « Autre » ouvre un champ libre à côté, pour qu'un cas imprévu
+    ne bloque jamais le comptoir. Ce champ part masqué et n'apparaît que
+    sur « Autre » — sauf si l'abonné a justement une profession hors liste,
+    auquel cas il s'affiche déjà rempli. %>
+<div data-controller="profession" data-profession-sentinelle-value="<%= Member::PROFESSION_AUTRE %>">
+  <p class="text-sm font-bold text-encre mb-2"><%= t("app.abonnes.profession") %></p>
+
+  <%= form.select :profession, options_professions(form.object.profession), {},
+        class: "champ",
+        data: { profession_target: "choix", action: "change->profession#basculer" } %>
+
+  <div class="mt-2" data-profession-target="autre" <%= "hidden" unless profession_hors_liste?(form.object.profession) %>>
+    <%= text_field_tag "member[profession_autre]",
+          (form.object.profession if profession_hors_liste?(form.object.profession)),
+          class: "champ",
+          placeholder: t("app.abonnes.profession_autre_exemple"),
+          data: { profession_target: "champAutre" } %>
+  </div>
+</div>
